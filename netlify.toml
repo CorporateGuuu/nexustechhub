@@ -1,0 +1,17 @@
+[build]
+  base = "mdtstech-store_20250508_001551"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18.17.0"
+  NPM_VERSION = "9.6.7"
+  NETLIFY_USE_PYTHON = "false"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
