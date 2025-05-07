@@ -2,9 +2,8 @@ import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import Head from 'next/head';
 
-// Simplified imports for Netlify deployment
-
-// Simplified dynamic imports for Netlify deployment
+// Import global styles
+import '../styles/globals.css';
 
 function AppContent({ Component, pageProps }) {
   return (
