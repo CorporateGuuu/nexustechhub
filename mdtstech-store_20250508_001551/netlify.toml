@@ -7,14 +7,26 @@
   NPM_VERSION = "9.6.7"
   NETLIFY_USE_PYTHON = "false"
 
-# Redirects and headers are NGINX-style redirects and headers
-# For more information see https://docs.netlify.com/routing/redirects/
+# These redirects are crucial for a Next.js application
+[[redirects]]
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
+  status = 200
 
-# Remove the redirect that's causing issues with Next.js
-# [[redirects]]
-#   from = "/*"
-#   to = "/index.html"
-#   status = 200
+[[redirects]]
+  from = "/_next/data/*"
+  to = "/_next/data/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_next/image*"
+  to = "/_next/image:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/*"
+  to = "/api/:splat"
+  status = 200
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

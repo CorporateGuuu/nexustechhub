@@ -1,6 +1,6 @@
 [build]
-  base = "."
-  command = "./netlify-build.sh"
+  base = "mdtstech-store_20250508_001551"
+  command = "npm run build"
   publish = ".next"
 
 [build.environment]
@@ -10,20 +10,24 @@
 
 # These redirects are crucial for a Next.js application
 [[redirects]]
-  from = "/_next/*"
-  to = "/_next/:splat"
+  from = "/_next/static/*"
+  to = "/_next/static/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_next/data/*"
+  to = "/_next/data/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/_next/image*"
+  to = "/_next/image:splat"
   status = 200
 
 [[redirects]]
   from = "/api/*"
   to = "/api/:splat"
   status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
