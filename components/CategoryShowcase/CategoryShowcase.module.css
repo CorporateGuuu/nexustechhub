@@ -1,0 +1,289 @@
+/* CategoryShowcase.module.css - Green & Turquoise Theme */
+.categoryShowcase {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+  padding: 80px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #20b2aa, #38a169);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #718096;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 80px;
+}
+
+.categoryCard {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  height: 200px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.categoryCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.featured {
+  grid-column: span 1;
+  height: 240px;
+}
+
+.cardContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.cardBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+  z-index: 2;
+}
+
+.cardInfo {
+  position: relative;
+  z-index: 3;
+  padding: 2rem;
+  color: white;
+  width: 100%;
+}
+
+.featuredBadge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  backdrop-filter: blur(10px);
+}
+
+.categoryName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.categoryDescription {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.categoryMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.itemCount {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.arrow {
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.categoryCard:hover .arrow {
+  transform: translate(4px, -4px);
+}
+
+/* CTA Section */
+.ctaSection {
+  text-align: center;
+  background: linear-gradient(135deg, #20b2aa, #38a169);
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  color: white;
+}
+
+.ctaTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.ctaDescription {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryCta {
+  background: white;
+  color: #20b2aa;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid white;
+}
+
+.primaryCta:hover {
+  background: transparent;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.secondaryCta {
+  background: transparent;
+  color: white;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.secondaryCta:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .categoryShowcase {
+    padding: 60px 0;
+  }
+  
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .categoriesGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 60px;
+  }
+  
+  .categoryCard,
+  .featured {
+    height: 180px;
+  }
+  
+  .cardInfo {
+    padding: 1.5rem;
+  }
+  
+  .categoryName {
+    font-size: 1.25rem;
+  }
+  
+  .categoryDescription {
+    font-size: 0.875rem;
+  }
+  
+  .ctaSection {
+    padding: 2rem 1rem;
+  }
+  
+  .ctaTitle {
+    font-size: 1.5rem;
+  }
+  
+  .ctaDescription {
+    font-size: 1rem;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .primaryCta,
+  .secondaryCta {
+    width: 100%;
+    max-width: 250px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .categoriesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .categoryCard,
+  .featured {
+    height: 160px;
+  }
+}

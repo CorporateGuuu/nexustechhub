@@ -1,0 +1,274 @@
+/* PromoBanner.module.css - Green & Turquoise Theme */
+.promoBanner {
+  background: #f7fafc;
+  padding: 80px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #20b2aa, #38a169);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #718096;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.promosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 60px;
+}
+
+.promoCard {
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.promoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cardContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.iconContainer {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.textContent {
+  flex: 1;
+}
+
+.promoTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.promoSubtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.promoDescription {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Special Offer Section */
+.specialOffer {
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  border-radius: 16px;
+  padding: 2.5rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.specialOffer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(32, 178, 170, 0.1) 50%, transparent 70%);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.offerContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.offerText {
+  flex: 1;
+}
+
+.offerTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #4fd1c7, #68d391);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.offerDescription {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+.offerActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.shopNowBtn {
+  background: linear-gradient(135deg, #20b2aa, #38a169);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.shopNowBtn:hover {
+  background: white;
+  color: #20b2aa;
+  border-color: #20b2aa;
+  transform: translateY(-2px);
+}
+
+.offerCode {
+  background: rgba(255, 255, 255, 0.1);
+  color: #4fd1c7;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px dashed rgba(79, 209, 199, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .promoBanner {
+    padding: 60px 0;
+  }
+  
+  .container {
+    padding: 0 0.5rem;
+  }
+  
+  .title {
+    font-size: 1.875rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .promosGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .promoCard {
+    padding: 1.5rem;
+  }
+  
+  .cardContent {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .iconContainer {
+    margin: 0 auto;
+  }
+  
+  .promoTitle {
+    font-size: 1.25rem;
+  }
+  
+  .specialOffer {
+    padding: 2rem 1rem;
+  }
+  
+  .offerContent {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .offerTitle {
+    font-size: 1.5rem;
+  }
+  
+  .offerDescription {
+    font-size: 1rem;
+  }
+  
+  .shopNowBtn {
+    width: 100%;
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .promosGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .promoCard {
+    padding: 1.25rem;
+  }
+  
+  .promoTitle {
+    font-size: 1.125rem;
+  }
+  
+  .promoDescription {
+    font-size: 0.875rem;
+  }
+}

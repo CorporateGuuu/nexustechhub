@@ -1,0 +1,83 @@
+.shippingCutoff {
+  width: 100%;
+  background-color: #2d3748;
+  /* Dark gray background */
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #20b2aa;
+  /* Turquoise border */
+  font-size: 0.9rem;
+}
+
+.cutoffMessage {
+  color: #ffffff;
+  /* White text */
+  font-weight: 500;
+  border-left: 3px solid #20b2aa;
+  /* Turquoise accent border */
+  padding-left: 10px;
+}
+
+.cutoffTimer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.timerDisplay {
+  background-color: #38a169;
+  /* Green background */
+  color: #ffffff;
+  /* White text */
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 600;
+  min-width: 90px;
+  text-align: center;
+}
+
+.timerDigits {
+  font-family: monospace;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.shippingMethod {
+  display: flex;
+  flex-direction: column;
+}
+
+.methodName {
+  font-weight: 600;
+  color: #ffffff;
+  /* White text */
+}
+
+.freeShipping {
+  font-size: 0.75rem;
+  color: #cccccc;
+  /* Light gray text */
+}
+
+.freeShipping strong {
+  color: #20b2aa;
+  /* Turquoise text */
+  font-weight: 700;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .shippingCutoff {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .cutoffTimer {
+    width: 100%;
+    justify-content: center;
+  }
+}
