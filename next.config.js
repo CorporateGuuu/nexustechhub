@@ -1,17 +1,13 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
-});
 
 const nextConfig = {
   reactStrictMode: true,
+  trailingSlash: true,
   images: {
-    domains: ['localhost', 'mdtstech.store', 'images.unsplash.com'],
+    domains: ['localhost', 'nexustechhub.netlify.app', 'images.unsplash.com'],
     formats: ['image/avif', 'image/webp'],
+    unoptimized: true
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -23,17 +19,17 @@ const nextConfig = {
   experimental: {
     forceSwcTransforms: true,
   },
-  webpack: (config, { isServer }) => {
-    // Add aliases for common directories
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@components': path.resolve(__dirname, 'components'),
-      '@styles': path.resolve(__dirname, 'styles'),
-      '@lib': path.resolve(__dirname, 'lib'),
+      '@': path.resolve(__dirname),
+      '@/components': path.resolve(__dirname, 'components'),
+      '@/pages': path.resolve(__dirname, 'pages'),
+      '@/styles': path.resolve(__dirname, 'styles'),
+      '@/public': path.resolve(__dirname, 'public'),
     };
-
     return config;
-  }
+  },
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = nextConfig;
