@@ -10,7 +10,7 @@ const Hero = ({ heroImageUrl = "/images/hero-repair.jpg" }) => {
 
       <div className={styles.content}>
         <span className={styles.badge}>Premium Quality Parts & Tools</span>
-        <h1 className={styles.title}>MDTS</h1>
+        <h1 className={styles.title}>Nexus TechHub</h1>
         <p className={styles.subtitle}>
           Your trusted partner for professional repair parts & tools. We provide high-quality components for iPhone, Samsung, iPad, and MacBook repairs.
         </p>

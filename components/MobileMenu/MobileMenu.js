@@ -67,7 +67,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       <div className={styles.mobileMenu}>
         <div className={styles.mobileMenuHeader}>
           <div className={styles.mobileMenuLogo}>
-            <Link href="/">MDTS</Link>
+            <Link href="/">Nexus TechHub</Link>
           </div>
 
           <button className={styles.closeButton} onClick={onClose}>

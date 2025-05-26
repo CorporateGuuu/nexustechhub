@@ -341,7 +341,7 @@ const UnifiedFooter = () => {
               <li className={styles.instagram}>
                 <a
                   aria-label="instagram"
-                  href="https://www.instagram.com/mdtstech.store/"
+                  href="https://www.instagram.com/nexustechhub/"
                   title="instagram"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -352,7 +352,7 @@ const UnifiedFooter = () => {
               <li className={styles.youtube}>
                 <a
                   aria-label="youtube"
-                  href="https://youtube.com/channel/mdtstech"
+                  href="https://youtube.com/channel/nexustechhub"
                   title="youtube"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -364,9 +364,9 @@ const UnifiedFooter = () => {
           </div>
           <div className={styles.footerTrademark2}>
             <p>
-              All trademarks are properties of their respective holders. MDTS Tech does not own or make claim to those trademarks used on this website in which it is not the holder.
+              All trademarks are properties of their respective holders. Nexus TechHub does not own or make claim to those trademarks used on this website in which it is not the holder.
             </p>
-            <address>© {new Date().getFullYear()} MIDAS TECHNICAL SOLUTIONS</address>
+            <address>© {new Date().getFullYear()} NEXUS TECHHUB</address>
           </div>
         </div>
         <div className={styles.rightCol}>
