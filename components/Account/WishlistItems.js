@@ -136,8 +136,8 @@ const WishlistItems = () => {
           <h4>Share Your Wishlist</h4>
           <SocialShare
             url={typeof window !== 'undefined' ? window.location.href : ''}
-            title="Check out my wishlist at MDTS - Midas Technical Solutions"
-            description="Here are some products I'm interested in from MDTS - Midas Technical Solutions."
+            title="Check out my wishlist at Nexus TechHub"
+            description="Here are some products I'm interested in from Nexus TechHub."
             platforms={['facebook', 'twitter', 'email', 'copy']}
           />
         </div>

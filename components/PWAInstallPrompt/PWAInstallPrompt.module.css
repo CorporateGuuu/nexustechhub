@@ -3,10 +3,10 @@
   bottom: 20px;
   left: 20px;
   right: 20px;
-  background-color: #000000;
-  border: 2px solid #d4af37;
+  background-color: #ffffff;
+  border: 2px solid #10b981;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
   z-index: 1000;
   animation: slideUp 0.3s ease-out;
 }
@@ -50,13 +50,13 @@
   margin: 0 0 4px;
   font-size: 18px;
   font-weight: 600;
-  color: #d4af37;
+  color: #10b981;
 }
 
 .promptText p {
   margin: 0;
   font-size: 14px;
-  color: #ffffff;
+  color: #374151;
   line-height: 1.4;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .installButton {
-  background-color: #e60000;
+  background-color: #10b981;
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -113,14 +113,14 @@
 }
 
 .installButton:hover {
-  background-color: #cc0000;
+  background-color: #059669;
   transform: translateY(-2px);
 }
 
 .closeButton {
   background-color: transparent;
-  color: #d4af37;
-  border: 1px solid #d4af37;
+  color: #14b8a6;
+  border: 1px solid #14b8a6;
   border-radius: 4px;
   padding: 10px 18px;
   font-size: 14px;
@@ -130,7 +130,7 @@
 }
 
 .closeButton:hover {
-  background-color: rgba(212, 175, 55, 0.1);
+  background-color: rgba(20, 184, 166, 0.1);
   transform: translateY(-2px);
 }
 

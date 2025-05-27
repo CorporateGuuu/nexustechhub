@@ -1,0 +1,12 @@
+"use strict";(()=>{var e={};e.id=7154,e.ids=[7154],e.modules={20145:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},56249:(e,r)=>{Object.defineProperty(r,"l",{enumerable:!0,get:function(){return function e(r,t){return t in r?r[t]:"then"in r&&"function"==typeof r.then?r.then(r=>e(r,t)):"function"==typeof r&&"default"===t?r:void 0}}})},78200:(e,r,t)=>{t.r(r),t.d(r,{config:()=>d,default:()=>c,routeModule:()=>l});var o={};t.r(o),t.d(o,{default:()=>u});var n=t(71802),s=t(47153),a=t(56249),i=t(80544);async function u(e,r){if("POST"!==e.method)return r.status(405).json({message:"Method not allowed"});try{let{userId:t,productId:o,timestamp:n}=e.body;if(!o)return r.status(400).json({message:"Product ID is required"});let s=`
+      INSERT INTO product_views (
+        product_id, 
+        user_id, 
+        timestamp,
+        user_agent,
+        ip_address,
+        session_id
+      ) 
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id
+    `,a=e.headers["user-agent"]||"",u=e.headers["x-forwarded-for"]||e.connection.remoteAddress||"",c=e.cookies?.sessionId||null;try{let{rows:e}=await i.d_.query(s,[o,t||null,n||new Date,a,u,c]);return r.status(200).json({success:!0,id:e[0]?.id})}catch(e){return console.error("Database error:",e),r.status(200).json({success:!0,stored:!1,message:"Analytics recorded locally only"})}}catch(e){return console.error("Error processing product view analytics:",e),r.status(500).json({message:"Internal server error"})}}let c=(0,a.l)(o,"default"),d=(0,a.l)(o,"config"),l=new n.PagesAPIRouteModule({definition:{kind:s.x.PAGES_API,page:"/api/analytics/product-view",pathname:"/api/analytics/product-view",bundlePath:"",filename:""},userland:o})},80544:(e,r,t)=>{t.d(r,{d_:()=>o});let o={query:async(e,r=[])=>(console.log(`Utils pool query: ${e}`,r),{rows:[],rowCount:0}),connect:async()=>(console.log("Utils pool connection established"),{query:async(e,r=[])=>(console.log(`Utils connection query: ${e}`,r),{rows:[],rowCount:0}),release:()=>console.log("Utils connection released")})}},47153:(e,r)=>{var t;Object.defineProperty(r,"x",{enumerable:!0,get:function(){return t}}),function(e){e.PAGES="PAGES",e.PAGES_API="PAGES_API",e.APP_PAGE="APP_PAGE",e.APP_ROUTE="APP_ROUTE"}(t||(t={}))},71802:(e,r,t)=>{e.exports=t(20145)}};var r=require("../../../webpack-api-runtime.js");r.C(e);var t=r(r.s=78200);module.exports=t})();

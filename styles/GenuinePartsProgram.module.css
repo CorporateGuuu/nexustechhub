@@ -1,0 +1,561 @@
+/* Nexus TechHub Genuine Parts Program Styles */
+
+.main {
+  min-height: 100vh;
+  background: var(--primary-white, #ffffff);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, var(--primary-green, #10b981) 0%, var(--primary-turquoise, #14b8a6) 100%);
+  color: var(--primary-white, #ffffff);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/images/circuit-pattern.svg') repeat;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.heroText {
+  max-width: 500px;
+}
+
+.heroTitle {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--primary-white, #ffffff);
+}
+
+.heroSubtitle {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.heroDescription {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.heroActions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  background: var(--primary-white, #ffffff);
+  color: var(--primary-green, #10b981);
+  padding: 14px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all var(--transition-normal, 0.3s ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primaryBtn:hover {
+  background: var(--background-light, #f9fafb);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.secondaryBtn {
+  background: transparent;
+  color: var(--primary-white, #ffffff);
+  padding: 14px 28px;
+  border: 2px solid var(--primary-white, #ffffff);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all var(--transition-normal, 0.3s ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.secondaryBtn:hover {
+  background: var(--primary-white, #ffffff);
+  color: var(--primary-green, #10b981);
+  transform: translateY(-2px);
+}
+
+.heroImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.genuineBadge {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 300px;
+}
+
+.badgeText {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.badgeSubtext {
+  display: block;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+/* Section Styles */
+.sectionTitle {
+  font-size: 36px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+  color: var(--text-dark, #1f2937);
+}
+
+.sectionDescription {
+  font-size: 18px;
+  text-align: center;
+  color: var(--text-gray, #6b7280);
+  max-width: 800px;
+  margin: 0 auto 48px auto;
+  line-height: 1.6;
+}
+
+/* Program Options Section */
+.programOptions {
+  padding: 80px 0;
+  background: var(--background-light, #f9fafb);
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.optionCard {
+  background: var(--primary-white, #ffffff);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all var(--transition-normal, 0.3s ease);
+  border: 2px solid transparent;
+}
+
+.optionCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
+  border-color: var(--primary-green, #10b981);
+}
+
+.optionHeader {
+  margin-bottom: 24px;
+}
+
+.optionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 8px;
+}
+
+.optionSubtitle {
+  font-size: 16px;
+  color: var(--primary-green, #10b981);
+  font-weight: 500;
+}
+
+.optionDescription {
+  font-size: 16px;
+  color: var(--text-gray, #6b7280);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.optionFeatures {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.optionFeatures li {
+  padding: 8px 0;
+  color: var(--text-dark, #1f2937);
+  position: relative;
+  padding-left: 24px;
+}
+
+.optionFeatures li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--primary-green, #10b981);
+  font-weight: 700;
+}
+
+.pricingExample {
+  background: var(--background-light, #f9fafb);
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-green, #10b981);
+}
+
+.pricingExample h4 {
+  margin: 0 0 12px 0;
+  color: var(--text-dark, #1f2937);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.priceBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.priceBreakdown span {
+  font-size: 14px;
+  color: var(--text-gray, #6b7280);
+}
+
+.totalCost {
+  font-weight: 600;
+  color: var(--primary-green, #10b981) !important;
+  margin-top: 8px;
+}
+
+/* Parts Categories Section */
+.partsCategories {
+  padding: 80px 0;
+  background: var(--primary-white, #ffffff);
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.categoryCard {
+  text-align: center;
+  padding: 32px;
+  border-radius: 16px;
+  background: var(--background-light, #f9fafb);
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.categoryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.categoryIcon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.categoryTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 16px;
+}
+
+.categoryDescription {
+  font-size: 16px;
+  color: var(--text-gray, #6b7280);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.categoryFeatures {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.categoryFeatures li {
+  padding: 6px 0;
+  color: var(--text-dark, #1f2937);
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.categoryFeatures li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary-green, #10b981);
+  font-weight: 700;
+}
+
+/* Benefits Section */
+.benefits {
+  padding: 80px 0;
+  background: var(--background-light, #f9fafb);
+}
+
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.benefitCard {
+  background: var(--primary-white, #ffffff);
+  padding: 32px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.benefitCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
+}
+
+.benefitIcon {
+  font-size: 40px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.benefitTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 12px;
+}
+
+.benefitDescription {
+  font-size: 16px;
+  color: var(--text-gray, #6b7280);
+  line-height: 1.6;
+}
+
+/* Application Section */
+.application {
+  padding: 80px 0;
+  background: var(--primary-white, #ffffff);
+}
+
+.applicationContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.applicationText {
+  max-width: 500px;
+}
+
+.requirements {
+  margin: 32px 0;
+}
+
+.requirements h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 16px;
+}
+
+.requirements ul {
+  list-style: none;
+  padding: 0;
+}
+
+.requirements li {
+  padding: 8px 0;
+  color: var(--text-gray, #6b7280);
+  position: relative;
+  padding-left: 24px;
+}
+
+.requirements li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--primary-green, #10b981);
+  font-weight: 700;
+}
+
+.applicationActions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.applicationImage {
+  display: flex;
+  justify-content: center;
+}
+
+.contactCard {
+  background: var(--background-light, #f9fafb);
+  padding: 32px;
+  border-radius: 16px;
+  border: 2px solid var(--border-color, #e5e7eb);
+  max-width: 400px;
+}
+
+.contactCard h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.contactInfo {
+  margin-bottom: 24px;
+}
+
+.contactInfo p {
+  margin: 8px 0;
+  color: var(--text-gray, #6b7280);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.contactInfo strong {
+  color: var(--text-dark, #1f2937);
+}
+
+.businessHours h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 8px;
+}
+
+.businessHours p {
+  color: var(--text-gray, #6b7280);
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .heroTitle {
+    font-size: 36px;
+  }
+  
+  .heroSubtitle {
+    font-size: 20px;
+  }
+  
+  .optionsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .categoriesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .benefitsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .applicationContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .sectionTitle {
+    font-size: 28px;
+  }
+  
+  .container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 60px 0;
+  }
+  
+  .heroTitle {
+    font-size: 28px;
+  }
+  
+  .heroSubtitle {
+    font-size: 18px;
+  }
+  
+  .heroActions {
+    flex-direction: column;
+  }
+  
+  .primaryBtn,
+  .secondaryBtn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .optionCard,
+  .categoryCard,
+  .benefitCard {
+    padding: 24px;
+  }
+  
+  .contactCard {
+    padding: 24px;
+  }
+}

@@ -61,8 +61,8 @@ export default function DeviceGradingPage() {
   return (
     <Layout>
       <Head>
-        <title>Device Grading System | MDTS - Midas Technical Solutions</title>
-        <meta name="description" content="Learn about our device grading system for LCD buyback and trade-ins at MDTS - Midas Technical Solutions." />
+        <title>Device Grading System | Nexus TechHub</title>
+        <meta name="description" content="Learn about our device grading system for LCD buyback and trade-ins at Nexus TechHub." />
       </Head>
 
       <main className="main-content">
@@ -70,7 +70,7 @@ export default function DeviceGradingPage() {
           <div className={styles.gradingHeader}>
             <h1>Device Grading System</h1>
             <p>
-              At MDTS, we use a standardized grading system to evaluate the condition of devices and parts.
+              At Nexus TechHub, we use a standardized grading system to evaluate the condition of devices and parts.
               This ensures transparency and fair pricing for all our customers.
             </p>
           </div>

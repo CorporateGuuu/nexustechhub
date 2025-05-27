@@ -1,0 +1,136 @@
+/* Nexus TechHub Home Page Styles */
+
+/* Genuine Parts Program Banner */
+.genuinePartsBanner {
+  background: linear-gradient(135deg, var(--primary-green, #10b981) 0%, var(--primary-turquoise, #14b8a6) 100%);
+  color: var(--primary-white, #ffffff);
+  padding: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.genuinePartsBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/images/circuit-pattern.svg') repeat;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.bannerContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.bannerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.bannerIcon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.bannerText {
+  flex: 1;
+  min-width: 300px;
+}
+
+.bannerTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--primary-white, #ffffff);
+}
+
+.bannerDescription {
+  font-size: 16px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+}
+
+.bannerActions {
+  flex-shrink: 0;
+}
+
+.bannerBtn {
+  background: var(--primary-white, #ffffff);
+  color: var(--primary-green, #10b981);
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all var(--transition-normal, 0.3s ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bannerBtn:hover {
+  background: var(--background-light, #f9fafb);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bannerContent {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  
+  .bannerText {
+    min-width: auto;
+  }
+  
+  .bannerTitle {
+    font-size: 20px;
+  }
+  
+  .bannerDescription {
+    font-size: 14px;
+  }
+  
+  .bannerBtn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .genuinePartsBanner {
+    padding: 16px 0;
+  }
+  
+  .bannerContainer {
+    padding: 0 16px;
+  }
+  
+  .bannerIcon {
+    font-size: 24px;
+  }
+  
+  .bannerTitle {
+    font-size: 18px;
+  }
+  
+  .bannerBtn {
+    width: 100%;
+    max-width: 200px;
+  }
+}

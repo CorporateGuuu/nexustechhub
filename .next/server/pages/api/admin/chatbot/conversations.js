@@ -1,0 +1,14 @@
+"use strict";(()=>{var e={};e.id=2601,e.ids=[2601],e.modules={67096:e=>{e.exports=require("bcrypt")},73227:e=>{e.exports=require("next-auth")},62113:e=>{e.exports=require("next-auth/next")},47449:e=>{e.exports=require("next-auth/providers/credentials")},93598:e=>{e.exports=require("next-auth/providers/google")},20145:e=>{e.exports=require("next/dist/compiled/next-server/pages-api.runtime.prod.js")},31526:(e,t,r)=>{r.r(t),r.d(t,{config:()=>h,default:()=>l,routeModule:()=>g});var s={};r.r(s),r.d(s,{default:()=>d});var o=r(71802),a=r(47153),n=r(56249),u=r(80544),c=r(62113),i=r(45884);async function d(e,t){let r=await (0,c.getServerSession)(e,t,i.authOptions);if(!r||!r.user.isAdmin)return t.status(401).json({success:!1,message:"Unauthorized"});if("GET"!==e.method)return t.status(405).json({success:!1,message:"Method not allowed"});try{let e=`
+      SELECT 
+        c.id, 
+        c.user_id, 
+        c.created_at, 
+        c.updated_at, 
+        c.status,
+        COUNT(m.id) as message_count
+      FROM chatbot_conversations c
+      LEFT JOIN chatbot_messages m ON c.id = m.conversation_id
+      GROUP BY c.id
+      ORDER BY c.updated_at DESC
+      LIMIT 100
+    `;try{let{rows:r}=await u.d_.query(e);return t.status(200).json({success:!0,conversations:r})}catch(e){return console.error("Database error:",e),t.status(200).json({success:!0,conversations:function(){let e=["active","closed","pending"],t=["user_123","user_456","anonymous","user_789","user_101"];return Array.from({length:20},(r,s)=>{let o=new Date;o.setDate(o.getDate()-Math.floor(30*Math.random()));let a=new Date(o);return a.setHours(a.getHours()+Math.floor(48*Math.random())),{id:`conv_${s+1}`,user_id:t[Math.floor(Math.random()*t.length)],created_at:o.toISOString(),updated_at:a.toISOString(),status:e[Math.floor(Math.random()*e.length)],message_count:Math.floor(20*Math.random())+1}})}()})}}catch(e){return console.error("Error fetching conversations:",e),t.status(500).json({success:!1,message:"Internal server error"})}}let l=(0,n.l)(s,"default"),h=(0,n.l)(s,"config"),g=new o.PagesAPIRouteModule({definition:{kind:a.x.PAGES_API,page:"/api/admin/chatbot/conversations",pathname:"/api/admin/chatbot/conversations",bundlePath:"",filename:""},userland:s})},80544:(e,t,r)=>{r.d(t,{d_:()=>s});let s={query:async(e,t=[])=>(console.log(`Utils pool query: ${e}`,t),{rows:[],rowCount:0}),connect:async()=>(console.log("Utils pool connection established"),{query:async(e,t=[])=>(console.log(`Utils connection query: ${e}`,t),{rows:[],rowCount:0}),release:()=>console.log("Utils connection released")})}}};var t=require("../../../../webpack-api-runtime.js");t.C(e);var r=e=>t(t.s=e),s=t.X(0,[8074],()=>r(31526));module.exports=s})();

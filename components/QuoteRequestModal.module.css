@@ -1,0 +1,439 @@
+/* Nexus TechHub Quote Request Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modalContent {
+  background: var(--primary-white, #ffffff);
+  border-radius: var(--border-radius, 0.5rem);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modalHeader {
+  background: linear-gradient(135deg, var(--primary-green, #10b981) 0%, var(--primary-turquoise, #14b8a6) 100%);
+  color: var(--primary-white, #ffffff);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--border-radius, 0.5rem) var(--border-radius, 0.5rem) 0 0;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--primary-white, #ffffff);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-normal, 0.3s ease);
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.form {
+  padding: 2rem;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-dark, #1f2937);
+  margin: 0 0 1rem 0;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--text-dark, #1f2937);
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 0.75rem;
+  border: 2px solid var(--border-color, #e5e7eb);
+  border-radius: var(--border-radius, 0.5rem);
+  font-size: 0.875rem;
+  background-color: var(--primary-white, #ffffff);
+  color: var(--text-dark, #1f2937);
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-green, #10b981);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-light, #9ca3af);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.select {
+  cursor: pointer;
+}
+
+.addProductButton {
+  background: var(--primary-green, #10b981);
+  color: var(--primary-white, #ffffff);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius, 0.5rem);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.addProductButton:hover {
+  background: var(--primary-turquoise, #14b8a6);
+  transform: translateY(-1px);
+}
+
+.productCard {
+  background: var(--background-light, #f9fafb);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: var(--border-radius, 0.5rem);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.productHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.productHeader h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark, #1f2937);
+  margin: 0;
+}
+
+.removeProductButton {
+  background: #ef4444;
+  color: var(--primary-white, #ffffff);
+  border: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--border-radius, 0.5rem);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.removeProductButton:hover {
+  background: #dc2626;
+}
+
+.pricingPreview {
+  background: var(--primary-white, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: var(--border-radius, 0.5rem);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.pricingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.pricingRow:last-child {
+  margin-bottom: 0;
+}
+
+.savings {
+  color: var(--primary-green, #10b981);
+  font-weight: 600;
+}
+
+.errorContainer {
+  margin: 1.5rem 2rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--border-radius, 0.5rem);
+  display: flex;
+  gap: 0.75rem;
+}
+
+.errorIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.errorContent h4 {
+  color: #dc2626;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.errorContent ul {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.errorContent li {
+  margin-bottom: 0.25rem;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.cancelButton {
+  background: var(--background-light, #f9fafb);
+  color: var(--text-gray, #6b7280);
+  border: 1px solid var(--border-color, #e5e7eb);
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--border-radius, 0.5rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.cancelButton:hover {
+  background: var(--border-color, #e5e7eb);
+}
+
+.submitButton {
+  background: linear-gradient(135deg, var(--primary-green, #10b981) 0%, var(--primary-turquoise, #14b8a6) 100%);
+  color: var(--primary-white, #ffffff);
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--border-radius, 0.5rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 150px;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.successContainer {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.successIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.successTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-green, #10b981);
+  margin: 0 0 1rem 0;
+}
+
+.successMessage {
+  color: var(--text-gray, #6b7280);
+  font-size: 1.125rem;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.quoteId {
+  background: var(--background-light, #f9fafb);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: var(--border-radius, 0.5rem);
+  padding: 1rem;
+  margin: 1.5rem 0;
+  font-family: monospace;
+  color: var(--primary-green, #10b981);
+}
+
+.successActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.newQuoteButton {
+  background: var(--primary-green, #10b981);
+  color: var(--primary-white, #ffffff);
+  border: none;
+  padding: 0.875rem 1.5rem;
+  border-radius: var(--border-radius, 0.5rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.newQuoteButton:hover {
+  background: var(--primary-turquoise, #14b8a6);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modalOverlay {
+    padding: 0.5rem;
+  }
+  
+  .modalContent {
+    max-height: 95vh;
+  }
+  
+  .modalHeader {
+    padding: 1rem 1.5rem;
+  }
+  
+  .modalTitle {
+    font-size: 1.25rem;
+  }
+  
+  .form {
+    padding: 1.5rem;
+  }
+  
+  .formRow {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .formActions {
+    flex-direction: column;
+  }
+  
+  .successActions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalHeader {
+    padding: 1rem;
+  }
+  
+  .form {
+    padding: 1rem;
+  }
+  
+  .input,
+  .select,
+  .textarea {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+  }
+  
+  .productCard {
+    padding: 1rem;
+  }
+}
