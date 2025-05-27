@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn, getCsrfToken, getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Turnstile, SecurityBadge, SecurityMessage } from '../../components/Security';
-import { recordFailedLogin } from '../../lib/fraudPrevention';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import styles from '../../styles/AuthPages.module.css';
-import Layout from '../../components/Layout/Layout';
 
 export default function SignIn({ csrfToken }) {
   const [email, setEmail] = useState('');
@@ -14,8 +14,6 @@ export default function SignIn({ csrfToken }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [turnstileToken, setTurnstileToken] = useState('');
-  const [securityMessage, setSecurityMessage] = useState(null);
   const router = useRouter();
   const { callbackUrl, error: errorParam } = router.query;
 
@@ -46,36 +44,8 @@ export default function SignIn({ csrfToken }) {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setSecurityMessage(null);
-
-    // Check if Turnstile token is present (skip in development)
-    if (!turnstileToken && process.env.NODE_ENV !== 'development') {
-      setError('Please complete the security check');
-      setLoading(false);
-      return;
-    }
 
     try {
-      // Skip Turnstile verification in development
-      if (process.env.NODE_ENV !== 'development') {
-        // Verify the Turnstile token
-        const verifyResponse = await fetch('/api/security/verify-turnstile', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token: turnstileToken }),
-        });
-
-        const verifyData = await verifyResponse.json();
-
-        if (!verifyData.success) {
-          setError('Security check failed. Please try again.');
-          setLoading(false);
-          return;
-        }
-      }
-
       // Proceed with sign in
       const result = await signIn('credentials', {
         redirect: false,
@@ -85,32 +55,24 @@ export default function SignIn({ csrfToken }) {
       });
 
       if (result.error) {
-        // Record failed login attempt for fraud prevention
-        // recordFailedLogin('client_ip', email);
-
-        setError('Invalid email or password');
-        setSecurityMessage({
-          type: 'warning',
-          message: 'Multiple failed login attempts may result in temporary account lockout.'
-        });
+        setError('Invalid email or password. Please check your credentials and try again.');
         setLoading(false);
       } else if (result.url && result.url.includes('requiresTwoFactor=true')) {
         // Redirect to 2FA page
         router.push(`/auth/2fa${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`);
       } else {
-        // Check if the callback URL is to the account page
-        if (callbackUrl && callbackUrl.includes('/account')) {
-          // Redirect to account page with a small delay to ensure session is properly set
-          setTimeout(() => {
-            router.push('/account');
-          }, 500);
+        // Successful login - redirect to appropriate page
+        if (callbackUrl && callbackUrl.includes('/dashboard')) {
+          router.push('/dashboard');
+        } else if (callbackUrl && callbackUrl.includes('/admin')) {
+          router.push('/admin/dashboard');
         } else {
-          router.push(callbackUrl || '/');
+          router.push(callbackUrl || '/dashboard');
         }
       }
     } catch (error) {
       console.error('Sign in error:', error);
-      setError('An error occurred. Please try again.');
+      setError('An error occurred during sign in. Please try again.');
       setLoading(false);
     }
   };
@@ -121,110 +83,128 @@ export default function SignIn({ csrfToken }) {
 
   if (initialLoading) {
     return (
-      <Layout
-        title="Sign In - Midas Technical Solutions"
-        description="Sign in to your Midas Technical Solutions account."
-      >
-        <div className={styles.mainContent}>
-          <div className={styles.authForm}>
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Loading...</p>
+      <ErrorBoundary componentName="SignIn">
+        <Head>
+          <title>Loading - Nexus TechHub</title>
+        </Head>
+        <Header />
+        <main className={styles.authMain}>
+          <div className={styles.authContainer}>
+            <div className={styles.authCard}>
+              <div className={styles.authHeader}>
+                <div className={styles.loadingSpinner}></div>
+                <h1 className={styles.authTitle}>Loading...</h1>
+              </div>
             </div>
           </div>
-        </div>
-      </Layout>
+        </main>
+        <Footer />
+      </ErrorBoundary>
     );
   }
 
   return (
-    <Layout
-      title="Sign In - Midas Technical Solutions"
-      description="Sign in to your Midas Technical Solutions account."
-    >
+    <ErrorBoundary componentName="SignIn">
+      <Head>
+        <title>Sign In - Nexus TechHub | Customer Login</title>
+        <meta name="description" content="Sign in to your Nexus TechHub account to access your orders, quotes, and manage your profile." />
+        <meta name="robots" content="noindex, nofollow" />
+      </Head>
 
-      <div className={styles.mainContent}>
-        <div className={styles.authForm}>
-          <h1>Sign In</h1>
+      <Header />
 
-          {error && (
-            <div className="error-message">
-              <p>{error}</p>
-            </div>
-          )}
-
-          {securityMessage && (
-            <SecurityMessage type={securityMessage.type}>
-              {securityMessage.message}
-            </SecurityMessage>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
-
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
+      <main className={styles.authMain}>
+        <div className={styles.authContainer}>
+          <div className={styles.authCard}>
+            <div className={styles.authHeader}>
+              <h1 className={styles.authTitle}>Welcome Back</h1>
+              <p className={styles.authSubtitle}>
+                Sign in to your Nexus TechHub account
+              </p>
             </div>
 
-            <div className="form-group">
-              <div className="password-header">
-                <label htmlFor="password">Password</label>
-                <Link href="/auth/forgot-password" className="forgot-password-link">
-                  Forgot password?
-                </Link>
+            {error && (
+              <div className={styles.formError}>
+                {error}
               </div>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+            )}
 
-            {/* Cloudflare Turnstile for bot protection */}
-            <Turnstile
-              onVerify={(token) => setTurnstileToken(token)}
-              onError={() => setTurnstileToken('')}
-              action="signin"
-            />
+            {successMessage && (
+              <div className={styles.successMessage}>
+                {successMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className={styles.authForm}>
+              <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+
+              <div className={styles.formGroup}>
+                <label htmlFor="email" className={styles.formLabel}>Email Address</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Enter your email address"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="password" className={styles.formLabel}>Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className={`${styles.primaryBtn} ${loading ? styles.loading : ''}`}
+                disabled={loading}
+              >
+                {loading && <span className={styles.loadingSpinner}></span>}
+                {loading ? 'Signing in...' : 'Sign In'}
+              </button>
+            </form>
+
+            <div className={styles.divider}>OR</div>
 
             <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={loading || (!turnstileToken && process.env.NODE_ENV !== 'development')}
+              onClick={handleGoogleSignIn}
+              className={styles.googleBtn}
+              type="button"
+              disabled={loading}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
             </button>
-          </form>
 
-          <SecurityBadge />
-
-          <div className="auth-separator">
-            <span>OR</span>
+            <div className={styles.authLinks}>
+              <p className={styles.authLink}>
+                <Link href="/auth/forgot-password">Forgot your password?</Link>
+              </p>
+              <p className={styles.authLink}>
+                Don't have an account? <Link href="/auth/register">Create Account</Link>
+              </p>
+            </div>
           </div>
-
-          <button
-            onClick={handleGoogleSignIn}
-            className="btn btn-google"
-            type="button"
-          >
-            Sign in with Google
-          </button>
-
-          <p className="auth-link">
-            Don't have an account? <Link href="/auth/register">Register</Link>
-          </p>
         </div>
-      </div>
-    </Layout>
+      </main>
+
+      <Footer />
+    </ErrorBoundary>
   );
 }
 

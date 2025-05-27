@@ -1,22 +1,18 @@
 .shippingCutoff {
   width: 100%;
-  background-color: #000000;
-  /* Black background */
+  background-color: var(--footer-bg);
   padding: 0.75rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #d4af37;
-  /* Gold border */
+  border-bottom: 1px solid var(--primary-color);
   font-size: 0.9rem;
 }
 
 .cutoffMessage {
   color: #ffffff;
-  /* White text */
   font-weight: 500;
-  border-left: 3px solid #e60000;
-  /* Red accent border */
+  border-left: 3px solid var(--error-color);
   padding-left: 10px;
 }
 
@@ -27,10 +23,8 @@
 }
 
 .timerDisplay {
-  background-color: #d4af37;
-  /* Gold background */
-  color: #000000;
-  /* Black text */
+  background-color: var(--primary-color);
+  color: #ffffff;
   padding: 0.35rem 0.75rem;
   border-radius: 4px;
   font-weight: 600;
@@ -62,8 +56,7 @@
 }
 
 .freeShipping strong {
-  color: #e60000;
-  /* Red text */
+  color: var(--error-color);
   font-weight: 700;
 }
 

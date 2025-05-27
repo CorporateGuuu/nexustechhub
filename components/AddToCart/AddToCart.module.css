@@ -21,23 +21,23 @@
 }
 
 .addToCartButton {
-  background-color: #10b981;
+  background-color: var(--primary-color);
   color: white;
   border: none;
 }
 
 .addToCartButton:hover {
-  background-color: #059669;
+  background-color: var(--primary-dark);
 }
 
 .buyNowButton {
-  background-color: #14b8a6;
+  background-color: var(--secondary-color);
   color: white;
   border: none;
 }
 
 .buyNowButton:hover {
-  background-color: #0d9488;
+  background-color: var(--secondary-dark);
 }
 
 .addToCartButton:disabled,

@@ -4,7 +4,7 @@ import styles from '../styles/ReturnPolicy.module.css';
 
 const ReturnPolicy = () => {
   return (
-    <Layout title="Return Policy" description="MDTS Return Policy - Learn about our return and refund policies">
+    <Layout title="Return Policy" description="Nexus TechHub Return Policy - Learn about our return and refund policies">
       <div className={styles.container}>
         <div className={styles.header}>
           <h1>Return Policy</h1>
@@ -14,7 +14,7 @@ const ReturnPolicy = () => {
           <section className={styles.section}>
             <h2>Our Return Policy</h2>
             <p>
-              At MDTS, we want you to be completely satisfied with your purchase. We understand that sometimes a product may not meet your expectations or may arrive damaged. Our return policy is designed to make the return process as simple and fair as possible.
+              At Nexus TechHub, we want you to be completely satisfied with your purchase. We understand that sometimes a product may not meet your expectations or may arrive damaged. Our return policy is designed to make the return process as simple and fair as possible.
             </p>
           </section>
 
@@ -34,7 +34,7 @@ const ReturnPolicy = () => {
               <li>
                 <h3>Contact Customer Service</h3>
                 <p>
-                  Before returning any item, please contact our customer service team at <a href="mailto:support@mdtstech.store">support@mdtstech.store</a> or call us at +1 (240) 351-0511 to obtain a Return Merchandise Authorization (RMA) number.
+                  Before returning any item, please contact our customer service team at <a href="mailto:support@nexustechhub.ae">support@nexustechhub.ae</a> or call us at +971 58 553 1029 to obtain a Return Merchandise Authorization (RMA) number.
                 </p>
               </li>
               <li>
@@ -109,9 +109,9 @@ const ReturnPolicy = () => {
               If you have any questions about our return policy, please contact our customer service team:
             </p>
             <div className={styles.contactInfo}>
-              <p>Email: <a href="mailto:support@mdtstech.store">support@mdtstech.store</a></p>
-              <p>Phone: +1 (240) 351-0511</p>
-              <p>Hours: Monday-Friday, 9AM-10PM EST</p>
+              <p>Email: <a href="mailto:support@nexustechhub.ae">support@nexustechhub.ae</a></p>
+              <p>Phone: +971 58 553 1029</p>
+              <p>Hours: Sunday-Thursday, 9AM-6PM GST</p>
             </div>
           </section>
         </div>

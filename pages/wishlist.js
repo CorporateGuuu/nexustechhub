@@ -93,7 +93,7 @@ export default function WishlistPage() {
   const handleRemoveFromWishlist = (itemId) => {
     // In a real app, this would call an API to remove the item from the wishlist
     setWishlistItems(wishlistItems.filter(item => item.id !== itemId));
-    
+
     // If using localStorage for unauthenticated users
     if (status === 'unauthenticated') {
       const updatedWishlist = wishlistItems.filter(item => item.id !== itemId);
@@ -119,7 +119,7 @@ export default function WishlistPage() {
       }
 
       const data = await response.json();
-      
+
       if (data.success) {
         alert(`${item.name} added to cart!`);
       } else {
@@ -134,12 +134,12 @@ export default function WishlistPage() {
   const handleClearWishlist = () => {
     if (window.confirm('Are you sure you want to clear your wishlist?')) {
       setWishlistItems([]);
-      
+
       // If using localStorage for unauthenticated users
       if (status === 'unauthenticated') {
         localStorage.setItem('wishlistItems', JSON.stringify([]));
       }
-      
+
       // In a real app, this would call an API to clear the wishlist for authenticated users
     }
   };
@@ -147,7 +147,7 @@ export default function WishlistPage() {
   return (
     <Layout>
       <Head>
-        <title>My Wishlist | MDTS - Midas Technical Solutions</title>
+        <title>My Wishlist | Nexus TechHub</title>
         <meta name="description" content="View and manage your saved items at MDTS - Midas Technical Solutions." />
       </Head>
 
@@ -161,7 +161,7 @@ export default function WishlistPage() {
               </div>
 
               {wishlistItems.length > 0 && (
-                <button 
+                <button
                   onClick={handleClearWishlist}
                   className={styles.clearWishlistButton}
                 >

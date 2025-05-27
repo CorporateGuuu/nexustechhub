@@ -67,7 +67,7 @@ const OutlineButton = styled(BaseButton)`
   color: var(--primary-color);
 
   &:hover:not(:disabled) {
-    background-color: rgba(74, 0, 224, 0.05);
+    background-color: rgba(16, 185, 129, 0.05);
   }
 
   &:active:not(:disabled) {
@@ -83,7 +83,7 @@ const TextButton = styled(BaseButton)`
   padding: 0.25rem 0.5rem;
 
   &:hover:not(:disabled) {
-    background-color: rgba(74, 0, 224, 0.05);
+    background-color: rgba(16, 185, 129, 0.05);
   }
 
   &:active:not(:disabled) {
@@ -108,12 +108,12 @@ const sizeStyles = {
 };
 
 // Button component
-const Button = ({ 
-  children, 
-  variant = 'primary', 
-  size = 'medium', 
+const Button = ({
+  children,
+  variant = 'primary',
+  size = 'medium',
   fullWidth = false,
-  ...props 
+  ...props
 }) => {
   // Select the appropriate button component based on variant
   let ButtonComponent;

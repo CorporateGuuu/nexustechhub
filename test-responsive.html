@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus TechHub - Responsive Design Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h2 {
+            color: #10b981;
+            margin-top: 0;
+        }
+        .iframe-container {
+            border: 2px solid #10b981;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .device-label {
+            background: #10b981;
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        iframe {
+            border: none;
+            display: block;
+        }
+        .test-checklist {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .test-checklist ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .test-checklist li {
+            margin: 5px 0;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-pass { background: #10b981; }
+        .status-fail { background: #ef4444; }
+        .status-pending { background: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Nexus TechHub - Responsive Design Testing Suite</h1>
+        <p>This page tests the Nexus TechHub website across different screen sizes and devices to ensure optimal user experience.</p>
+
+        <!-- Desktop Testing -->
+        <div class="test-section">
+            <h2>🖥️ Desktop Testing (1920x1080)</h2>
+            <div class="test-checklist">
+                <h3>Desktop Checklist:</h3>
+                <ul>
+                    <li><span class="status-indicator status-pending"></span>Navigation menu fully visible</li>
+                    <li><span class="status-indicator status-pending"></span>Mega menus work correctly</li>
+                    <li><span class="status-indicator status-pending"></span>Nexus TechHub branding visible</li>
+                    <li><span class="status-indicator status-pending"></span>Search bar functional</li>
+                    <li><span class="status-indicator status-pending"></span>Cart and account buttons accessible</li>
+                    <li><span class="status-indicator status-pending"></span>Footer displays properly</li>
+                </ul>
+            </div>
+            <div class="iframe-container">
+                <div class="device-label">Desktop - 1920x1080</div>
+                <iframe src="http://localhost:3002" width="1200" height="800"></iframe>
+            </div>
+        </div>
+
+        <!-- Tablet Testing -->
+        <div class="test-section">
+            <h2>📱 Tablet Testing (768x1024)</h2>
+            <div class="test-checklist">
+                <h3>Tablet Checklist:</h3>
+                <ul>
+                    <li><span class="status-indicator status-pending"></span>Mobile menu toggle visible</li>
+                    <li><span class="status-indicator status-pending"></span>Touch-friendly navigation</li>
+                    <li><span class="status-indicator status-pending"></span>Responsive layout adjustments</li>
+                    <li><span class="status-indicator status-pending"></span>Search functionality works</li>
+                    <li><span class="status-indicator status-pending"></span>Product cards display properly</li>
+                </ul>
+            </div>
+            <div class="iframe-container">
+                <div class="device-label">Tablet - 768x1024</div>
+                <iframe src="http://localhost:3002" width="768" height="600"></iframe>
+            </div>
+        </div>
+
+        <!-- Mobile Testing -->
+        <div class="test-section">
+            <h2>📱 Mobile Testing (375x667)</h2>
+            <div class="test-checklist">
+                <h3>Mobile Checklist:</h3>
+                <ul>
+                    <li><span class="status-indicator status-pending"></span>Mobile menu fully functional</li>
+                    <li><span class="status-indicator status-pending"></span>Touch targets appropriately sized</li>
+                    <li><span class="status-indicator status-pending"></span>Text readable without zooming</li>
+                    <li><span class="status-indicator status-pending"></span>WhatsApp button accessible</li>
+                    <li><span class="status-indicator status-pending"></span>Contact information visible</li>
+                </ul>
+            </div>
+            <div class="iframe-container">
+                <div class="device-label">Mobile - 375x667 (iPhone)</div>
+                <iframe src="http://localhost:3002" width="375" height="500"></iframe>
+            </div>
+        </div>
+
+        <!-- Branding Verification -->
+        <div class="test-section">
+            <h2>🎨 Nexus TechHub Branding Verification</h2>
+            <div class="test-checklist">
+                <h3>Branding Checklist:</h3>
+                <ul>
+                    <li><span class="status-indicator status-pending"></span>Company name: "Nexus TechHub" (not MDTS)</li>
+                    <li><span class="status-indicator status-pending"></span>Color scheme: White, Green (#10b981), Turquoise (#14b8a6)</li>
+                    <li><span class="status-indicator status-pending"></span>Phone: +971 58 553 1029</li>
+                    <li><span class="status-indicator status-pending"></span>WhatsApp: https://wa.me/971585531029</li>
+                    <li><span class="status-indicator status-pending"></span>Address: Compass Building, Al Shohada Road, AL Hamra Industrial Zone-FZ, Ras Al Khaimah, UAE</li>
+                    <li><span class="status-indicator status-pending"></span>No MDTS references remaining</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Functionality Testing -->
+        <div class="test-section">
+            <h2>⚙️ Core Functionality Testing</h2>
+            <div class="test-checklist">
+                <h3>Functionality Checklist:</h3>
+                <ul>
+                    <li><span class="status-indicator status-pending"></span>Navigation links work correctly</li>
+                    <li><span class="status-indicator status-pending"></span>Product browsing functional</li>
+                    <li><span class="status-indicator status-pending"></span>Search functionality works</li>
+                    <li><span class="status-indicator status-pending"></span>Cart operations work</li>
+                    <li><span class="status-indicator status-pending"></span>User authentication works</li>
+                    <li><span class="status-indicator status-pending"></span>Contact forms functional</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: #10b981; color: white; border-radius: 5px;">
+            <h3>🚀 Manual Testing Instructions</h3>
+            <p>1. Open each iframe and test the functionality</p>
+            <p>2. Verify responsive behavior by resizing browser window</p>
+            <p>3. Test navigation, search, and core e-commerce features</p>
+            <p>4. Confirm all Nexus TechHub branding is correct</p>
+            <p>5. Check that no MDTS references remain</p>
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh iframes every 30 seconds to ensure fresh content
+        setInterval(() => {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                const src = iframe.src;
+                iframe.src = '';
+                setTimeout(() => iframe.src = src, 100);
+            });
+        }, 30000);
+
+        // Add click handlers to update status indicators
+        document.querySelectorAll('.test-checklist li').forEach(item => {
+            item.addEventListener('click', () => {
+                const indicator = item.querySelector('.status-indicator');
+                if (indicator.classList.contains('status-pending')) {
+                    indicator.classList.remove('status-pending');
+                    indicator.classList.add('status-pass');
+                } else if (indicator.classList.contains('status-pass')) {
+                    indicator.classList.remove('status-pass');
+                    indicator.classList.add('status-fail');
+                } else {
+                    indicator.classList.remove('status-fail');
+                    indicator.classList.add('status-pending');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

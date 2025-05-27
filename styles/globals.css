@@ -20,8 +20,8 @@
   --border-color: #d1d5db;
   --card-bg: #ffffff;
   --header-bg: #ffffff;
-  --footer-bg: #111827;
-  /* Dark footer */
+  --footer-bg: #10b981;
+  /* Green footer to match Nexus TechHub branding */
   --accent-color: #14b8a6;
   /* Turquoise accent */
   --success-color: #10b981;
@@ -46,8 +46,8 @@
   --border-color: #374151;
   --card-bg: #1f2937;
   --header-bg: #1f2937;
-  --footer-bg: #000000;
-  /* Black footer */
+  --footer-bg: #059669;
+  /* Darker green footer for dark theme */
   --accent-color: #14b8a6;
   /* Turquoise accent */
   --success-color: #10b981;
@@ -72,8 +72,8 @@
   --border-color: #d1d5db;
   --card-bg: #ffffff;
   --header-bg: #ffffff;
-  --footer-bg: #111827;
-  /* Dark footer */
+  --footer-bg: #10b981;
+  /* Green footer to match Nexus TechHub branding */
   --accent-color: #14b8a6;
   /* Turquoise accent */
   --success-color: #10b981;

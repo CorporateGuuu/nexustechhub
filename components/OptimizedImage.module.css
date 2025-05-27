@@ -1,0 +1,329 @@
+/* Nexus TechHub Optimized Image Styles */
+
+.imageContainer {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.fillContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.optimizedImage {
+  transition: all var(--transition-normal, 0.3s ease);
+  border-radius: var(--border-radius, 0.5rem);
+}
+
+.optimizedImage.loading {
+  opacity: 0;
+}
+
+.optimizedImage.error {
+  opacity: 0.5;
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color, #e5e7eb);
+  border-top: 3px solid var(--primary-green, #10b981);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error Overlay */
+.errorOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-light, #f9fafb);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: var(--border-radius, 0.5rem);
+  z-index: 3;
+}
+
+.errorIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+.errorText {
+  font-size: 0.875rem;
+  color: var(--text-gray, #6b7280);
+  text-align: center;
+}
+
+/* Product Image Styles */
+.productImageContainer {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--border-radius, 0.5rem);
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.productImageContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.productImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Product Badges */
+.stockBadge,
+.outOfStockBadge,
+.featuredBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius, 0.5rem);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+
+.stockBadge {
+  background: var(--primary-green, #10b981);
+  color: var(--primary-white, #ffffff);
+}
+
+.outOfStockBadge {
+  background: #ef4444;
+  color: var(--primary-white, #ffffff);
+}
+
+.featuredBadge {
+  background: var(--primary-turquoise, #14b8a6);
+  color: var(--primary-white, #ffffff);
+  top: 0.5rem;
+  left: 0.5rem;
+  right: auto;
+}
+
+/* Hero Image Styles */
+.heroContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.8) 0%,
+    rgba(20, 184, 166, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+.heroContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--primary-white, #ffffff);
+  z-index: 2;
+  width: 90%;
+  max-width: 800px;
+}
+
+/* Logo Styles */
+.logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+/* Gallery Image Styles */
+.galleryImageContainer {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--border-radius, 0.5rem);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.galleryImageContainer:hover {
+  transform: scale(1.02);
+}
+
+.galleryImageContainer:hover .galleryOverlay {
+  opacity: 1;
+}
+
+.galleryImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.galleryOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-normal, 0.3s ease);
+}
+
+.zoomIcon {
+  font-size: 2rem;
+  color: var(--primary-white, #ffffff);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .heroContainer {
+    height: 60vh;
+    min-height: 300px;
+  }
+  
+  .heroContent {
+    width: 95%;
+  }
+  
+  .productImageContainer:hover {
+    transform: none;
+  }
+  
+  .galleryImageContainer:hover {
+    transform: none;
+  }
+  
+  .spinner {
+    width: 30px;
+    height: 30px;
+    border-width: 2px;
+  }
+  
+  .errorIcon {
+    font-size: 1.5rem;
+  }
+  
+  .errorText {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroContainer {
+    height: 50vh;
+    min-height: 250px;
+  }
+  
+  .stockBadge,
+  .outOfStockBadge,
+  .featuredBadge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.375rem;
+  }
+  
+  .spinner {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .loadingSpinner,
+  .galleryOverlay,
+  .heroOverlay {
+    display: none;
+  }
+  
+  .optimizedImage {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .errorOverlay {
+    border: 2px solid currentColor;
+  }
+  
+  .stockBadge,
+  .outOfStockBadge,
+  .featuredBadge {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .optimizedImage,
+  .productImageContainer,
+  .galleryImageContainer,
+  .logo {
+    transition: none;
+  }
+  
+  .spinner {
+    animation: none;
+  }
+  
+  .productImageContainer:hover,
+  .galleryImageContainer:hover,
+  .logo:hover {
+    transform: none;
+  }
+}

@@ -175,7 +175,7 @@ const UnifiedHeader = () => {
           title: 'By Brand',
           items: [
             { id: 5021, title: 'iFixit', url: '/products?category=repair-tools&brand=ifixit' },
-            { id: 5022, title: 'MDTS Tools', url: '/products?category=repair-tools&brand=mdts' },
+            { id: 5022, title: 'Nexus TechHub Tools', url: '/products?category=repair-tools&brand=nexustechhub' },
             { id: 5023, title: 'JAKEMY', url: '/products?category=repair-tools&brand=jakemy' },
             { id: 5024, title: 'QIANLI', url: '/products?category=repair-tools&brand=qianli' },
           ]
@@ -276,7 +276,16 @@ const UnifiedHeader = () => {
       <div className={styles.mainHeader}>
         <div className={styles.headerContainer}>
           <div className={styles.logo}>
-            <Link href="/">Nexus TechHub</Link>
+            <Link href="/">
+              <img
+                src="/icons/nexustechhub-icon.svg"
+                alt="Nexus TechHub"
+                width="50"
+                height="50"
+                style={{ marginRight: '0.5rem' }}
+              />
+              <span>Nexus TechHub</span>
+            </Link>
           </div>
 
           {/* Search Bar */}

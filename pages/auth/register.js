@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import styles from '../../styles/AuthPages.module.css';
 
 export default function Register() {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [businessName, setBusinessName] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,7 +31,7 @@ export default function Register() {
         }, 1000);
         return () => clearTimeout(timer);
       } else {
-        router.push('/');
+        router.push('/dashboard');
       }
     }
   }, [redirectCountdown, router]);
@@ -36,6 +42,12 @@ export default function Register() {
     setError('');
 
     // Validate form
+    if (!firstName.trim() || !lastName.trim()) {
+      setError('Please enter your first and last name');
+      setLoading(false);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
@@ -48,6 +60,13 @@ export default function Register() {
       return;
     }
 
+    // Validate UAE phone number format
+    if (phone && !phone.match(/^(\+971|971|0)?[0-9]{8,9}$/)) {
+      setError('Please enter a valid UAE phone number');
+      setLoading(false);
+      return;
+    }
+
     try {
       // Register user
       const response = await fetch('/api/auth/register', {
@@ -55,7 +74,14 @@ export default function Register() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          phone: phone || null,
+          businessName: businessName || null
+        }),
       });
 
       const data = await response.json();
@@ -75,7 +101,7 @@ export default function Register() {
         setError('Registration successful, but sign-in failed. Please try signing in manually.');
         setLoading(false);
       } else {
-        setSuccess(`Account created successfully! Welcome, ${name}. You will be redirected to the homepage in 5 seconds.`);
+        setSuccess(`Account created successfully! Welcome, ${firstName}. You will be redirected to your dashboard in 5 seconds.`);
         setLoading(false);
         setRedirectCountdown(5);
       }
@@ -90,233 +116,171 @@ export default function Register() {
   };
 
   return (
-    <>
+    <ErrorBoundary componentName="Register">
       <Head>
-        <title>Register - Midas Technical Solutions</title>
-        <meta name="description" content="Create a new account with Midas Technical Solutions." />
+        <title>Create Account - Nexus TechHub | Customer Registration</title>
+        <meta name="description" content="Create your Nexus TechHub account to access mobile repair parts, quotes, and manage your orders in the UAE." />
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
 
+      <Header />
 
-
-      <div className={styles.mainContent}>
-        <div className={styles.authForm}>
-          <h1>Register</h1>
-
-          {error && (
-            <div className="error-message">
-              <p>{error}</p>
-            </div>
-          )}
-
-          {success && (
-            <div className="success-message">
-              <p>{success}</p>
-              {redirectCountdown !== null && (
-                <p className="countdown">Redirecting in {redirectCountdown} seconds...</p>
-              )}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+      <main className={styles.authMain}>
+        <div className={styles.authContainer}>
+          <div className={styles.authCard}>
+            <div className={styles.authHeader}>
+              <h1 className={styles.authTitle}>Create Your Account</h1>
+              <p className={styles.authSubtitle}>
+                Join Nexus TechHub and access premium mobile repair parts in the UAE
+              </p>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+            {error && (
+              <div className={styles.formError}>
+                {error}
+              </div>
+            )}
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-              />
-              <small>Password must be at least 8 characters long</small>
-            </div>
+            {success && (
+              <div className={styles.successMessage}>
+                {success}
+                {redirectCountdown !== null && (
+                  <p>Redirecting in {redirectCountdown} seconds...</p>
+                )}
+              </div>
+            )}
 
-            <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
+            <form onSubmit={handleSubmit} className={styles.authForm}>
+              <div className={styles.formGroup}>
+                <label htmlFor="firstName" className={styles.formLabel}>First Name *</label>
+                <input
+                  id="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Enter your first name"
+                  required
+                />
+              </div>
 
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Registering...' : 'Register'}
+              <div className={styles.formGroup}>
+                <label htmlFor="lastName" className={styles.formLabel}>Last Name *</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Enter your last name"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="email" className={styles.formLabel}>Email Address *</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Enter your email address"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="phone" className={styles.formLabel}>Phone Number (UAE)</label>
+                <input
+                  id="phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className={styles.formInput}
+                  placeholder="+971 50 123 4567"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="businessName" className={styles.formLabel}>Business Name (Optional)</label>
+                <input
+                  id="businessName"
+                  type="text"
+                  value={businessName}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  className={styles.formInput}
+                  placeholder="Your repair shop or business name"
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="password" className={styles.formLabel}>Password *</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Create a strong password"
+                  required
+                  minLength={8}
+                />
+                <small style={{ color: 'var(--text-gray, #6b7280)', fontSize: '14px' }}>
+                  Password must be at least 8 characters long
+                </small>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="confirmPassword" className={styles.formLabel}>Confirm Password *</label>
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={`${styles.formInput} ${error ? styles.error : ''}`}
+                  placeholder="Confirm your password"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                className={`${styles.primaryBtn} ${loading ? styles.loading : ''}`}
+                disabled={loading}
+              >
+                {loading && <span className={styles.loadingSpinner}></span>}
+                {loading ? 'Creating Account...' : 'Create Account'}
+              </button>
+            </form>
+
+            <div className={styles.divider}>OR</div>
+
+            <button
+              onClick={handleGoogleSignIn}
+              className={styles.googleBtn}
+              type="button"
+              disabled={loading}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
             </button>
-          </form>
 
-          <div className="auth-separator">
-            <span>OR</span>
-          </div>
-
-          <button
-            onClick={handleGoogleSignIn}
-            className="btn btn-google"
-            type="button"
-          >
-            Sign up with Google
-          </button>
-
-          <p className="auth-link">
-            Already have an account? <Link href="/auth/signin">Sign In</Link>
-          </p>
-        </div>
-      </div>
-
-      <footer className={styles.footer}>
-        <div className={styles.footerContainer}>
-          <div className={styles.footerTop}>
-            <div className={styles.footerNewsletter}>
-              <h3>Subscribe to Our Newsletter</h3>
-              <p>Stay updated with our latest products, promotions, and repair guides.</p>
-              <form className={styles.footerForm}>
-                <input type="email" placeholder="Your email address" required />
-                <button type="submit">Subscribe</button>
-              </form>
-            </div>
-
-            <div>
-              <h3>Our Services</h3>
-              <div className={styles.footerServices}>
-                <div className={styles.footerService}>
-                  <div className={styles.footerServiceIcon}>🚚</div>
-                  <div className={styles.footerServiceName}>Fast Shipping</div>
-                  <div className={styles.footerServiceDescription}>Free shipping on orders over $1000</div>
-                </div>
-
-                <div className={styles.footerService}>
-                  <div className={styles.footerServiceIcon}>🔧</div>
-                  <div className={styles.footerServiceName}>Repair Guides</div>
-                  <div className={styles.footerServiceDescription}>Step-by-step tutorials</div>
-                </div>
-
-                <div className={styles.footerService}>
-                  <div className={styles.footerServiceIcon}>💬</div>
-                  <div className={styles.footerServiceName}>Support</div>
-                  <div className={styles.footerServiceDescription}>24/7 customer service</div>
-                </div>
-
-                <div className={styles.footerService}>
-                  <div className={styles.footerServiceIcon}>🔄</div>
-                  <div className={styles.footerServiceName}>Returns</div>
-                  <div className={styles.footerServiceDescription}>30-day money back</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.footerMiddle}>
-            <div className={styles.footerColumn}>
-              <h3>Shop</h3>
-              <ul className={styles.footerLinks}>
-                <li><Link href="/products/iphone">iPhone Parts</Link></li>
-                <li><Link href="/products/samsung">Samsung Parts</Link></li>
-                <li><Link href="/products/ipad">iPad Parts</Link></li>
-                <li><Link href="/products/macbook">MacBook Parts</Link></li>
-                <li><Link href="/products/tools">Repair Tools</Link></li>
-              </ul>
-            </div>
-
-            <div className={styles.footerColumn}>
-              <h3>Information</h3>
-              <ul className={styles.footerLinks}>
-                <li><Link href="/about">About Us</Link></li>
-                <li><Link href="/contact">Contact Us</Link></li>
-                <li><Link href="/blog">Repair Guides</Link></li>
-                <li><Link href="/lcd-buyback">LCD Buyback Program</Link></li>
-                <li><Link href="/wholesale">Wholesale Program</Link></li>
-              </ul>
-            </div>
-
-            <div className={styles.footerColumn}>
-              <h3>Customer Service</h3>
-              <ul className={styles.footerLinks}>
-                <li><Link href="/faq">FAQ</Link></li>
-                <li><Link href="/shipping">Shipping Policy</Link></li>
-                <li><Link href="/returns">Returns & Warranty</Link></li>
-                <li><Link href="/privacy">Privacy Policy</Link></li>
-                <li><Link href="/terms">Terms & Conditions</Link></li>
-              </ul>
-            </div>
-
-            <div className={styles.footerColumn}>
-              <h3>Contact Us</h3>
-              <ul className={styles.footerLinks}>
-                <li>Vienna, VA 22182</li>
-                <li>Phone: +1 (240) 351-0511</li>
-                <li>Email: support@mdtstech.store</li>
-                <li>Hours: Mon-Fri 9AM-10PM EST</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className={styles.footerBottom}>
-            <div className={styles.footerCopyright}>
-              &copy; {new Date().getFullYear()} Midas Technical Solutions. All rights reserved.
-            </div>
-            <div className={styles.footerPaymentMethods}>
-              <div className={styles.footerPaymentIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="5" width="20" height="14" rx="2" />
-                  <line x1="2" y1="10" x2="22" y2="10" />
-                </svg>
-              </div>
-              <div className={styles.footerPaymentIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="5" width="20" height="14" rx="2" />
-                  <circle cx="12" cy="12" r="3" />
-                  <circle cx="18" cy="12" r="3" />
-                </svg>
-              </div>
-              <div className={styles.footerPaymentIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="5" width="20" height="14" rx="2" />
-                  <path d="M12 9v6" />
-                  <path d="M8 9h8" />
-                </svg>
-              </div>
-              <div className={styles.footerPaymentIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-              </div>
-              <div className={styles.footerPaymentIcon}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z" />
-                  <path d="M12 16V8" />
-                  <path d="M8 12h8" />
-                </svg>
-              </div>
+            <div className={styles.authLinks}>
+              <p className={styles.authLink}>
+                Already have an account? <Link href="/auth/signin">Sign In</Link>
+              </p>
             </div>
           </div>
         </div>
-      </footer>
-    </>
+      </main>
+
+      <Footer />
+    </ErrorBoundary>
   );
 }

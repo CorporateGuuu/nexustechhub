@@ -43,7 +43,7 @@ const MainNavigation = () => {
       <div className={styles.navContainer}>
         {/* Logo */}
         <Link href="/" className={styles.navLogo}>
-          <span className={styles.logoText}>MDTS</span>
+          <span className={styles.logoText}>Nexus TechHub</span>
         </Link>
 
         {/* Main Navigation Links */}

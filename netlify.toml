@@ -1,12 +1,37 @@
+# Netlify configuration for Nexus TechHub Next.js Application
 [build]
-  base = "mdtstech-store_20250508_001551"
   command = "npm run build"
   publish = ".next"
+  functions = "netlify/functions"
+  base = "."
 
 [build.environment]
   NODE_VERSION = "18.17.0"
   NPM_VERSION = "9.6.7"
   NETLIFY_USE_PYTHON = "false"
+  NETLIFY_USE_YARN = "false"
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  NEXT_TELEMETRY_DISABLED = "1"
+  NPM_CONFIG_PRODUCTION = "false"
+  CI = "true"
+
+# Build processing optimizations
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
 
 # These redirects are crucial for a Next.js application
 [[redirects]]
@@ -29,5 +54,68 @@
   to = "/api/:splat"
   status = 200
 
+# Security and performance headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(self), payment=(self)"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Cache headers for static assets
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# SEO redirects
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/products"
+  to = "/iphone-parts"
+  status = 301
+
+[[redirects]]
+  from = "/whatsapp"
+  to = "https://wa.me/971585531029"
+  status = 302
+
+[[redirects]]
+  from = "/call"
+  to = "tel:+971585531029"
+  status = 302
+
+# Environment-specific settings
+[context.production]
+  command = "npm run build"
+  [context.production.environment]
+    NODE_ENV = "production"
+    NEXT_PUBLIC_SITE_URL = "https://nexustechhub.netlify.app"
+
+[context.deploy-preview]
+  command = "npm run build"
+  [context.deploy-preview.environment]
+    NODE_ENV = "production"
+    NEXT_PUBLIC_SITE_URL = "$DEPLOY_PRIME_URL"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[plugins]]
+  package = "netlify-plugin-sitemap"
+  [plugins.inputs]
+    baseUrl = "https://nexustechhub.netlify.app"
+    pretty = true
+    trailingSlash = false

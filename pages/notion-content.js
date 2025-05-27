@@ -36,11 +36,11 @@ const NotionContentPage = () => {
   return (
     <div>
       <Head>
-        <title>Notion Content | MDTS Tech</title>
+        <title>Notion Content | Nexus TechHub</title>
         <meta name="description" content="Content managed with Notion" />
       </Head>
 
-      <Layout title="Notion Content | MDTS Tech" description="Content managed with Notion">
+      <Layout title="Notion Content | Nexus TechHub" description="Content managed with Notion">
 
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Notion Content</h1>
@@ -134,7 +134,7 @@ const NotionContentPage = () => {
             </div>
           )}
         </div>
-      
+
 </Layout>
     </div>
   );

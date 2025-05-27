@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  color: #333;
+  color: var(--text-color);
 }
 
 .gappHero {
@@ -105,7 +105,7 @@
 .optionCard h4 {
   font-size: 1.4rem;
   margin-bottom: 1rem;
-  color: #003087;
+  color: var(--primary-color);
 }
 
 .optionCard p {
@@ -121,7 +121,7 @@
 
 .signupButton {
   display: inline-block;
-  background-color: #003087;
+  background-color: var(--primary-color);
   color: white;
   padding: 0.8rem 2rem;
   border-radius: 4px;

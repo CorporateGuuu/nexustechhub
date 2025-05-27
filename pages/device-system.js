@@ -334,8 +334,8 @@ export default function DeviceSystemPage() {
   return (
     <Layout>
       <Head>
-        <title>Device Inventory System | MDTS - Midas Technical Solutions</title>
-        <meta name="description" content="Browse our inventory of devices and parts at MDTS - Midas Technical Solutions." />
+        <title>Device Inventory System | Nexus TechHub</title>
+        <meta name="description" content="Browse our inventory of devices and parts at Nexus TechHub." />
       </Head>
 
       <main className="main-content">

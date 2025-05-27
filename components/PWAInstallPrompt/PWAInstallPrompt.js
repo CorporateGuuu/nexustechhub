@@ -60,14 +60,14 @@ const PWAInstallPrompt = () => {
     <div className={styles.installPrompt}>
       <div className={styles.promptContent}>
         <div className={styles.promptIcon}>
-          <img src="/icons/mdts-icon.svg" alt="MDTS App Icon" />
+          <img src="/icons/nexustechhub-icon.svg" alt="Nexus TechHub App Icon" />
         </div>
         <div className={styles.promptText}>
-          <h3>Install MDTS App</h3>
+          <h3>Install Nexus TechHub App</h3>
           <p>
             {isIOS
               ? 'To install this app on your iPhone: tap the Share button then "Add to Home Screen"'
-              : 'Install our app for a better experience'}
+              : 'Install our app for a better shopping experience with faster access to repair parts and tools'}
           </p>
         </div>
         <div className={styles.promptActions}>

@@ -55,7 +55,7 @@ const ChatbotUI = () => {
         const welcomeMessage = {
           id: Date.now(),
           role: 'assistant',
-          content: "Hello! I'm your MDTS virtual assistant. How can I help you today? I can assist with product information, order tracking, returns, and more.",
+          content: "Hello! I'm your Nexus TechHub virtual assistant. How can I help you today? I can assist with product information, order tracking, returns, and more.",
           timestamp: new Date().toISOString(),
         };
 
@@ -69,7 +69,7 @@ const ChatbotUI = () => {
       const fallbackMessage = {
         id: Date.now(),
         role: 'assistant',
-        content: "Hello! I'm your MDTS virtual assistant. How can I help you today?",
+        content: "Hello! I'm your Nexus TechHub virtual assistant. How can I help you today?",
         timestamp: new Date().toISOString(),
       };
 
@@ -137,7 +137,7 @@ const ChatbotUI = () => {
         const errorMessage = {
           id: Date.now() + 1,
           role: 'assistant',
-          content: "I'm sorry, I'm having trouble processing your request right now. Please try again later or contact our support team at support@mdtstech.store.",
+          content: "I'm sorry, I'm having trouble processing your request right now. Please try again later or contact our support team at +971 58 553 1029.",
           timestamp: new Date().toISOString(),
         };
 

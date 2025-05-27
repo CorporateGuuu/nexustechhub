@@ -1,0 +1,287 @@
+/* Nexus TechHub Add to Cart Button Styles */
+
+.addToCartButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal, 0.3s ease);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.addToCartButton:focus {
+  outline: 2px solid var(--primary-green, #10b981);
+  outline-offset: 2px;
+}
+
+.addToCartButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Button Variants */
+.primary {
+  background: var(--primary-green, #10b981);
+  color: var(--primary-white, #ffffff);
+  border: 2px solid var(--primary-green, #10b981);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--primary-turquoise, #14b8a6);
+  border-color: var(--primary-turquoise, #14b8a6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.secondary {
+  background: var(--primary-white, #ffffff);
+  color: var(--primary-green, #10b981);
+  border: 2px solid var(--primary-green, #10b981);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--primary-green, #10b981);
+  color: var(--primary-white, #ffffff);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.outline {
+  background: transparent;
+  color: var(--primary-green, #10b981);
+  border: 1px solid var(--primary-green, #10b981);
+}
+
+.outline:hover:not(:disabled) {
+  background: var(--primary-green, #10b981);
+  color: var(--primary-white, #ffffff);
+}
+
+/* Button Sizes */
+.small {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.medium {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.large {
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+/* Button States */
+.success {
+  background: var(--success-color, #22c55e) !important;
+  border-color: var(--success-color, #22c55e) !important;
+  color: var(--primary-white, #ffffff) !important;
+}
+
+.outOfStock {
+  background: var(--text-gray, #6b7280) !important;
+  border-color: var(--text-gray, #6b7280) !important;
+  color: var(--primary-white, #ffffff) !important;
+}
+
+/* Button Content */
+.buttonText {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.quantityBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--primary-turquoise, #14b8a6);
+  color: var(--primary-white, #ffffff);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  animation: bounce 0.3s ease-out;
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Quick Add Button */
+.quickAdd {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 700;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.quickAdd:hover:not(:disabled) {
+  transform: scale(1);
+}
+
+/* Show quick add on parent hover */
+*:hover .quickAdd {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Bulk Add Container */
+.bulkAddContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--background-light, #f9fafb);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+.quantitySelect {
+  background: var(--primary-white, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: var(--text-dark, #1f2937);
+  cursor: pointer;
+  min-width: 80px;
+}
+
+.quantitySelect:focus {
+  outline: none;
+  border-color: var(--primary-green, #10b981);
+}
+
+.bulkAddButton {
+  flex-shrink: 0;
+}
+
+/* Loading State */
+.addToCartButton:disabled .buttonText {
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .medium {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .large {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+  
+  .bulkAddContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  
+  .quantitySelect {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .small {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  
+  .medium {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .large {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .quickAdd {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .quantityBadge {
+    font-size: 9px;
+    padding: 1px 4px;
+    min-width: 16px;
+    height: 16px;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .addToCartButton {
+    border-width: 2px;
+  }
+  
+  .outline {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .addToCartButton {
+    transition: none;
+  }
+  
+  .addToCartButton:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .quantityBadge {
+    animation: none;
+  }
+  
+  .quickAdd {
+    transition: opacity var(--transition-normal, 0.3s ease);
+  }
+}
+
+/* Focus Visible */
+.addToCartButton:focus-visible {
+  outline: 2px solid var(--primary-green, #10b981);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .addToCartButton {
+    display: none;
+  }
+}

@@ -1,281 +1,337 @@
-import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Layout from '../../components/Layout/Layout';
-import AddToCart from '../../components/AddToCart';
-import ProductImages from '../../components/ProductDetail/ProductImages';
-import ProductTabs from '../../components/ProductDetail/ProductTabs';
-import RelatedProducts from '../../components/ProductDetail/RelatedProducts';
-import ProductReviews from '../../components/ProductDetail/ProductReviews';
-import CompareButton from '../../components/ProductDetail/CompareButton';
-import ProductRecommendations from '../../components/ProductRecommendations/ProductRecommendations';
-import RecentlyViewed from '../../components/RecentlyViewed/RecentlyViewed';
-import SocialShare from '../../components/SocialShare/SocialShare';
-import SimilarProducts from '../../components/Recommendations/SimilarProducts';
-import FrequentlyBoughtTogether from '../../components/Recommendations/FrequentlyBoughtTogether';
-import { trackProductView } from '../../utils/recommendationEngine';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import WhatsAppButton from '../../components/WhatsAppButton';
 import styles from '../../styles/ProductDetail.module.css';
+
+// Mock function to get all products - in production, this would come from a database/API
+const getAllProducts = () => {
+  return [
+    // iPhone Parts
+    {
+      id: 'ip15-screen-oled',
+      name: 'iPhone 15 Pro OLED Screen Assembly',
+      category: 'iPhone Parts',
+      model: 'iPhone 15 Pro',
+      price: 299.99,
+      originalPrice: 349.99,
+      inStock: true,
+      image: '/images/products/placeholder.svg',
+      description: 'High-quality OLED replacement screen for iPhone 15 Pro with advanced touch sensitivity and vibrant color reproduction.',
+      specifications: ['OLED Display', 'Touch Digitizer Included', '6-Month Warranty', 'True Tone Compatible'],
+      compatibility: ['iPhone 15 Pro'],
+      sku: 'NTH-IP15P-SCREEN-001',
+      installationDifficulty: 'Advanced',
+      warranty: '6 Months',
+      bulkPricing: [
+        { quantity: '1-4', price: 299.99 },
+        { quantity: '5-9', price: 279.99 },
+        { quantity: '10+', price: 259.99 }
+      ]
+    },
+    {
+      id: 'ip14-battery',
+      name: 'iPhone 14 Battery Replacement',
+      category: 'iPhone Parts',
+      model: 'iPhone 14',
+      price: 89.99,
+      originalPrice: null,
+      inStock: true,
+      image: '/images/products/placeholder.svg',
+      description: 'Original capacity battery replacement for iPhone 14 with advanced battery management system.',
+      specifications: ['3279mAh Capacity', 'Li-ion Technology', '1-Year Warranty', 'Battery Health Optimization'],
+      compatibility: ['iPhone 14'],
+      sku: 'NTH-IP14-BAT-001',
+      installationDifficulty: 'Intermediate',
+      warranty: '1 Year',
+      bulkPricing: [
+        { quantity: '1-4', price: 89.99 },
+        { quantity: '5-9', price: 79.99 },
+        { quantity: '10+', price: 69.99 }
+      ]
+    },
+    // Samsung Parts
+    {
+      id: 'sg-s24-screen-oled',
+      name: 'Samsung Galaxy S24 OLED Screen Assembly',
+      category: 'Samsung Parts',
+      model: 'Galaxy S24',
+      price: 249.99,
+      originalPrice: 279.99,
+      inStock: true,
+      image: '/images/products/placeholder.svg',
+      description: 'High-quality OLED replacement screen for Samsung Galaxy S24 with Dynamic AMOLED technology.',
+      specifications: ['OLED Display', 'Touch Digitizer Included', '6-Month Warranty', 'Always-On Display Compatible'],
+      compatibility: ['Samsung Galaxy S24'],
+      sku: 'NTH-SGS24-SCREEN-001',
+      installationDifficulty: 'Advanced',
+      warranty: '6 Months',
+      bulkPricing: [
+        { quantity: '1-4', price: 249.99 },
+        { quantity: '5-9', price: 229.99 },
+        { quantity: '10+', price: 209.99 }
+      ]
+    },
+    // Repair Tools
+    {
+      id: 'toolkit-pro-50pc',
+      name: 'Professional Repair Tool Kit - 50 Pieces',
+      category: 'Repair Tools',
+      model: 'Universal',
+      price: 149.99,
+      originalPrice: 179.99,
+      inStock: true,
+      image: '/images/products/placeholder.svg',
+      description: 'Complete professional repair tool kit for mobile device technicians with premium quality tools.',
+      specifications: ['50+ Precision Tools', 'Anti-Static Mat Included', 'Carrying Case', 'Lifetime Tool Warranty'],
+      compatibility: ['iPhone', 'Samsung', 'iPad', 'Universal'],
+      sku: 'NTH-TOOLS-PRO50-001',
+      installationDifficulty: 'Beginner',
+      warranty: 'Lifetime on Tools',
+      bulkPricing: [
+        { quantity: '1-4', price: 149.99 },
+        { quantity: '5-9', price: 139.99 },
+        { quantity: '10+', price: 129.99 }
+      ]
+    }
+  ];
+};
+
+// Mock function to get product by slug
+const getProductBySlug = (slug) => {
+  const products = getAllProducts();
+  return products.find(product => product.id === slug);
+};
 
 export default function ProductDetail() {
   const router = useRouter();
   const { slug } = router.query;
-
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    // Only fetch when slug is available
-    if (!slug) return;
+    if (router.isReady && slug) {
+      const foundProduct = getProductBySlug(slug);
+      setProduct(foundProduct);
+      setLoading(false);
+    }
+  }, [router.isReady, slug]);
 
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/products/${slug}`);
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-AE', {
+      style: 'currency',
+      currency: 'AED'
+    }).format(price);
+  };
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch product');
-        }
+  const getCurrentPrice = () => {
+    if (!product || quantity < 10) return product?.price;
 
-        const data = await response.json();
-
-        if (data.success) {
-          setProduct(data.product);
-
-          // Track this product in recently viewed
-          try {
-            const recentlyViewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-            const productId = data.product.id.toString();
-
-            // Remove if already exists (to move to front)
-            const filtered = recentlyViewed.filter(id => id !== productId);
-
-            // Add to beginning
-            filtered.unshift(productId);
-
-            // Keep only the most recent 20
-            const limited = filtered.slice(0, 20);
-
-            // Save back to localStorage
-            localStorage.setItem('recentlyViewed', JSON.stringify(limited));
-
-            // Track product view for recommendations
-            trackProductView(data.product.id);
-          } catch (err) {
-            console.error('Error updating recently viewed:', err);
-          }
-        } else {
-          throw new Error(data.message || 'Failed to fetch product');
-        }
-      } catch (err) {
-        console.error('Error fetching product:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
+    const bulkTier = product.bulkPricing.find(tier => {
+      const [min, max] = tier.quantity.split('-').map(q => q.replace('+', ''));
+      if (tier.quantity.includes('+')) {
+        return quantity >= parseInt(min);
       }
-    };
+      return quantity >= parseInt(min) && quantity <= parseInt(max);
+    });
 
-    fetchProduct();
-  }, [slug]);
+    return bulkTier ? bulkTier.price : product.price;
+  };
 
   const handleQuantityChange = (newQuantity) => {
-    setQuantity(newQuantity);
+    if (newQuantity >= 1) {
+      setQuantity(newQuantity);
+    }
   };
 
   if (loading) {
     return (
-      <Layout title="Loading Product" description="Loading product details...">
-        <div className="container">
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p>Loading product details...</p>
-          </div>
+      <>
+        <Header />
+        <div className={styles.loading}>
+          <div className="loading-spinner"></div>
+          <p>Loading product details...</p>
         </div>
-      </Layout>
-    );
-  }
-
-  if (error) {
-    return (
-      <Layout title="Error" description="An error occurred while loading the product">
-        <div className="container">
-          <div className="error-message">
-            <h1>Error</h1>
-            <p>{error}</p>
-            <Link href="/products" className="btn">
-              Back to Products
-            </Link>
-          </div>
-        </div>
-      </Layout>
+        <Footer />
+        <WhatsAppButton />
+      </>
     );
   }
 
   if (!product) {
     return (
-      <Layout title="Product Not Found" description="The requested product could not be found">
-        <div className="container">
-          <div className="error-message">
-            <h1>Product Not Found</h1>
-            <p>The requested product could not be found.</p>
-            <Link href="/products" className="btn">
-              Back to Products
-            </Link>
-          </div>
+      <>
+        <Header />
+        <div className={styles.notFound}>
+          <h1>Product Not Found</h1>
+          <p>The product you're looking for doesn't exist.</p>
+          <Link href="/search" className={styles.backButton}>
+            Browse All Products
+          </Link>
         </div>
-      </Layout>
+        <Footer />
+        <WhatsAppButton />
+      </>
     );
   }
 
   return (
-    <Layout
-      title={product.name}
-      description={product.description || `Buy ${product.name} from MDTS`}
-    >
-      <div className="container product-detail-container">
-        <div className={styles.breadcrumbs}>
-          <Link href="/">Home</Link> /
-          <Link href="/products">Products</Link> /
-          <Link href={`/categories/${product.category_slug || 'all'}`}>{product.category_name}</Link> /
-          <span>{product.name}</span>
-        </div>
+    <>
+      <Head>
+        <title>{product.name} | Nexus TechHub</title>
+        <meta name="description" content={product.description} />
+        <meta name="keywords" content={`${product.name}, ${product.category}, ${product.model}, repair parts, UAE`} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href={`https://nexustechhub.ae/products/${product.id}`} />
+      </Head>
 
-        <div className={styles.productDetail}>
-          <div className={styles.productMedia}>
-            <ProductImages product={product} />
-          </div>
+      <Header />
 
-          <div className={styles.productInfo}>
-            <h1 className={styles.productName}>{product.name}</h1>
+      <main className={styles.productDetail}>
+        <div className={styles.container}>
+          {/* Breadcrumb */}
+          <nav className={styles.breadcrumb}>
+            <Link href="/">Home</Link>
+            <span>/</span>
+            <Link href={`/${product.category.toLowerCase().replace(' ', '-')}`}>
+              {product.category}
+            </Link>
+            <span>/</span>
+            <span>{product.name}</span>
+          </nav>
 
-            <div className={styles.productMeta}>
-              <span className={styles.productCategory}>Category: {product.category_name}</span>
-              <span className={styles.productSku}>SKU: {product.sku || 'N/A'}</span>
-              {product.stock_status && (
-                <span className={`${styles.stockStatus} ${product.stock_status === 'In Stock' ? styles.inStock : styles.outOfStock}`}>
-                  {product.stock_status}
-                </span>
+          <div className={styles.productContent}>
+            <div className={styles.productImage}>
+              <img
+                src={product.image}
+                alt={product.name}
+                className={styles.mainImage}
+              />
+              {product.originalPrice && (
+                <span className={styles.saleTag}>Sale</span>
+              )}
+              {!product.inStock && (
+                <span className={styles.outOfStockTag}>Out of Stock</span>
               )}
             </div>
 
-            <div className={styles.productPrice}>
-              <span className={styles.currentPrice}>$82.34</span>
-            </div>
+            <div className={styles.productInfo}>
+              <h1 className={styles.productName}>{product.name}</h1>
+              <p className={styles.productModel}>{product.model}</p>
+              <p className={styles.productSku}>SKU: {product.sku}</p>
 
-            <div className={styles.productDescription}>
-              <p>{product.description || 'No description available for this product.'}</p>
-            </div>
+              <div className={styles.priceSection}>
+                <div className={styles.currentPrice}>
+                  {formatPrice(getCurrentPrice())}
+                </div>
+                {product.originalPrice && (
+                  <div className={styles.originalPrice}>
+                    {formatPrice(product.originalPrice)}
+                  </div>
+                )}
+              </div>
 
-            <div className={styles.productActions}>
-              <div className={styles.quantityWrapper}>
-                <label htmlFor="quantity">Quantity:</label>
-                <div className={styles.quantitySelector + " " + styles.horizontalQuantity}>
+              <div className={styles.stockStatus}>
+                {product.inStock ? (
+                  <span className={styles.inStock}>✓ In Stock</span>
+                ) : (
+                  <span className={styles.outOfStock}>⚠ Out of Stock</span>
+                )}
+              </div>
+
+              <div className={styles.description}>
+                <p>{product.description}</p>
+              </div>
+
+              <div className={styles.specifications}>
+                <h3>Specifications:</h3>
+                <ul>
+                  {product.specifications.map((spec, index) => (
+                    <li key={index}>{spec}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={styles.compatibility}>
+                <h3>Compatibility:</h3>
+                <div className={styles.compatibilityList}>
+                  {product.compatibility.map((device, index) => (
+                    <span key={index} className={styles.compatibilityTag}>
+                      {device}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className={styles.quantitySection}>
+                <label>Quantity:</label>
+                <div className={styles.quantityControls}>
                   <button
-                    onClick={() => handleQuantityChange(Math.max(1, quantity - 1))}
+                    onClick={() => handleQuantityChange(quantity - 1)}
                     disabled={quantity <= 1}
-                    className={styles.quantityButton}
                   >
                     -
                   </button>
                   <input
                     type="number"
-                    id="quantity"
                     value={quantity}
-                    min="1"
                     onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                    className={styles.quantityInput}
+                    min="1"
                   />
-                  <button
-                    onClick={() => handleQuantityChange(quantity + 1)}
-                    className={styles.quantityButton}
-                  >
+                  <button onClick={() => handleQuantityChange(quantity + 1)}>
                     +
                   </button>
                 </div>
               </div>
 
-              <AddToCart product={product} quantity={quantity} />
+              {quantity >= 10 && (
+                <div className={styles.bulkPricing}>
+                  <h3>Bulk Pricing:</h3>
+                  <div className={styles.pricingTiers}>
+                    {product.bulkPricing.map((tier, index) => (
+                      <div key={index} className={styles.pricingTier}>
+                        <span className={styles.tierQuantity}>{tier.quantity}</span>
+                        <span className={styles.tierPrice}>{formatPrice(tier.price)} each</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              <button className={styles.wishlistButton}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-                Add to Wishlist
-              </button>
-
-              <CompareButton product={product} />
-            </div>
-
-            <div className={styles.socialShareContainer}>
-              <h4 className={styles.socialShareTitle}>Share This Product</h4>
-              <SocialShare
-                url={`${typeof window !== 'undefined' ? window.location.origin : ''}/products/${product.slug}`}
-                title={product.name}
-                description={product.description || `Check out ${product.name} at MDTS - Midas Technical Solutions`}
-                image={product.image_url}
-              />
-            </div>
-
-            <div className={styles.productFeatures}>
-              <div className={styles.feature}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="1" y="3" width="15" height="13"></rect>
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                </svg>
-                <span>Free shipping on orders over $1000</span>
+              <div className={styles.actions}>
+                <button
+                  className={styles.quoteButton}
+                  disabled={!product.inStock}
+                >
+                  Request Quote
+                </button>
+                <button className={styles.contactButton}>
+                  Contact Sales
+                </button>
               </div>
 
-              <div className={styles.feature}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
-                </svg>
-                <span>30-day satisfaction guarantee</span>
-              </div>
-
-              <div className={styles.feature}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-                <span>Secure checkout</span>
+              <div className={styles.productFeatures}>
+                <div className={styles.feature}>
+                  <span>🚚 Fast UAE Delivery</span>
+                </div>
+                <div className={styles.feature}>
+                  <span>🛡️ {product.warranty} Warranty</span>
+                </div>
+                <div className={styles.feature}>
+                  <span>📞 24/7 Support</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </main>
 
-        <ProductTabs product={product} />
-
-        <ProductReviews productId={product.id} />
-
-        <FrequentlyBoughtTogether
-          productId={product.id}
-          currentProduct={product}
-          title="Frequently Bought Together"
-          limit={3}
-        />
-
-        <SimilarProducts
-          productId={product.id}
-          categoryId={product.category_id}
-          title="Similar Products"
-          subtitle="You might also be interested in these products"
-          limit={4}
-        />
-
-        <ProductRecommendations
-          currentProductId={product.id}
-          currentCategory={product.category_name}
-          title="You Might Also Like"
-        />
-
-        <RecentlyViewed
-          currentProductId={product.id}
-          title="Recently Viewed Products"
-        />
-      </div>
-    </Layout>
+      <Footer />
+      <WhatsAppButton />
+    </>
   );
 }

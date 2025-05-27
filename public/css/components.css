@@ -1,6 +1,6 @@
 /* Header styles */
 .header {
-  background-color: #10b981;
+  background-color: var(--primary-color);
   color: white;
   padding: 15px 0;
   position: sticky;

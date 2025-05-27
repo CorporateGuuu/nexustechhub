@@ -18,7 +18,7 @@
 }
 
 .addButton {
-  background-color: #0066cc;
+  background-color: var(--primary-color);
   color: white;
   padding: 10px 15px;
   border-radius: 4px;
@@ -30,7 +30,7 @@
 }
 
 .addButton:hover {
-  background-color: #0052a3;
+  background-color: var(--primary-dark);
 }
 
 .filterBar {
@@ -484,7 +484,7 @@
 }
 
 .saveButton {
-  background-color: #0066cc;
+  background-color: var(--primary-color);
   color: white;
   padding: 10px 20px;
   border: none;
@@ -495,7 +495,7 @@
 }
 
 .saveButton:hover {
-  background-color: #0052a3;
+  background-color: var(--primary-dark);
 }
 
 .saveButton:disabled {
@@ -594,7 +594,7 @@
   .settingsContainer {
     flex-direction: column;
   }
-  
+
   .settingsTabs {
     width: 100%;
     border-right: none;
@@ -603,31 +603,31 @@
     overflow-x: auto;
     padding: 0;
   }
-  
+
   .tabButton {
     padding: 15px;
     white-space: nowrap;
   }
-  
+
   .activeTab {
     border-left: none;
     border-bottom: 3px solid #0066cc;
   }
-  
+
   .formRow {
     flex-direction: column;
     gap: 0;
   }
-  
+
   .filterBar {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .searchForm {
     width: 100%;
   }
-  
+
   .searchInput {
     flex: 1;
   }
