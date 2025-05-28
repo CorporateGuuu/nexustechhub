@@ -1,63 +1,149 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { analytics } from '../components/Analytics';
 import styles from '../styles/Offline.module.css';
 
 function Offline() {
+  const [isOnline, setIsOnline] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+
+  useEffect(() => {
+    // Check online status
+    setIsOnline(navigator.onLine);
+
+    // Listen for online/offline events
+    const handleOnline = () => {
+      setIsOnline(true);
+      if (typeof analytics !== 'undefined') {
+        analytics.trackEngagement('back_online');
+      }
+      // Auto-reload when back online
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      if (typeof analytics !== 'undefined') {
+        analytics.trackEngagement('went_offline');
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Track offline page view
+    if (typeof analytics !== 'undefined') {
+      analytics.trackEngagement('offline_page_view');
+    }
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    if (typeof analytics !== 'undefined') {
+      analytics.trackEngagement('offline_retry_attempt', { attempt: retryCount + 1 });
+    }
+
+    // Check if online before reloading
+    if (navigator.onLine) {
+      window.location.reload();
+    } else {
+      // Show feedback that still offline
+      alert('Still offline. Please check your internet connection.');
+    }
+  };
+
+  const handleContactOffline = () => {
+    if (typeof analytics !== 'undefined') {
+      analytics.trackEngagement('offline_contact_attempt');
+    }
+    // Try to open WhatsApp (works offline if app is installed)
+    window.open('https://wa.me/971585531029?text=I was trying to access Nexus TechHub website but I\'m having connection issues.', '_blank');
+  };
+
   return (
     <>
       <Head>
-        <title>Offline | MDTS - Midas Technical Solutions</title>
+        <title>Offline - Nexus TechHub</title>
         <meta name="description" content="You are currently offline. Please check your internet connection." />
+        <meta name="robots" content="noindex, nofollow" />
       </Head>
 
       <div className={styles.offlineContainer}>
         <div className={styles.offlineContent}>
           <div className={styles.offlineIcon}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="1" y1="1" x2="23" y2="23"></line>
-              <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
-              <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
-              <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
-              <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
-              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-              <line x1="12" y1="20" x2="12.01" y2="20"></line>
-            </svg>
+            {isOnline ? '🌐' : '📱'}
           </div>
 
-          <h1 className={styles.offlineTitle}>You're Offline</h1>
+          <h1 className={styles.offlineTitle}>
+            {isOnline ? 'Connection Restored!' : 'You\'re Offline'}
+          </h1>
+
           <p className={styles.offlineMessage}>
-            It looks like you've lost your internet connection. Please check your connection and try again.
+            {isOnline
+              ? 'Great! Your internet connection is back. Reloading...'
+              : 'It looks like you\'ve lost your internet connection. Please check your connection and try again.'
+            }
           </p>
+
+          <div className={styles.status}>
+            <div className={`${styles.statusIndicator} ${isOnline ? styles.online : styles.offline}`}>
+              {isOnline ? '✅ Online' : '❌ Offline'}
+            </div>
+          </div>
 
           <div className={styles.offlineActions}>
             <button
               className={styles.retryButton}
-              onClick={() => window.location.reload()}
+              onClick={handleRetry}
+              disabled={isOnline}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M23 4v6h-6"></path>
-                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-              </svg>
-              Retry
+              {isOnline ? 'Reloading...' : 'Try Again'}
             </button>
 
             <Link href="/" className={styles.homeButton}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-              </svg>
               Go Home
             </Link>
+
+            <button
+              className={styles.contactButton}
+              onClick={handleContactOffline}
+            >
+              Contact via WhatsApp
+            </button>
           </div>
 
           <div className={styles.offlineTips}>
-            <h2>While you're offline, you can still:</h2>
+            <h2>While you're offline:</h2>
             <ul>
-              <li>View previously visited pages that have been cached</li>
-              <li>Browse your order history if you've viewed it before</li>
-              <li>Check your wishlist if you've viewed it before</li>
+              <li>✅ Your browsing data is saved locally</li>
+              <li>✅ Forms will be submitted when you're back online</li>
+              <li>✅ Some pages may still be available from cache</li>
+              <li>✅ WhatsApp contact still works if app is installed</li>
             </ul>
+          </div>
+
+          <div className={styles.cachedPages}>
+            <h3>Available Offline:</h3>
+            <div className={styles.pageLinks}>
+              <Link href="/iphone-parts" className={styles.pageLink}>iPhone Parts</Link>
+              <Link href="/samsung-parts" className={styles.pageLink}>Samsung Parts</Link>
+              <Link href="/contact" className={styles.pageLink}>Contact Info</Link>
+            </div>
+          </div>
+
+          <div className={styles.businessInfo}>
+            <h3>📞 Nexus TechHub Contact:</h3>
+            <p><strong>Phone:</strong> +971 58 553 1029</p>
+            <p><strong>Location:</strong> Ras Al Khaimah, UAE</p>
+            <p><strong>Hours:</strong> 9 AM - 6 PM (UAE Time)</p>
           </div>
         </div>
       </div>

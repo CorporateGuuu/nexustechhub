@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
@@ -142,7 +142,12 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -170,6 +175,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -184,6 +193,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,7 +239,7 @@ import ProductCard from '../ProductCard/ProductCard';
 import { getPersonalizedRecommendations } from '../../utils/recommendationEngine';
 import styles from './Recommendations.module.css';
 &nbsp;
-const PersonalizedRecommendations = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({ </span></span>
+const PersonalizedRecommendations = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
   title = <span class="branch-0 cbranch-no" title="branch not covered" >"Recommended For You",</span>
   subtitle = <span class="branch-0 cbranch-no" title="branch not covered" >"Based on your browsing history",</span>
   limit = <span class="branch-0 cbranch-no" title="branch not covered" >4</span>
@@ -237,19 +247,23 @@ const PersonalizedRecommendations = <span class="cstat-no" title="statement not 
   const { data: session } = <span class="cstat-no" title="statement not covered" >useSession();</span>
   const [recommendations, setRecommendations] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
   const [loading, setLoading] = <span class="cstat-no" title="statement not covered" >useState(true);</span>
-  
+&nbsp;
 <span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
     const fetchRecommendations = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      try {</span>
 <span class="cstat-no" title="statement not covered" >        setLoading(true);</span>
-        
+&nbsp;
         // Get user ID if logged in
         const userId = <span class="cstat-no" title="statement not covered" >session?.user?.id;</span>
-        
+&nbsp;
         // Get personalized recommendations
-        const recommendedProducts = <span class="cstat-no" title="statement not covered" >await getPersonalizedRecommendations(userId, limit);</span>
-        
-<span class="cstat-no" title="statement not covered" >        setRecommendations(recommendedProducts);</span>
+        const response = <span class="cstat-no" title="statement not covered" >await getPersonalizedRecommendations(userId, limit);</span>
+&nbsp;
+        // Extract the recommendations array from the response object
+        const recommendedProducts = <span class="cstat-no" title="statement not covered" >response?.recommendations || [];</span>
+&nbsp;
+        // Ensure we have an array before setting state
+<span class="cstat-no" title="statement not covered" >        setRecommendations(Array.isArray(recommendedProducts) ? recommendedProducts : []);</span>
       } catch (error) {
 <span class="cstat-no" title="statement not covered" >        console.error('Error fetching personalized recommendations:', error);</span>
 <span class="cstat-no" title="statement not covered" >        setRecommendations([]);</span>
@@ -257,10 +271,10 @@ const PersonalizedRecommendations = <span class="cstat-no" title="statement not 
 <span class="cstat-no" title="statement not covered" >        setLoading(false);</span>
       }
     };
-    
+&nbsp;
 <span class="cstat-no" title="statement not covered" >    fetchRecommendations();</span>
   }, [session, limit]);
-  
+&nbsp;
 <span class="cstat-no" title="statement not covered" >  if (loading) {</span>
 <span class="cstat-no" title="statement not covered" >    return (</span>
       &lt;div className={styles.recommendationsLoading}&gt;
@@ -268,11 +282,12 @@ const PersonalizedRecommendations = <span class="cstat-no" title="statement not 
       &lt;/div&gt;
     );
   }
-  
-<span class="cstat-no" title="statement not covered" >  if (recommendations.length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >    return null; </span>// Don't show anything if no recommendations
+&nbsp;
+  // Additional safety check to ensure recommendations is an array
+<span class="cstat-no" title="statement not covered" >  if (!Array.isArray(recommendations) || recommendations.length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >    return null; </span>// Don't show anything if no recommendations or invalid data
   }
-  
+&nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;section className={styles.recommendationsSection}&gt;
       &lt;div className="container"&gt;
@@ -280,15 +295,15 @@ const PersonalizedRecommendations = <span class="cstat-no" title="statement not 
           &lt;h2 className={styles.recommendationsTitle}&gt;{title}&lt;/h2&gt;
           {subtitle &amp;&amp; &lt;p className={styles.recommendationsSubtitle}&gt;{subtitle}&lt;/p&gt;}
         &lt;/div&gt;
-        
+&nbsp;
         &lt;div className={styles.recommendationsGrid}&gt;
-          {recommendations.map(<span class="fstat-no" title="function not covered" >pr</span>oduct =&gt; (
-<span class="cstat-no" title="statement not covered" >            &lt;div key={product.id} className={styles.recommendationItem}&gt;</span>
+          {recommendations &amp;&amp; Array.isArray(recommendations) &amp;&amp; recommendations.map(<span class="fstat-no" title="function not covered" >pr</span>oduct =&gt; (
+<span class="cstat-no" title="statement not covered" >            &lt;div key={product?.id || Math.random()} className={styles.recommendationItem}&gt;</span>
               &lt;ProductCard product={product} /&gt;
             &lt;/div&gt;
           ))}
         &lt;/div&gt;
-        
+&nbsp;
         &lt;div className={styles.viewAllContainer}&gt;
           &lt;Link href="/products" className={styles.viewAllLink}&gt;
             View All Products
@@ -307,7 +322,7 @@ export default PersonalizedRecommendations;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-25T19:05:22.890Z
+                at 2025-05-28T09:07:43.923Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
