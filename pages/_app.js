@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { GoogleAnalytics } from '../components/Analytics';
 import ChatBot from '../components/ChatBot';
 import ErrorBoundary from '../components/ErrorBoundary';
+import WebVitals from '../components/WebVitals';
 import { CartProvider } from '../contexts/CartContext';
 
 // Import global styles
@@ -24,6 +25,9 @@ function AppContent({ Component, pageProps }) {
 
         {/* Google Analytics */}
         <GoogleAnalytics />
+
+        {/* Core Web Vitals Monitoring */}
+        <WebVitals />
 
         <main>
           <Component {...pageProps} />

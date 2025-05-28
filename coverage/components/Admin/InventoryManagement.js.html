@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/163</span>
+                <span class='fraction'>0/169</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/154</span>
+                <span class='fraction'>0/160</span>
             </div>
         
             
@@ -1040,10 +1040,29 @@
 <a name='L975'></a><a href='#L975'>975</a>
 <a name='L976'></a><a href='#L976'>976</a>
 <a name='L977'></a><a href='#L977'>977</a>
-<a name='L978'></a><a href='#L978'>978</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L978'></a><a href='#L978'>978</a>
+<a name='L979'></a><a href='#L979'>979</a>
+<a name='L980'></a><a href='#L980'>980</a>
+<a name='L981'></a><a href='#L981'>981</a>
+<a name='L982'></a><a href='#L982'>982</a>
+<a name='L983'></a><a href='#L983'>983</a>
+<a name='L984'></a><a href='#L984'>984</a>
+<a name='L985'></a><a href='#L985'>985</a>
+<a name='L986'></a><a href='#L986'>986</a>
+<a name='L987'></a><a href='#L987'>987</a>
+<a name='L988'></a><a href='#L988'>988</a>
+<a name='L989'></a><a href='#L989'>989</a>
+<a name='L990'></a><a href='#L990'>990</a>
+<a name='L991'></a><a href='#L991'>991</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1055,6 +1074,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2017,7 +2043,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from 'react';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { toast } from 'react-toastify';
 import styles from '../../styles/InventoryManagement.module.css';
 &nbsp;
 export default function <span class="fstat-no" title="function not covered" >InventoryManagement(</span>) {
@@ -2031,6 +2058,13 @@ export default function <span class="fstat-no" title="function not covered" >Inv
   const [selectedProducts, setSelectedProducts] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
   const [bulkAction, setBulkAction] = <span class="cstat-no" title="statement not covered" >useState('');</span>
   const [showAddModal, setShowAddModal] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
+  const [showEditModal, setShowEditModal] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
+  const [editingProduct, setEditingProduct] = <span class="cstat-no" title="statement not covered" >useState(null);</span>
+  const [lowStockAlerts, setLowStockAlerts] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
+  const [realTimeUpdates, setRealTimeUpdates] = <span class="cstat-no" title="statement not covered" >useState(true);</span>
+  const [lastSync, setLastSync] = <span class="cstat-no" title="statement not covered" >useState(new Date());</span>
+  const intervalRef = <span class="cstat-no" title="statement not covered" >useRef(null);</span>
+&nbsp;
   const [newProduct, setNewProduct] = <span class="cstat-no" title="statement not covered" >useState({</span>
     name: '',
     sku: '',
@@ -2038,7 +2072,12 @@ export default function <span class="fstat-no" title="function not covered" >Inv
     price: '',
     cost: '',
     stock: '',
-    description: ''
+    description: '',
+    lowStockThreshold: 5,
+    supplier: '',
+    location: '',
+    weight: '',
+    dimensions: ''
   });
 &nbsp;
   // Mock categories
@@ -3001,7 +3040,7 @@ export default function <span class="fstat-no" title="function not covered" >Inv
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-25T19:05:23.328Z
+                at 2025-05-28T09:07:44.928Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

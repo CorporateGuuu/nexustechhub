@@ -1,0 +1,24 @@
+{
+  "siteName": "Nexus TechHub",
+  "version": "0.1.0",
+  "buildId": "T6yNFmH1b5fK5kalxq6S2",
+  "buildTime": "2025-05-28T13:48:32.070Z",
+  "nodeVersion": "v23.11.0",
+  "environment": "production",
+  "features": [
+    "Enhanced Stripe Checkout (AED) with UAE Market Integration",
+    "Real-time Inventory Management with Webhook Automation",
+    "Customer Portal with NextAuth.js & Google OAuth",
+    "Progressive Web App (PWA) with Push Notifications",
+    "Advanced SEO & Schema Markup for UAE Market",
+    "Production Monitoring & Error Logging with Sentry",
+    "Cloudinary Image Optimization & CDN",
+    "Business Operations Automation with Zapier",
+    "Customer Support Chatbot with UAE Knowledge Base",
+    "Email Service Integration with UAE Branding"
+  ],
+  "urls": {
+    "production": "https://nexustechhub.netlify.app",
+    "github": "https://github.com/CorporateGuuu/nexustechhub"
+  }
+}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { toast } from 'react-toastify';
 import styles from '../../styles/InventoryManagement.module.css';
 
 export default function InventoryManagement() {
@@ -12,6 +13,13 @@ export default function InventoryManagement() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [bulkAction, setBulkAction] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [lowStockAlerts, setLowStockAlerts] = useState([]);
+  const [realTimeUpdates, setRealTimeUpdates] = useState(true);
+  const [lastSync, setLastSync] = useState(new Date());
+  const intervalRef = useRef(null);
+
   const [newProduct, setNewProduct] = useState({
     name: '',
     sku: '',
@@ -19,7 +27,12 @@ export default function InventoryManagement() {
     price: '',
     cost: '',
     stock: '',
-    description: ''
+    description: '',
+    lowStockThreshold: 5,
+    supplier: '',
+    location: '',
+    weight: '',
+    dimensions: ''
   });
 
   // Mock categories

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>12/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">64.7% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>11/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -172,36 +172,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -274,51 +274,51 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from '../styles/DeviceGradingPopup.module.css';
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >DeviceGradingPopup(</span>) {
-  const [isVisible, setIsVisible] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
-  const router = <span class="cstat-no" title="statement not covered" >useRouter();</span>
-  
-<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+export default function DeviceGradingPopup() {
+  const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
+&nbsp;
+  useEffect(() =&gt; {
     // Check if the user has already seen the popup
-    const hasSeenPopup = <span class="cstat-no" title="statement not covered" >localStorage.getItem('hasSeenGradingPopup');</span>
-    
-<span class="cstat-no" title="statement not covered" >    if (!hasSeenPopup) {</span>
+    const hasSeenPopup = localStorage.getItem('hasSeenGradingPopup');
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasSeenPopup) {
       // Show popup after 5 seconds
-      const timer = <span class="cstat-no" title="statement not covered" >setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+      const timer = setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >        setIsVisible(true);</span>
       }, 5000);
-      
-<span class="cstat-no" title="statement not covered" >      return <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >clearTimeout(timer);</span></span>
+&nbsp;
+      return () =&gt; clearTimeout(timer);
     }
   }, []);
-  
-  const handleClose = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+&nbsp;
+  const handleClose = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    setIsVisible(false);</span>
     // Remember that the user has seen the popup
 <span class="cstat-no" title="statement not covered" >    localStorage.setItem('hasSeenGradingPopup', 'true');</span>
   };
-  
-  const handleLearnMore = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+&nbsp;
+  const handleLearnMore = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    router.push('/device-grading');</span>
 <span class="cstat-no" title="statement not covered" >    handleClose();</span>
   };
-  
-<span class="cstat-no" title="statement not covered" >  if (!isVisible) {</span>
-<span class="cstat-no" title="statement not covered" >    return null;</span>
+&nbsp;
+  <span class="missing-if-branch" title="else path not taken" >E</span>if (!isVisible) {
+    return null;
   }
-  
+&nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;div className={styles.popupOverlay}&gt;
       &lt;div className={styles.popupContainer}&gt;
         &lt;button className={styles.closeButton} onClick={handleClose}&gt;
           &amp;times;
         &lt;/button&gt;
-        
+&nbsp;
         &lt;div className={styles.popupHeader}&gt;
           &lt;h2&gt;Device Grading System&lt;/h2&gt;
           &lt;p&gt;Learn about our standardized grading system for devices and parts&lt;/p&gt;
         &lt;/div&gt;
-        
+&nbsp;
         &lt;div className={styles.popupContent}&gt;
           &lt;div className={styles.gradingCards}&gt;
             &lt;div className={styles.gradingCard}&gt;
@@ -326,44 +326,44 @@ export default function <span class="fstat-no" title="function not covered" >Dev
               &lt;h3&gt;Excellent&lt;/h3&gt;
               &lt;p&gt;Like new condition with no visible wear&lt;/p&gt;
             &lt;/div&gt;
-            
+&nbsp;
             &lt;div className={styles.gradingCard}&gt;
               &lt;div className={styles.gradeBadge} style={{ backgroundColor: '#2196F3' }}&gt;Grade B&lt;/div&gt;
               &lt;h3&gt;Good&lt;/h3&gt;
               &lt;p&gt;Minor wear but fully functional&lt;/p&gt;
             &lt;/div&gt;
-            
+&nbsp;
             &lt;div className={styles.gradingCard}&gt;
               &lt;div className={styles.gradeBadge} style={{ backgroundColor: '#FFC107' }}&gt;Grade C&lt;/div&gt;
               &lt;h3&gt;Fair&lt;/h3&gt;
               &lt;p&gt;Noticeable wear but working properly&lt;/p&gt;
             &lt;/div&gt;
-            
+&nbsp;
             &lt;div className={styles.gradingCard}&gt;
               &lt;div className={styles.gradeBadge} style={{ backgroundColor: '#F44336' }}&gt;Grade D&lt;/div&gt;
               &lt;h3&gt;Poor&lt;/h3&gt;
               &lt;p&gt;Significant wear with possible issues&lt;/p&gt;
             &lt;/div&gt;
           &lt;/div&gt;
-          
+&nbsp;
           &lt;div className={styles.popupInfo}&gt;
             &lt;p&gt;
-              At MDTS, we use a standardized grading system to evaluate the condition of devices and parts.
+              At Nexus TechHub, we use a standardized grading system to evaluate the condition of devices and parts.
               This ensures transparency and fair pricing for all our customers.
             &lt;/p&gt;
-            
+&nbsp;
             &lt;p&gt;
               Whether you're buying a refurbished device or selling through our LCD Buyback Program,
               understanding our grading system helps you make informed decisions.
             &lt;/p&gt;
           &lt;/div&gt;
         &lt;/div&gt;
-        
+&nbsp;
         &lt;div className={styles.popupFooter}&gt;
           &lt;button className={styles.learnMoreButton} onClick={handleLearnMore}&gt;
             Learn More
           &lt;/button&gt;
-          
+&nbsp;
           &lt;Link href="/lcd-buyback" className={styles.buybackButton}&gt;
             LCD Buyback Program
           &lt;/Link&gt;
@@ -379,7 +379,7 @@ export default function <span class="fstat-no" title="function not covered" >Dev
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-25T19:05:23.328Z
+                at 2025-05-28T09:07:44.928Z
             </div>
         <script src="../prettify.js"></script>
         <script>
