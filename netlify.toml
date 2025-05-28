@@ -1,8 +1,8 @@
-# Netlify configuration for Nexus TechHub Next.js Application
+# Netlify configuration for Nexus TechHub Next.js Application with API Routes
 [build]
   command = "npm run build"
   publish = ".next"
-  functions = "netlify/functions"
+  functions = ".netlify/functions"
   base = "."
 
 [build.environment]
@@ -51,7 +51,18 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/api/:splat"
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200
+
+# Specific API route handling for UAE VAT endpoints
+[[redirects]]
+  from = "/api/stripe/calculate-tax"
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200
+
+[[redirects]]
+  from = "/api/stripe/refund-with-tax"
+  to = "/.netlify/functions/___netlify-handler"
   status = 200
 
 # Enhanced Security and performance headers for Production
@@ -190,6 +201,9 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    # Enable API routes and server-side rendering
+    target = "server"
 
 [[plugins]]
   package = "@netlify/plugin-sitemap"
