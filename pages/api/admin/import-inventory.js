@@ -1,9 +1,10 @@
-import { getSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 import formidable from 'formidable';
 import fs from 'fs';
 import csv from 'csv-parser';
 import { Pool } from 'pg';
-import XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
 // Configure formidable to handle file uploads
 export const config = {
@@ -25,7 +26,7 @@ export default async function handler(req, res) {
   }
 
   // Check authentication and admin status
-  const session = await getSession({ req });
+  const session = await getServerSession(req, res, authOptions);
   if (!session || !session.user.isAdmin) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
@@ -99,7 +100,7 @@ async function parseCSV(filePath, mapping, source) {
   });
 }
 
-// Parse Excel file with security measures
+// Parse Excel file with security measures using ExcelJS
 async function parseExcel(filePath, mapping, source) {
   const products = [];
 
@@ -110,48 +111,46 @@ async function parseExcel(filePath, mapping, source) {
       throw new Error('File size exceeds 10MB limit');
     }
 
-    // Read with security options
-    const workbook = XLSX.readFile(filePath, {
-      cellDates: true,
-      cellNF: false,
-      cellText: false,
-      cellHTML: false,
-      sheetStubs: false,
-      bookDeps: false,
-      bookFiles: false,
-      bookProps: false,
-      bookSheets: false,
-      bookVBA: false
-    });
+    // Create workbook and read file with ExcelJS (more secure)
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.readFile(filePath);
 
-    if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+    if (!workbook.worksheets || workbook.worksheets.length === 0) {
       throw new Error('No sheets found in Excel file');
     }
 
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
+    const worksheet = workbook.worksheets[0];
 
     if (!worksheet) {
       throw new Error('Unable to read worksheet');
     }
 
-    const data = XLSX.utils.sheet_to_json(worksheet, {
-      header: 1,
-      defval: '',
-      blankrows: false,
-      raw: false
+    // Get all rows as values
+    const rows = [];
+    worksheet.eachRow((row, rowNumber) => {
+      const values = [];
+      row.eachCell((cell, colNumber) => {
+        // Convert cell value to string to prevent injection
+        values[colNumber - 1] = String(cell.value || '');
+      });
+      rows.push(values);
     });
+
+    if (rows.length === 0) {
+      throw new Error('No data found in Excel file');
+    }
 
     // Limit number of rows to prevent DoS
     const maxRows = 10000;
-    const limitedData = data.slice(0, maxRows);
+    const limitedRows = rows.slice(0, maxRows);
+    const headerRow = limitedRows[0];
 
-    limitedData.forEach((row, index) => {
+    limitedRows.forEach((row, index) => {
       if (index === 0) return; // Skip header row
 
       // Convert array to object using header row
       const rowObject = {};
-      data[0].forEach((header, colIndex) => {
+      headerRow.forEach((header, colIndex) => {
         rowObject[header] = row[colIndex] || '';
       });
 

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">77.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>7/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>1/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">77.77% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>7/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -114,24 +114,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,24 +161,24 @@
 import { useState } from 'react';
 import styles from './WhatsApp.module.css';
 &nbsp;
-const WhatsAppButton = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> phoneNumber = <span class="branch-0 cbranch-no" title="branch not covered" >'+971585531029',</span> message = <span class="branch-0 cbranch-no" title="branch not covered" >'Hello! I have a question about your products.' </span>}) =&gt; {</span>
-  const [isTooltipVisible, setIsTooltipVisible] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
+const WhatsAppButton = ({ phoneNumber = '+971585531029', message = 'Hello! I have a question about your products.' }) =&gt; {
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 &nbsp;
   // Format the phone number (remove any non-numeric characters)
-  const formattedPhone = <span class="cstat-no" title="statement not covered" >phoneNumber.replace(/\D/g, '');</span>
+  const formattedPhone = phoneNumber.replace(/\D/g, '');
 &nbsp;
   // Create the WhatsApp URL
-  const whatsappUrl = <span class="cstat-no" title="statement not covered" >`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;</span>
+  const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
 &nbsp;
-  const handleMouseEnter = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+  const handleMouseEnter = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    setIsTooltipVisible(true);</span>
   };
 &nbsp;
-  const handleMouseLeave = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+  const handleMouseLeave = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    setIsTooltipVisible(false);</span>
   };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div className={styles.whatsappContainer}&gt;
       &lt;a
         href={whatsappUrl}
@@ -195,7 +195,7 @@ const WhatsAppButton = <span class="cstat-no" title="statement not covered" ><sp
       &lt;/a&gt;
 &nbsp;
       {isTooltipVisible &amp;&amp; (
-        &lt;div className={styles.whatsappTooltip}&gt;
+<span class="branch-1 cbranch-no" title="branch not covered" >        &lt;div className={styles.whatsappTooltip}&gt;</span>
           Chat with us on WhatsApp
         &lt;/div&gt;
       )}
@@ -211,7 +211,7 @@ export default WhatsAppButton;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-25T19:05:23.328Z
+                at 2025-05-28T09:07:44.928Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

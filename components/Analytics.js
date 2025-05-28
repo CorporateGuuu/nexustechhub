@@ -47,7 +47,7 @@ export function GoogleAnalytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            
+
             gtag('config', '${GA_TRACKING_ID}', {
               page_title: document.title,
               page_location: window.location.href,
@@ -65,7 +65,7 @@ export function GoogleAnalytics() {
               allow_google_signals: true,
               allow_ad_personalization_signals: false
             });
-            
+
             // Custom events for Nexus TechHub
             gtag('event', 'page_view', {
               event_category: 'engagement',
@@ -265,6 +265,54 @@ export const analytics = {
         metric_value: value
       }
     });
+  },
+
+  // Track Core Web Vitals
+  trackWebVitals: (metric) => {
+    analytics.event({
+      action: 'web_vitals',
+      category: 'performance',
+      label: metric.name,
+      value: Math.round(metric.value),
+      custom_parameters: {
+        metric_name: metric.name,
+        metric_value: metric.value,
+        metric_rating: metric.rating,
+        metric_delta: metric.delta,
+        page_url: window.location.pathname
+      }
+    });
+  },
+
+  // Track business conversions
+  trackConversion: (type, value = 0, details = {}) => {
+    analytics.event({
+      action: 'conversion',
+      category: 'business',
+      label: type,
+      value: value,
+      custom_parameters: {
+        conversion_type: type,
+        conversion_value: value,
+        currency: 'AED',
+        ...details
+      }
+    });
+  },
+
+  // Track UAE-specific metrics
+  trackUAEMetrics: (action, details = {}) => {
+    analytics.event({
+      action: action,
+      category: 'uae_market',
+      label: 'regional_tracking',
+      custom_parameters: {
+        market: 'UAE',
+        region: 'Middle_East',
+        business_type: 'mobile_repair_parts',
+        ...details
+      }
+    });
   }
 };
 
@@ -313,7 +361,7 @@ export function PrivacyCompliantAnalytics({ children }) {
   useEffect(() => {
     // Check for user consent (implement based on your privacy policy)
     const hasConsent = localStorage.getItem('analytics_consent') === 'true';
-    
+
     if (hasConsent && typeof window !== 'undefined' && window.gtag) {
       // Enable analytics
       window.gtag('consent', 'update', {

@@ -1,19 +1,19 @@
 import { pool } from '../../../../utils/db';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]';
 
 export default async function handler(req, res) {
   // Check if user is authenticated and is an admin
   const session = await getServerSession(req, res, authOptions);
-  
+
   if (!session || !session.user.isAdmin) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
-  
+
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
-  
+
   try {
     // Get analytics data
     try {
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       `;
       const conversationsResult = await pool.query(conversationsQuery);
       const totalConversations = parseInt(conversationsResult.rows[0].count);
-      
+
       // Get total messages
       const messagesQuery = `
         SELECT COUNT(*) as count
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       `;
       const messagesResult = await pool.query(messagesQuery);
       const totalMessages = parseInt(messagesResult.rows[0].count);
-      
+
       // Get average messages per conversation
       const avgMessagesQuery = `
         SELECT AVG(message_count) as avg
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       `;
       const avgMessagesResult = await pool.query(avgMessagesQuery);
       const avgMessagesPerConversation = parseFloat(avgMessagesResult.rows[0].avg) || 0;
-      
+
       // Get top intents
       const topIntentsQuery = `
         SELECT intent as name, COUNT(*) as count
@@ -55,10 +55,10 @@ export default async function handler(req, res) {
       `;
       const topIntentsResult = await pool.query(topIntentsQuery);
       const topIntents = topIntentsResult.rows;
-      
+
       // Calculate satisfaction rate (mock data for demo)
       const satisfactionRate = 0.85;
-      
+
       return res.status(200).json({
         success: true,
         analytics: {
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
       });
     } catch (dbError) {
       console.error('Database error:', dbError);
-      
+
       // Return mock data for demo purposes
       return res.status(200).json({
         success: true,
