@@ -1,7 +1,9 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import EmailProvider from 'next-auth/providers/email';
 import bcrypt from 'bcrypt';
+import { createTransport } from 'nodemailer';
 
 // Create fallback functions if imports fail
 const dbFallback = {
@@ -208,6 +210,99 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+    }),
+
+    // Email Provider for Production
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST || process.env.SMTP_HOST,
+        port: parseInt(process.env.EMAIL_SERVER_PORT || process.env.SMTP_PORT || '587'),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER || process.env.SMTP_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD || process.env.SMTP_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM || 'noreply@nexustechhub.ae',
+
+      // Custom email template for UAE market
+      sendVerificationRequest: async ({ identifier: email, url, provider }) => {
+        const { host } = new URL(url);
+        const transport = createTransport(provider.server);
+
+        const brandColor = '#10b981';
+        const emailHtml = `
+          <body style="background: #f9fafb; font-family: Helvetica, Arial, sans-serif;">
+            <table width="100%" border="0" cellspacing="20" cellpadding="0"
+              style="background: #fff; max-width: 600px; margin: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+              <tr>
+                <td align="center" style="padding: 40px 20px 20px 20px;">
+                  <img src="https://nexustechhub.netlify.app/images/nexus-logo.svg" alt="Nexus TechHub" style="height: 60px; margin-bottom: 20px;">
+                  <h1 style="color: #1f2937; font-size: 24px; margin: 0;">Welcome to Nexus TechHub</h1>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding: 0 20px 20px 20px;">
+                  <p style="color: #6b7280; font-size: 16px; line-height: 24px; margin: 0 0 30px 0;">
+                    Click the button below to sign in to your account and access premium mobile device parts.
+                  </p>
+                  <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td align="center" style="border-radius: 8px;" bgcolor="${brandColor}">
+                        <a href="${url}" target="_blank"
+                          style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #fff; text-decoration: none; border-radius: 8px; padding: 15px 30px; border: 1px solid ${brandColor}; display: inline-block; font-weight: bold;">
+                          Sign in to Your Account
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding: 0 20px 40px 20px;">
+                  <div style="background: #f0fdf4; border: 1px solid #d1fae5; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                    <h3 style="color: #065f46; font-size: 16px; margin: 0 0 10px 0;">🇦🇪 UAE's Premier Mobile Parts Store</h3>
+                    <ul style="color: #047857; font-size: 14px; margin: 0; padding-left: 20px; text-align: left;">
+                      <li>Premium iPhone, Samsung & iPad parts</li>
+                      <li>Professional repair tools & equipment</li>
+                      <li>Fast shipping across UAE</li>
+                      <li>Expert technical support</li>
+                    </ul>
+                  </div>
+                  <p style="color: #9ca3af; font-size: 12px; line-height: 18px; margin: 20px 0 0 0;">
+                    If you did not request this email, you can safely ignore it.<br>
+                    This link will expire in 24 hours for your security.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding: 20px; background: #f9fafb; border-radius: 0 0 10px 10px;">
+                  <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                    <strong>Nexus TechHub</strong><br>
+                    Ras Al Khaimah, United Arab Emirates<br>
+                    Phone: <a href="tel:+971585531029" style="color: ${brandColor};">+971 58 553 1029</a> |
+                    WhatsApp: <a href="https://wa.me/971585531029" style="color: ${brandColor};">Chat with us</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </body>
+        `;
+
+        await transport.sendMail({
+          to: email,
+          from: provider.from,
+          subject: `Sign in to Nexus TechHub - UAE's Premier Mobile Parts Store`,
+          text: `Sign in to Nexus TechHub\n\nClick here to sign in: ${url}\n\nIf you did not request this email, you can safely ignore it.\n\nNexus TechHub\nRas Al Khaimah, UAE\n+971 58 553 1029`,
+          html: emailHtml,
+        });
+      },
     }),
   ],
   pages: {

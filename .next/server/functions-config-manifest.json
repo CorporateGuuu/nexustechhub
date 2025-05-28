@@ -1,1 +1,4 @@
-{"version":1,"functions":{"/api/admin/import-inventory":{},"/api/auth/[...nextauth]":{},"/api/contact":{},"/api/quote":{},"/api/webhooks/stripe":{},"/account":{},"/admin/customers":{},"/admin/dashboard":{},"/admin/orders":{},"/admin/products":{},"/admin/settings":{},"/auth/signin":{},"/device-grading":{},"/device-system":{},"/orders/track/[id]":{},"/orders/[orderNumber]/details":{},"/tech-stack":{},"/user/profile":{}}}
+{
+  "version": 1,
+  "functions": {}
+}

@@ -1,19 +1,19 @@
 import { pool } from '../../../../utils/db';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]';
 
 export default async function handler(req, res) {
   // Check if user is authenticated and is an admin
   const session = await getServerSession(req, res, authOptions);
-  
+
   if (!session || !session.user.isAdmin) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
-  
+
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
-  
+
   try {
     // Get support articles
     const query = `
@@ -21,17 +21,17 @@ export default async function handler(req, res) {
       FROM support_articles
       ORDER BY updated_at DESC
     `;
-    
+
     try {
       const { rows } = await pool.query(query);
-      
+
       return res.status(200).json({
         success: true,
         articles: rows
       });
     } catch (dbError) {
       console.error('Database error:', dbError);
-      
+
       // Return mock data for demo purposes
       return res.status(200).json({
         success: true,

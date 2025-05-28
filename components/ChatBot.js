@@ -263,8 +263,47 @@ export default function ChatBot() {
         analytics.trackWhatsAppClick('chatbot');
         break;
       case "Request Quote":
-        // Trigger quote modal or redirect
-        addBotMessage("I'll connect you with our sales team for a personalized quote. Please click the button below to start your quote request.", null);
+      case "Request Wholesale Quote":
+        // Enhanced quote integration
+        addBotMessage("🎯 I'll help you get a personalized quote! Here are your options:", [
+          "Quick Quote (1-3 items)",
+          "Bulk Order Quote (5+ items)",
+          "Wholesale Pricing",
+          "Custom Requirements"
+        ]);
+        analytics.trackConversion('quote_request_initiated', 0, { source: 'chatbot' });
+        break;
+      case "Quick Quote (1-3 items)":
+        addBotMessage("📋 For a quick quote, please provide:\n\n1. Product name/model\n2. Quantity needed\n3. Your contact details\n\nOr visit our quote page for a detailed form.", ["Go to Quote Page", "Continue Here"]);
+        break;
+      case "Bulk Order Quote (5+ items)":
+        addBotMessage("📦 Bulk orders get special pricing! Benefits:\n\n• 5-9 items: 10% discount\n• 10+ items: 15% discount\n• Free technical support\n• Priority processing\n\nReady to start your bulk quote?", ["Start Bulk Quote", "Learn More"]);
+        break;
+      case "Wholesale Pricing":
+        addBotMessage("💼 Wholesale pricing available for:\n\n• Repair shops\n• Technicians\n• Resellers\n• Regular bulk buyers\n\nSpecial rates up to 25% off retail prices!", ["Apply for Wholesale", "Contact Sales Team"]);
+        analytics.trackUAEMetrics('wholesale_inquiry', { source: 'chatbot' });
+        break;
+      case "Go to Quote Page":
+        window.open("/quote", "_blank");
+        analytics.trackConversion('quote_page_visit', 0, { source: 'chatbot' });
+        addBotMessage("✅ Quote page opened in a new tab. I'll stay here if you need any help filling it out!");
+        break;
+      case "Start Bulk Quote":
+      case "Apply for Wholesale":
+        window.open("/quote?type=wholesale", "_blank");
+        analytics.trackConversion('wholesale_quote_initiated', 0, { source: 'chatbot' });
+        addBotMessage("🎯 Wholesale quote page opened! Our team will review your application and contact you within 24 hours with special pricing.");
+        break;
+      case "Contact Sales Team":
+        addBotMessage("📞 Our sales team is ready to help:\n\n• Phone: +971 58 553 1029\n• WhatsApp: Instant response\n• Email: sales@nexustechhub.ae\n\nBest time to call: 9 AM - 6 PM UAE time", ["Call Sales", "WhatsApp Sales"]);
+        break;
+      case "Call Sales":
+        window.open("tel:+971585531029", "_self");
+        analytics.trackPhoneCall('sales_chatbot');
+        break;
+      case "WhatsApp Sales":
+        window.open("https://wa.me/971585531029?text=Hi, I'm interested in wholesale pricing and bulk orders for mobile repair parts.", "_blank");
+        analytics.trackWhatsAppClick('sales_chatbot');
         break;
       case "Speak to Human":
         addBotMessage("I'll connect you with our support team. You can reach them via:\n\n📞 Phone: +971 58 553 1029\n💬 WhatsApp: Available 24/7\n📧 Email: info@nexustechhub.ae", ["Call Now", "WhatsApp Now"]);

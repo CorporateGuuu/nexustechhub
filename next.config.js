@@ -3,7 +3,6 @@ const path = require('path');
 
 const nextConfig = {
   reactStrictMode: false, // Disable to prevent Fast Refresh issues
-  swcMinify: true, // Use SWC for faster builds
   images: {
     domains: ['localhost', 'nexustechhub.ae', 'nexustechhub.netlify.app', 'images.unsplash.com'],
     formats: ['image/avif', 'image/webp'],
