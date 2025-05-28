@@ -2,7 +2,7 @@
 [build]
   command = "npm run build"
   publish = ".next"
-  functions = ".netlify/functions"
+  functions = "netlify/functions"
   base = "."
 
 [build.environment]
@@ -57,9 +57,15 @@
 # Specific API route handling for UAE VAT endpoints
 [[redirects]]
   from = "/api/stripe/calculate-tax"
-  to = "/.netlify/functions/___netlify-handler"
+  to = "/.netlify/functions/calculate-tax"
   status = 200
 
+[[redirects]]
+  from = "/api/test"
+  to = "/.netlify/functions/test-api"
+  status = 200
+
+# Keep Next.js API routes for other endpoints
 [[redirects]]
   from = "/api/stripe/refund-with-tax"
   to = "/.netlify/functions/___netlify-handler"
