@@ -207,9 +207,6 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    # Enable API routes and server-side rendering
-    target = "server"
 
 [[plugins]]
   package = "@netlify/plugin-sitemap"
