@@ -6,8 +6,8 @@
   base = "."
 
 [build.environment]
-  NODE_VERSION = "18.17.0"
-  NPM_VERSION = "9.6.7"
+  NODE_VERSION = "20.11.0"
+  NPM_VERSION = "10.2.4"
   NETLIFY_USE_PYTHON = "false"
   NETLIFY_USE_YARN = "false"
   NODE_OPTIONS = "--max-old-space-size=4096"
