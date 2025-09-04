@@ -5,7 +5,31 @@ import FeaturedProducts from '../components/FeaturedProducts/FeaturedProducts';
 import WhatsAppButton from '../components/WhatsAppButton';
 import Footer from '../components/Footer';
 import Link from 'next/link';
+import MediaGallery from '../components/MediaGallery/MediaGallery';
 import styles from '../styles/Home.module.css';
+
+const homepageMedia = [
+  {
+    type: 'image',
+    src: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop',
+    alt: 'Professional Mobile Repair Tools',
+  },
+  {
+    type: 'image',
+    src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop',
+    alt: 'iPhone Repair Parts',
+  },
+  {
+    type: 'image',
+    src: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=800&h=400&fit=crop',
+    alt: 'Samsung Galaxy Repair',
+  },
+  {
+    type: 'video',
+    src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',
+    poster: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop',
+  },
+];
 
 export default function Home() {
   // Sample product data - replace with actual data from API
@@ -15,7 +39,7 @@ export default function Home() {
       name: 'iPhone 15 Pro Screen',
       category: 'iPhone Parts',
       price: 299.99,
-      imageUrl: '/images/products/iphone-15-screen.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
       badge: 'New'
     },
     {
@@ -23,7 +47,7 @@ export default function Home() {
       name: 'Samsung S24 Battery',
       category: 'Samsung Parts',
       price: 49.99,
-      imageUrl: '/images/products/samsung-s24-battery.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=200&fit=crop',
       badge: 'Best Seller'
     },
     {
@@ -31,14 +55,14 @@ export default function Home() {
       name: 'iPad Pro 12.9" Screen',
       category: 'iPad Parts',
       price: 399.99,
-      imageUrl: '/images/products/ipad-pro-screen.jpg'
+      imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop'
     },
     {
       id: 4,
       name: 'Professional Repair Kit',
       category: 'Tools',
       price: 149.99,
-      imageUrl: '/images/products/repair-kit.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop',
       badge: 'Popular'
     }
   ];
@@ -49,7 +73,7 @@ export default function Home() {
       name: 'iPhone 15 Pro Max Screen',
       category: 'iPhone Parts',
       price: 349.99,
-      imageUrl: '/images/products/iphone-15-pro-max-screen.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
       badge: 'New Arrival'
     },
     {
@@ -57,7 +81,7 @@ export default function Home() {
       name: 'Samsung Z Fold 5 Hinge',
       category: 'Samsung Parts',
       price: 89.99,
-      imageUrl: '/images/products/samsung-z-fold-hinge.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=200&fit=crop',
       badge: 'New'
     },
     {
@@ -65,14 +89,14 @@ export default function Home() {
       name: 'MacBook Pro 16" Screen',
       category: 'MacBook Parts',
       price: 599.99,
-      imageUrl: '/images/products/macbook-pro-screen.jpg'
+      imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=200&fit=crop'
     },
     {
       id: 8,
       name: 'Soldering Station Pro',
       category: 'Tools',
       price: 199.99,
-      imageUrl: '/images/products/soldering-station.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop',
       badge: 'New'
     }
   ];
@@ -83,7 +107,7 @@ export default function Home() {
       name: 'iPhone 14 Screen',
       category: 'iPhone Parts',
       price: 249.99,
-      imageUrl: '/images/products/iphone-14-screen.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop',
       badge: 'Best Seller'
     },
     {
@@ -91,7 +115,7 @@ export default function Home() {
       name: 'Samsung S23 Battery',
       category: 'Samsung Parts',
       price: 39.99,
-      imageUrl: '/images/products/samsung-s23-battery.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=200&fit=crop',
       badge: 'Best Seller'
     },
     {
@@ -99,14 +123,14 @@ export default function Home() {
       name: 'iPad Air 5 Screen',
       category: 'iPad Parts',
       price: 299.99,
-      imageUrl: '/images/products/ipad-air-screen.jpg'
+      imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop'
     },
     {
       id: 12,
       name: 'Screwdriver Set 64pcs',
       category: 'Tools',
       price: 79.99,
-      imageUrl: '/images/products/screwdriver-set.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=200&fit=crop',
       badge: 'Best Seller'
     }
   ];
@@ -122,6 +146,9 @@ export default function Home() {
 
       <UnifiedHeader />
       <Hero />
+
+      {/* Interactive Media Gallery */}
+      <MediaGallery media={homepageMedia} autoplay={true} autoplayDelay={4000} showThumbs={true} />
 
       {/* Featured Products Section */}
       <FeaturedProducts products={featuredProducts} />
