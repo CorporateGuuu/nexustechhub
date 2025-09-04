@@ -1,0 +1,107 @@
+{
+  "header_structure": {
+    "has_top_banner": false,
+    "logo_position": "left",
+    "search_bar": true,
+    "cart_icon": true,
+    "account_menu": true,
+    "shipping_cutoff": true,
+    "layout": "multi-row"
+  },
+  "navigation": {
+    "type": "mega-menu",
+    "menu_items_count": 337,
+    "has_dropdown": false,
+    "mobile_menu": true,
+    "categories": [
+      "Apple",
+      "Samsung",
+      "Motorola",
+      "Google",
+      "Other Parts",
+      "Accessories",
+      "Tools"
+    ]
+  },
+  "hero_section": {
+    "type": "image_slider",
+    "has_carousel": true,
+    "promotional_banners": true,
+    "call_to_action": true,
+    "layout": "full-width"
+  },
+  "product_sections": {
+    "featured_products": true,
+    "new_products": true,
+    "best_sellers": true,
+    "product_grid": "4-column",
+    "product_cards": {
+      "has_badges": true,
+      "has_pricing": true,
+      "has_add_to_cart": true,
+      "image_aspect_ratio": "square"
+    }
+  },
+  "footer": {},
+  "color_scheme": [
+    "rgba(194, 194, 194, .52)",
+    "rgb(0 0 0 / .12)",
+    "rgb(51 51 51 / .47)",
+    "rgb(0 0 0 / 16%)",
+    "#e93e4f",
+    "rgb(0 0 0 / .03)",
+    "#228b22",
+    "#929292",
+    "#e2e2e2",
+    "#F3FFF2",
+    "#616161",
+    "#f2f2f2",
+    "#7C7C7C",
+    "#B09C6C",
+    "#FD211B",
+    "#2b2b2b",
+    "rgb(187 187 187 / .33)",
+    "#F9F9F9",
+    "#A6A6A6",
+    "#CCC",
+    "#ffffff",
+    "#000000",
+    "#f8f9fa",
+    "#007bff",
+    "#28a745",
+    "#dc3545",
+    "#ffc107",
+    "#6c757d"
+  ],
+  "typography": [
+    "Arial, sans-serif",
+    "Helvetica, Arial, sans-serif",
+    "Roboto, sans-serif",
+    "Open Sans, sans-serif",
+    "Lato, sans-serif"
+  ],
+  "layout_patterns": {
+    "container_width": "max-width: 1200px",
+    "grid_system": "CSS Grid / Flexbox",
+    "responsive_breakpoints": [
+      "768px",
+      "992px",
+      "1200px"
+    ],
+    "spacing_system": "8px base unit",
+    "card_design": "elevated with shadow",
+    "button_style": "rounded corners, solid background"
+  },
+  "interactive_elements": {
+    "search_autocomplete": true,
+    "product_quick_view": true,
+    "add_to_cart_ajax": true,
+    "image_zoom": true,
+    "product_filters": true,
+    "pagination": true,
+    "breadcrumbs": true,
+    "newsletter_signup": true,
+    "live_chat": true,
+    "whatsapp_integration": true
+  }
+}

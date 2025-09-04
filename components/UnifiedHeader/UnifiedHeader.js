@@ -267,6 +267,13 @@ const UnifiedHeader = () => {
       className={`${styles.header} unified-header ${scrollState.scrolled ? styles.headerScrolled : ''} ${scrollState.hidden ? styles.headerHidden : ''}`}
       id="unified-header"
     >
+      {/* Top Announcement Banner */}
+      <div className={styles.announcementBanner}>
+        <div className={styles.announcementContainer}>
+          <p>🚚 Free shipping on orders over AED 500 | ⏰ Limited time offer!</p>
+        </div>
+      </div>
+
       {/* Shipping Cutoff Timer */}
       <div className={styles.shippingCutoffContainer}>
         <ShippingCutoff />
@@ -355,6 +362,7 @@ const UnifiedHeader = () => {
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
               </svg>
               <span>Cart</span>
+              <span className={styles.cartCount}>0</span>
             </Link>
 
             <div className={styles.accountDropdown} ref={dropdownRef}>
