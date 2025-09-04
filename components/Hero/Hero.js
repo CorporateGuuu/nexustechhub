@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Hero.module.css';
 
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const intervalRef = useRef(null);
+  const progressRef = useRef(null);
 
   const slides = [
     {
@@ -44,26 +48,84 @@ const Hero = () => {
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setProgress(0);
   };
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setProgress(0);
   };
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
+    setProgress(0);
   };
 
-  // Auto slide
+  // Progress animation
   useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, []);
+    if (isPaused) return;
+
+    const startTime = Date.now();
+    const duration = 5000; // 5 seconds
+
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const newProgress = Math.min((elapsed / duration) * 100, 100);
+      setProgress(newProgress);
+
+      if (newProgress < 100) {
+        progressRef.current = requestAnimationFrame(updateProgress);
+      } else {
+        nextSlide();
+      }
+    };
+
+    progressRef.current = requestAnimationFrame(updateProgress);
+
+    return () => {
+      if (progressRef.current) {
+        cancelAnimationFrame(progressRef.current);
+      }
+    };
+  }, [currentSlide, isPaused]);
+
+  // Auto slide with pause functionality
+  useEffect(() => {
+    if (!isPaused) {
+      intervalRef.current = setTimeout(nextSlide, 5000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+      }
+    };
+  }, [currentSlide, isPaused]);
+
+  // Handle mouse enter/leave for pause functionality
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+    if (intervalRef.current) {
+      clearTimeout(intervalRef.current);
+    }
+    if (progressRef.current) {
+      cancelAnimationFrame(progressRef.current);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+    setProgress(0);
+  };
 
   const currentSlideData = slides[currentSlide];
 
   return (
-    <section className={styles.hero}>
+    <section
+      className={styles.hero}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className={styles.slider}>
         {slides.map((slide, index) => (
           <div
@@ -100,12 +162,19 @@ const Hero = () => {
       {/* Slider Indicators */}
       <div className={styles.indicators}>
         {slides.map((_, index) => (
-          <button
-            key={index}
-            className={`${styles.indicator} ${index === currentSlide ? styles.active : ''}`}
-            onClick={() => goToSlide(index)}
-            aria-label={`Go to slide ${index + 1}`}
-          />
+          <div key={index} className={styles.indicatorWrapper}>
+            <button
+              className={`${styles.indicator} ${index === currentSlide ? styles.active : ''}`}
+              onClick={() => goToSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+            {index === currentSlide && (
+              <div
+                className={styles.progressBar}
+                style={{ width: `${progress}%` }}
+              />
+            )}
+          </div>
         ))}
       </div>
 
