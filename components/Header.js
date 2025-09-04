@@ -18,6 +18,7 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className={styles.nav}>
+          <Link href="/products" className={styles.navLink}>Products</Link>
           <Link href="/iphone-parts" className={styles.navLink}>iPhone Parts</Link>
           <Link href="/samsung-parts" className={styles.navLink}>Samsung Parts</Link>
           <Link href="/ipad-parts" className={styles.navLink}>iPad Parts</Link>
@@ -26,6 +27,9 @@ export default function Header() {
           <Link href="/genuine-parts-program" className={`${styles.navLink} ${styles.genuinePartsLink}`}>
             Genuine Parts Program
           </Link>
+          <Link href="/about" className={styles.navLink}>About Us</Link>
+          <Link href="/contact" className={styles.navLink}>Contact</Link>
+          <Link href="/blog" className={styles.navLink}>Blog</Link>
         </nav>
 
         {/* Header Actions */}
@@ -46,6 +50,7 @@ export default function Header() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className={styles.mobileMenu}>
+          <Link href="/products" className={styles.mobileLink}>Products</Link>
           <Link href="/iphone-parts" className={styles.mobileLink}>iPhone Parts</Link>
           <Link href="/samsung-parts" className={styles.mobileLink}>Samsung Parts</Link>
           <Link href="/ipad-parts" className={styles.mobileLink}>iPad Parts</Link>
@@ -54,6 +59,9 @@ export default function Header() {
           <Link href="/genuine-parts-program" className={`${styles.mobileLink} ${styles.genuinePartsLink}`}>
             Genuine Parts Program
           </Link>
+          <Link href="/about" className={styles.mobileLink}>About Us</Link>
+          <Link href="/contact" className={styles.mobileLink}>Contact</Link>
+          <Link href="/blog" className={styles.mobileLink}>Blog</Link>
         </div>
       )}
     </header>
