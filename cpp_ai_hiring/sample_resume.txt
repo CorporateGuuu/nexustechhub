@@ -1,0 +1,10 @@
+John Doe
+Software Engineer
+
+Experience: 5 years in software development.
+
+Skills: C++, Python, Java, Machine Learning, AI, Data Analysis.
+
+Education: Bachelor's in Computer Science.
+
+Projects: Developed AI models for hiring prediction.
