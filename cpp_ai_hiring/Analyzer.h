@@ -3,11 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "Candidate.h"
 
 class Analyzer {
 private:
     std::vector<std::string> skillKeywords;
+    std::map<std::string, std::vector<std::string>> skillSynonyms;
 
 public:
     Analyzer();
