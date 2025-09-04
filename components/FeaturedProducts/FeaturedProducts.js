@@ -15,10 +15,13 @@ const FeaturedProducts = ({ products }) => {
         {products.map(product => (
           <div key={product.id} className={styles.product}>
             <div className={styles.imageContainer}>
-              <img
+              <Image
                 src={product.imageUrl || '/images/placeholder.png'}
                 alt={product.name}
+                width={300}
+                height={200}
                 className={styles.image}
+                loading="lazy"
               />
               {product.badge && (
                 <div className={styles.badge}>{product.badge}</div>

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Head from 'next/head';
 import Layout from '../components/Layout/Layout';
 import Link from 'next/link';
+import MediaGallery from '../components/MediaGallery/MediaGallery';
 
 // Sample blog posts data
 const repairGuides = [
@@ -11,7 +12,7 @@ const repairGuides = [
     title: 'How to Replace an iPhone Screen',
     excerpt: 'A step-by-step guide to replacing your iPhone screen at home with the right tools and parts.',
     date: 'June 15, 2023',
-    image: '/images/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=180&fit=crop',
     category: 'iPhone Repairs'
   },
   {
@@ -19,7 +20,7 @@ const repairGuides = [
     title: 'Samsung Galaxy Battery Replacement Guide',
     excerpt: 'Learn how to safely replace the battery in your Samsung Galaxy phone to extend its life.',
     date: 'May 22, 2023',
-    image: '/images/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=300&h=180&fit=crop',
     category: 'Samsung Repairs'
   },
   {
@@ -27,7 +28,7 @@ const repairGuides = [
     title: 'iPad Screen Repair: Professional Tips',
     excerpt: 'Professional technicians share their tips for successful iPad screen replacements.',
     date: 'April 10, 2023',
-    image: '/images/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=180&fit=crop',
     category: 'iPad Repairs'
   },
   {
@@ -35,7 +36,7 @@ const repairGuides = [
     title: 'MacBook Keyboard Replacement Guide',
     excerpt: 'A comprehensive guide to replacing MacBook keyboards for different models.',
     date: 'March 5, 2023',
-    image: '/images/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=180&fit=crop',
     category: 'MacBook Repairs'
   },
   {
@@ -43,7 +44,7 @@ const repairGuides = [
     title: 'Essential Tools for Electronics Repair',
     excerpt: 'The must-have tools for any electronics repair technician or enthusiast.',
     date: 'February 18, 2023',
-    image: '/images/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=180&fit=crop',
     category: 'Tools & Equipment'
   },
   {
@@ -51,9 +52,33 @@ const repairGuides = [
     title: 'Troubleshooting Common iPhone Issues',
     excerpt: 'Learn how to diagnose and fix the most common iPhone problems.',
     date: 'January 30, 2023',
-    image: '/images/placeholder.svg',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=180&fit=crop',
     category: 'Troubleshooting'
   }
+];
+
+// Media for blog page gallery
+const blogPageMedia = [
+  {
+    type: 'image',
+    src: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop',
+    alt: 'Repair Tools',
+  },
+  {
+    type: 'image',
+    src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=400&fit=crop',
+    alt: 'iPhone Repair',
+  },
+  {
+    type: 'image',
+    src: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=800&h=400&fit=crop',
+    alt: 'Samsung Repair',
+  },
+  {
+    type: 'video',
+    src: '/videos/repair-tutorial.mp4',
+    poster: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=400&fit=crop',
+  },
 ];
 
 function RepairGuides() {
@@ -73,6 +98,9 @@ function RepairGuides() {
             and expert advice to help you with your device repairs. Whether you're a professional technician or a DIY enthusiast, 
             our guides will help you complete repairs successfully.
           </p>
+
+          {/* Interactive Media Gallery */}
+          <MediaGallery media={blogPageMedia} autoplay={true} autoplayDelay={4000} showThumbs={true} />
           
           <div style={{ 
             display: 'grid', 
@@ -91,10 +119,13 @@ function RepairGuides() {
                 flexDirection: 'column'
               }}>
                 <div style={{ height: '180px', overflow: 'hidden' }}>
-                  <img 
-                    src={guide.image} 
-                    alt={guide.title} 
+                  <Image
+                    src={guide.image}
+                    alt={guide.title}
+                    width={300}
+                    height={180}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    loading="lazy"
                   />
                 </div>
                 <div style={{ padding: '1.5rem', flex: '1', display: 'flex', flexDirection: 'column' }}>

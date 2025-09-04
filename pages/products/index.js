@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../../components/Layout/Layout';
 import ProductFilters from '../../components/ProductFilters/ProductFilters';
+import MediaGallery from '../../components/MediaGallery/MediaGallery';
 import styles from '../../styles/ProductsPage.module.css';
 
 export default function Products() {
@@ -18,6 +19,30 @@ export default function Products() {
   const [limit] = useState(12);
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Media for products page gallery
+  const productsPageMedia = [
+    {
+      type: 'image',
+      src: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=400&fit=crop',
+      alt: 'iPhone Repair Parts',
+    },
+    {
+      type: 'image',
+      src: 'https://images.unsplash.com/photo-1503602642458-232111445657?w=800&h=400&fit=crop',
+      alt: 'Samsung Repair Parts',
+    },
+    {
+      type: 'image',
+      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&h=400&fit=crop',
+      alt: 'iPad Repair Parts',
+    },
+    {
+      type: 'video',
+      src: 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm',
+      poster: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&h=400&fit=crop',
+    },
+  ];
 
   // Categories for filtering - updated to match header structure
   const [categories, setCategories] = useState([
@@ -302,6 +327,9 @@ export default function Products() {
           <p>Browse our extensive collection of repair parts and tools</p>
         </div>
 
+        {/* Interactive Media Gallery */}
+        <MediaGallery media={productsPageMedia} autoplay={true} autoplayDelay={5000} showThumbs={true} />
+
         <div className={styles.productsLayout}>
           {/* Product Filters */}
           <ProductFilters
@@ -348,10 +376,13 @@ export default function Products() {
                   {products.map((product) => (
                     <div key={product.id} className={styles.productCard}>
                       <div className={styles.productImageContainer}>
-                        <img
+                        <Image
                           src={product.image_url || `/images/gapp/${getProductImage(product)}`}
                           alt={product.name}
+                          width={300}
+                          height={200}
                           className={styles.productImage}
+                          loading="lazy"
                         />
                         {product.discount_percentage > 0 && (
                           <span className={styles.discountBadge}>
@@ -366,7 +397,7 @@ export default function Products() {
                           </button>
                           <button className={styles.quickViewButton} title="Quick View">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <path d="M1 12s4-8 11-8 11 8-4 8-11 8-11-8-11-8z"></path>
                               <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                           </button>
