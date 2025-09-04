@@ -6,6 +6,8 @@ import ChatBot from '../components/ChatBot';
 import ErrorBoundary from '../components/ErrorBoundary';
 import WebVitals from '../components/WebVitals';
 import { CartProvider } from '../contexts/CartContext';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
 
 // Import global styles
 import '../styles/globals.css';
@@ -29,9 +31,13 @@ function AppContent({ Component, pageProps }) {
         {/* Core Web Vitals Monitoring */}
         <WebVitals />
 
+        <Header />
+
         <main>
           <Component {...pageProps} />
         </main>
+
+        <Footer />
 
         {/* AI Customer Support Chatbot */}
         <ChatBot />
