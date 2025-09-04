@@ -4,6 +4,9 @@ import Layout from '../components/Layout/Layout';
 import styles from '../styles/Finance.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
+import FadeIn from '../components/animations/FadeIn';
+import SlideIn from '../components/animations/SlideIn';
+import StaggerList from '../components/animations/StaggerList';
 
 export default function FinancePage() {
   const [activeAccordion, setActiveAccordion] = useState(null);
@@ -61,163 +64,221 @@ export default function FinancePage() {
       <main className="main-content">
         <div className="container">
           {/* Hero Section */}
-          <section className={styles.heroSection}>
-            <div className={styles.heroContent}>
-              <div className={styles.heroText}>
-                <div className={styles.logoContainer}>
-                  <img
-                    src="/images/finance/credit-key-logo.png"
-                    alt="Credit Key Logo"
-                    className={styles.creditKeyLogo}
-                    onError={(e) => e.target.src = '/images/placeholder.svg'}
-                  />
-                </div>
-                <h1>We Accept <span>Credit Key</span></h1>
-                <h2>0% Financing for 30 Days</h2>
-                <p>Fast, frictionless B2B Buy Now, Pay Later solutions.</p>
-                <p>We connect you to the resources you need to help your business flourish.</p>
-                <p>Credit Key delivers better business credit through a real-time proprietary B2B credit and payment option that can be used to make your payments online.</p>
-                <div className={styles.heroCta}>
-                  <a href="https://www.creditkey.com/support" className={styles.secondaryButton} target="_blank" rel="noopener noreferrer">
-                    Contact Credit Key Support
-                  </a>
-                  <a href="https://www.creditkey.com/app/apply/mdts-tech" className={styles.primaryButton} target="_blank" rel="noopener noreferrer">
-                    Apply Now
-                  </a>
-                </div>
+          <FadeIn delay={0.2} direction="up">
+            <section className={styles.heroSection}>
+              <div className={styles.heroContent}>
+                <SlideIn delay={0.4} direction="left" distance={40}>
+                  <div className={styles.heroText}>
+                    <div className={styles.logoContainer}>
+                      <img
+                        src="/images/finance/credit-key-logo.png"
+                        alt="Credit Key Logo"
+                        className={styles.creditKeyLogo}
+                        onError={(e) => e.target.src = '/images/placeholder.svg'}
+                      />
+                    </div>
+                    <h1>We Accept <span>Credit Key</span></h1>
+                    <h2>0% Financing for 30 Days</h2>
+                    <p>Fast, frictionless B2B Buy Now, Pay Later solutions.</p>
+                    <p>We connect you to the resources you need to help your business flourish.</p>
+                    <p>Credit Key delivers better business credit through a real-time proprietary B2B credit and payment option that can be used to make your payments online.</p>
+                    <div className={styles.heroCta}>
+                      <a href="https://www.creditkey.com/support" className={styles.secondaryButton} target="_blank" rel="noopener noreferrer">
+                        Contact Credit Key Support
+                      </a>
+                      <a href="https://www.creditkey.com/app/apply/mdts-tech" className={styles.primaryButton} target="_blank" rel="noopener noreferrer">
+                        Apply Now
+                      </a>
+                    </div>
+                  </div>
+                </SlideIn>
+                <SlideIn delay={0.6} direction="right" distance={40}>
+                  <div className={styles.heroImage}>
+                    <img
+                      src="/images/finance/banner-img-1.png"
+                      alt="Credit Key Financing"
+                      onError={(e) => e.target.src = '/images/placeholder.svg'}
+                    />
+                  </div>
+                </SlideIn>
               </div>
-              <div className={styles.heroImage}>
-                <img
-                  src="/images/finance/banner-img-1.png"
-                  alt="Credit Key Financing"
-                  onError={(e) => e.target.src = '/images/placeholder.svg'}
-                />
-              </div>
-            </div>
-          </section>
+            </section>
+          </FadeIn>
 
           {/* Benefits Section */}
-          <section id="benefits" className={styles.benefitsSection}>
-            <h2>Buy Now Pay Later for B2B</h2>
-            <p>A true BNPL option offering instant credit decisions, installments up to 12 months, and point-of-sale integrations.</p>
+          <FadeIn delay={0.3} direction="up">
+            <section id="benefits" className={styles.benefitsSection}>
+              <FadeIn delay={0.1} direction="up">
+                <h2>Buy Now Pay Later for B2B</h2>
+                <p>A true BNPL option offering instant credit decisions, installments up to 12 months, and point-of-sale integrations.</p>
+              </FadeIn>
 
-            <div className={styles.benefitsGrid}>
-              <div className={styles.benefitCard}>
-                <h3>Up to</h3>
-                <div className={styles.benefitValue}>$50,000</div>
-                <p>Credit line</p>
-              </div>
-              <div className={styles.benefitCard}>
-                <h3>0% for</h3>
-                <div className={styles.benefitValue}>30</div>
-                <p>Days</p>
-              </div>
-              <div className={styles.benefitCard}>
-                <h3>Fees starting at</h3>
-                <div className={styles.benefitValue}>1%</div>
-                <p>Monthly, after 30 days</p>
-              </div>
-              <div className={styles.benefitCard}>
-                <h3>Approvals in</h3>
-                <div className={styles.benefitValue}>5</div>
-                <p>Minutes</p>
-              </div>
-            </div>
-          </section>
+              <StaggerList
+                staggerDelay={0.15}
+                initialDelay={0.2}
+                animationType="slide"
+                direction="up"
+                className={styles.benefitsGrid}
+              >
+                <div className={styles.benefitCard}>
+                  <h3>Up to</h3>
+                  <div className={styles.benefitValue}>$50,000</div>
+                  <p>Credit line</p>
+                </div>
+                <div className={styles.benefitCard}>
+                  <h3>0% for</h3>
+                  <div className={styles.benefitValue}>30</div>
+                  <p>Days</p>
+                </div>
+                <div className={styles.benefitCard}>
+                  <h3>Fees starting at</h3>
+                  <div className={styles.benefitValue}>1%</div>
+                  <p>Monthly, after 30 days</p>
+                </div>
+                <div className={styles.benefitCard}>
+                  <h3>Approvals in</h3>
+                  <div className={styles.benefitValue}>5</div>
+                  <p>Minutes</p>
+                </div>
+              </StaggerList>
+            </section>
+          </FadeIn>
 
           {/* How It Works Section */}
-          <section id="how-it-works" className={styles.howItWorksSection}>
-            <h2>How Credit Key Works?</h2>
-            <div className={styles.stepsContainer}>
-              <div className={styles.step}>
-                <div className={styles.stepImage}>
-                  <img
-                    src="/images/finance/step-1.png"
-                    alt="Fill out Application"
-                    onError={(e) => e.target.src = '/images/placeholder.svg'}
-                  />
+          <FadeIn delay={0.4} direction="up">
+            <section id="how-it-works" className={styles.howItWorksSection}>
+              <FadeIn delay={0.1} direction="up">
+                <h2>How Credit Key Works?</h2>
+              </FadeIn>
+              <StaggerList
+                staggerDelay={0.2}
+                initialDelay={0.2}
+                animationType="slide"
+                direction="up"
+                className={styles.stepsContainer}
+              >
+                <div className={styles.step}>
+                  <div className={styles.stepImage}>
+                    <img
+                      src="/images/finance/step-1.png"
+                      alt="Fill out Application"
+                      onError={(e) => e.target.src = '/images/placeholder.svg'}
+                    />
+                  </div>
+                  <h3>Fill out Application</h3>
+                  <p>Fill out a short application that takes 2 minutes to complete. Receive an instant credit decision</p>
                 </div>
-                <h3>Fill out Application</h3>
-                <p>Fill out a short application that takes 2 minutes to complete. Receive an instant credit decision</p>
-              </div>
-              <div className={styles.step}>
-                <div className={styles.stepImage}>
-                  <img
-                    src="/images/finance/step-2.png"
-                    alt="Check out"
-                    onError={(e) => e.target.src = '/images/placeholder.svg'}
-                  />
+                <div className={styles.step}>
+                  <div className={styles.stepImage}>
+                    <img
+                      src="/images/finance/step-2.png"
+                      alt="Check out"
+                      onError={(e) => e.target.src = '/images/placeholder.svg'}
+                    />
+                  </div>
+                  <h3>Check out</h3>
+                  <p>View payment options and choose your preferred plan.</p>
                 </div>
-                <h3>Check out</h3>
-                <p>View payment options and choose your preferred plan.</p>
-              </div>
-              <div className={styles.step}>
-                <div className={styles.stepImage}>
-                  <img
-                    src="/images/finance/step-3.png"
-                    alt="Order Placed!"
-                    onError={(e) => e.target.src = '/images/placeholder.svg'}
-                  />
+                <div className={styles.step}>
+                  <div className={styles.stepImage}>
+                    <img
+                      src="/images/finance/step-3.png"
+                      alt="Order Placed!"
+                      onError={(e) => e.target.src = '/images/placeholder.svg'}
+                    />
+                  </div>
+                  <h3>Order Placed!</h3>
+                  <p>Enjoy your purchase! You can log into your account to view purchase history and upcoming payments.</p>
                 </div>
-                <h3>Order Placed!</h3>
-                <p>Enjoy your purchase! You can log into your account to view purchase history and upcoming payments.</p>
-              </div>
-            </div>
-          </section>
+              </StaggerList>
+            </section>
+          </FadeIn>
 
           {/* FAQ Section */}
-          <section id="faq" className={styles.faqSection}>
-            <h2>FAQs</h2>
-            <div className={styles.accordionContainer}>
-              {faqs.map((faq, index) => (
-                <div
-                  key={index}
-                  className={`${styles.accordionItem} ${activeAccordion === index ? styles.active : ''}`}
-                >
-                  <button
-                    className={styles.accordionHeader}
-                    onClick={() => toggleAccordion(index)}
+          <FadeIn delay={0.5} direction="up">
+            <section id="faq" className={styles.faqSection}>
+              <FadeIn delay={0.1} direction="up">
+                <h2>FAQs</h2>
+              </FadeIn>
+              <StaggerList
+                staggerDelay={0.1}
+                initialDelay={0.2}
+                animationType="slide"
+                direction="left"
+                className={styles.accordionContainer}
+              >
+                {faqs.map((faq, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.accordionItem} ${activeAccordion === index ? styles.active : ''}`}
                   >
-                    {faq.question}
-                    <span className={styles.accordionIcon}>
-                      {activeAccordion === index ? '−' : '+'}
-                    </span>
-                  </button>
-                  <div className={styles.accordionContent}>
-                    <p>{faq.answer}</p>
+                    <button
+                      className={styles.accordionHeader}
+                      onClick={() => toggleAccordion(index)}
+                      aria-expanded={activeAccordion === index}
+                      aria-controls={`faq-content-${index}`}
+                    >
+                      {faq.question}
+                      <span className={styles.accordionIcon} aria-hidden="true">
+                        {activeAccordion === index ? '−' : '+'}
+                      </span>
+                    </button>
+                    <div
+                      id={`faq-content-${index}`}
+                      className={styles.accordionContent}
+                      style={{
+                        maxHeight: activeAccordion === index ? '500px' : '0',
+                        transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                      }}
+                    >
+                      <p>{faq.answer}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
+                ))}
+              </StaggerList>
+            </section>
+          </FadeIn>
 
           {/* CTA Section */}
-          <section className={styles.ctaSection}>
-            <div className={styles.ctaContent}>
-              <div className={styles.ctaLogo}>
-                <img
-                  src="/images/finance/credit-key-full-logo.png"
-                  alt="Credit Key Logo"
-                  onError={(e) => e.target.src = '/images/placeholder.svg'}
-                />
+          <FadeIn delay={0.6} direction="up">
+            <section className={styles.ctaSection}>
+              <div className={styles.ctaContent}>
+                <SlideIn delay={0.2} direction="up" distance={30}>
+                  <div className={styles.ctaLogo}>
+                    <img
+                      src="/images/finance/credit-key-full-logo.png"
+                      alt="Credit Key Logo"
+                      onError={(e) => e.target.src = '/images/placeholder.svg'}
+                    />
+                  </div>
+                </SlideIn>
+                <FadeIn delay={0.3} direction="up">
+                  <h2>Buy What You Need, Pay Over Time</h2>
+                </FadeIn>
+                <StaggerList
+                  staggerDelay={0.1}
+                  initialDelay={0.4}
+                  animationType="fade"
+                  className={styles.ctaFeatures}
+                >
+                  <span>Up to $50k*</span>
+                  <span>0% for 30 days</span>
+                  <span>Instant credit decisions</span>
+                </StaggerList>
+                <FadeIn delay={0.6} direction="up">
+                  <p className={styles.disclaimer}>*Subject to credit approval</p>
+                  <a
+                    href="https://www.creditkey.com/app/apply/mdts-tech"
+                    className={styles.ctaButton}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Apply Now
+                  </a>
+                </FadeIn>
               </div>
-              <h2>Buy What You Need, Pay Over Time</h2>
-              <div className={styles.ctaFeatures}>
-                <span>Up to $50k*</span>
-                <span>0% for 30 days</span>
-                <span>Instant credit decisions</span>
-              </div>
-              <p className={styles.disclaimer}>*Subject to credit approval</p>
-              <a
-                href="https://www.creditkey.com/app/apply/mdts-tech"
-                className={styles.ctaButton}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Apply Now
-              </a>
-            </div>
-          </section>
+            </section>
+          </FadeIn>
         </div>
       </main>
     </Layout>
