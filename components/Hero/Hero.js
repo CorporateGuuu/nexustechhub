@@ -9,6 +9,8 @@ const Hero = () => {
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef(null);
   const progressRef = useRef(null);
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
 
   const slides = [
     {
@@ -118,6 +120,34 @@ const Hero = () => {
     setProgress(0);
   };
 
+  // Touch event handlers for swipe gestures
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.changedTouches[0].screenX;
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndX.current = e.changedTouches[0].screenX;
+    handleSwipeGesture();
+  };
+
+  const handleSwipeGesture = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const deltaX = touchStartX.current - touchEndX.current;
+    const swipeThreshold = 50; // Minimum swipe distance in px
+
+    if (deltaX > swipeThreshold) {
+      // Swipe left - next slide
+      nextSlide();
+    } else if (deltaX < -swipeThreshold) {
+      // Swipe right - previous slide
+      prevSlide();
+    }
+
+    // Reset touch positions
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
   const currentSlideData = slides[currentSlide];
 
   return (
@@ -125,6 +155,8 @@ const Hero = () => {
       className={styles.hero}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div className={styles.slider}>
         {slides.map((slide, index) => (
@@ -197,4 +229,3 @@ const Hero = () => {
   );
 };
 
-export default Hero;
