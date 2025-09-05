@@ -1,0 +1,144 @@
+/* SlideIn Animation Component Styles */
+
+.slideIn {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.slideInHidden {
+  opacity: 0;
+}
+
+.slideInVisible {
+  opacity: 1;
+}
+
+/* Direction variants */
+.slideInLeft {
+  transform: translateX(calc(-1 * var(--slide-distance, 50px)));
+}
+
+.slideInRight {
+  transform: translateX(var(--slide-distance, 50px));
+}
+
+.slideInUp {
+  transform: translateY(calc(-1 * var(--slide-distance, 50px)));
+}
+
+.slideInDown {
+  transform: translateY(var(--slide-distance, 50px));
+}
+
+.slideInVisible.slideInLeft,
+.slideInVisible.slideInRight,
+.slideInVisible.slideInUp,
+.slideInVisible.slideInDown {
+  transform: translateX(0) translateY(0);
+}
+
+/* Stagger animation for children */
+.slideInStagger > * {
+  animation: slideInStagger 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.slideInStagger > *:nth-child(1) { animation-delay: 0.1s; }
+.slideInStagger > *:nth-child(2) { animation-delay: 0.2s; }
+.slideInStagger > *:nth-child(3) { animation-delay: 0.3s; }
+.slideInStagger > *:nth-child(4) { animation-delay: 0.4s; }
+.slideInStagger > *:nth-child(5) { animation-delay: 0.5s; }
+.slideInStagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes slideInStagger {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Elastic slide animation */
+.slideInElastic {
+  animation: slideInElastic 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+}
+
+@keyframes slideInElastic {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Custom slide distances */
+.slideInShort {
+  --slide-distance: 20px;
+}
+
+.slideInMedium {
+  --slide-distance: 50px;
+}
+
+.slideInLong {
+  --slide-distance: 100px;
+}
+
+/* Custom animation durations */
+.slideInSlow {
+  transition-duration: 1s;
+}
+
+.slideInFast {
+  transition-duration: 0.4s;
+}
+
+/* Custom easing */
+.slideInEaseOut {
+  transition-timing-function: ease-out;
+}
+
+.slideInEaseInOut {
+  transition-timing-function: ease-in-out;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .slideIn,
+  .slideInStagger > *,
+  .slideInElastic {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Performance optimizations */
+.slideInVisible {
+  will-change: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .slideInLeft,
+  .slideInRight {
+    --slide-distance: 30px;
+  }
+
+  .slideInUp,
+  .slideInDown {
+    --slide-distance: 20px;
+  }
+}
