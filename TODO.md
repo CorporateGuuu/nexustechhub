@@ -1,13 +1,7 @@
-# UX Flow and Conversion Optimization Tasks
+# TODO: Implement /repaircategories API Endpoint
 
-## Completed
-- [x] Analyze current WhatsApp button and homepage structure
-- [x] Create implementation plan
-- [x] Improve WhatsApp fallback visibility for desktop users
-- [x] Add urgency messaging to genuine parts banner
-- [x] Create testimonials component
-- [x] Integrate testimonials into homepage
-
-## Pending
-- [ ] Test updated components for responsiveness
-- [ ] Verify WhatsApp alternatives work on desktop
+## Tasks
+- [x] Add getRepairCategories() function to lib/db.js
+- [ ] Create pages/api/repaircategories.js API route handler
+- [ ] Test the new API endpoint
+- [ ] Verify error handling
