@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -12,6 +12,43 @@ import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
 const FeaturedProducts = ({ products }) => {
+  const swiperRef = useRef(null);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (!swiperRef.current) return;
+
+      // Only handle keyboard navigation when the carousel is focused
+      const carousel = swiperRef.current.el;
+      if (!carousel.contains(document.activeElement)) return;
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
+          swiperRef.current.slidePrev();
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          swiperRef.current.slideNext();
+          break;
+        case 'Home':
+          event.preventDefault();
+          swiperRef.current.slideTo(0);
+          break;
+        case 'End':
+          event.preventDefault();
+          swiperRef.current.slideTo(products.length - 1);
+          break;
+        default:
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [products]);
+
   if (!products || products.length === 0) {
     return (
       <section className={styles.featuredProducts}>
@@ -63,6 +100,9 @@ const FeaturedProducts = ({ products }) => {
             pauseOnMouseEnter: true,
           }}
           loop={products.length > 3}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
           breakpoints={{
             640: {
               slidesPerView: 2,
@@ -82,42 +122,56 @@ const FeaturedProducts = ({ products }) => {
             },
           }}
           className={styles.productsSwiper}
+          tabIndex={0}
+          role="region"
+          aria-label="Featured products carousel"
           a11y={{
             prevSlideMessage: 'Previous products',
             nextSlideMessage: 'Next products',
             firstSlideMessage: 'This is the first slide',
             lastSlideMessage: 'This is the last slide',
             paginationBulletMessage: 'Go to slide {{index}}',
+            enabled: true,
           }}
         >
-          {products.map(product => (
+          {products.map((product, index) => (
             <SwiperSlide key={product.id}>
-              <div className={styles.product}>
+              <article className={styles.product} role="article" aria-labelledby={`product-title-${product.id}`}>
                 <div className={styles.imageContainer}>
                   <Image
                     src={product.imageUrl || '/images/placeholder.png'}
-                    alt={product.name}
+                    alt={`${product.name} - ${product.category} repair part`}
                     width={300}
                     height={200}
                     className={styles.image}
                     loading="lazy"
                   />
                   {product.badge && (
-                    <div className={styles.badge}>{product.badge}</div>
+                    <div className={styles.badge} aria-label={`Product badge: ${product.badge}`}>
+                      {product.badge}
+                    </div>
                   )}
                 </div>
 
                 <div className={styles.content}>
-                  <div className={styles.category}>{product.category}</div>
-                  <h3 className={styles.name}>{product.name}</h3>
-                  <div className={styles.price}>
+                  <div className={styles.category} aria-label={`Category: ${product.category}`}>
+                    {product.category}
+                  </div>
+                  <h3 id={`product-title-${product.id}`} className={styles.name}>
+                    {product.name}
+                  </h3>
+                  <div className={styles.price} aria-label={`Price: ${product.price.toFixed(2)} US dollars`}>
                     <span className={styles.salePrice}>${product.price.toFixed(2)}</span>
                   </div>
-                  <Link href={`/products/${product.id}`} className={styles.viewDetails}>
+                  <Link
+                    href={`/products/${product.id}`}
+                    className={styles.viewDetails}
+                    aria-label={`View details for ${product.name} - ${product.category}`}
+                  >
                     View Details
                   </Link>
                 </div>
-              </div>
+              </article>
             </SwiperSlide>
           ))}
         </Swiper>
