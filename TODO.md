@@ -1,23 +1,29 @@
-# TODO: Enhance Website with Rich Media and Interactive Galleries
+# TODO List for Interactivity Enhancements
 
-## Pending Tasks
-- [ ] Install Swiper library for interactive galleries
-- [ ] Create MediaGallery component with autoplay and thumbnails
-- [ ] Source high-quality stock images for homepage, products, and blog pages
-- [x] Integrate stock images into homepage sections (featured, new, best sellers)
-- [x] Add video background or sections to homepage
-- [x] Update products page to include interactive galleries for product images
-- [x] Update blog page to include galleries for guides
-- [ ] Optimize media for performance using Next.js Image and lazy loading
-- [ ] Ensure all media is responsive across devices
-- [ ] Test media integration and interactivity on different screen sizes
+## 1. Enhanced Accordion Animations in UnifiedFooter
+- [x] Refactor accordion expand/collapse to use dynamic height calculation
+- [x] Add smooth transition with cubic-bezier easing
+- [x] Add visual feedback during accordion toggle
+- [x] Ensure accessibility and keyboard navigation support
 
-## Completed Tasks
-- [x] Analyze existing files and create implementation plan
-- [x] Get user confirmation on plan
-- [x] Install Swiper library for interactive galleries
-- [x] Create MediaGallery component with autoplay and thumbnails
-- [x] Integrate interactive galleries on homepage, products, and blog pages
-- [x] Optimize media for performance using Next.js Image and lazy loading
-- [x] Ensure all media is responsive across devices
-- [x] Test media integration and interactivity on different screen sizes
+## 2. Advanced Slider Features in Hero Component
+- [x] Add touch gesture support (swipe left/right)
+- [x] Implement touch start, move, end handlers
+- [x] Add momentum-based scrolling behavior
+- [x] Prevent default touch behaviors interfering with slider
+
+## 3. Global Animation Styles in globals.css
+- [x] Add keyframe animations for fade in/out
+- [x] Add slide animations (up, down, left, right)
+- [x] Add scale, bounce, and pulse animations
+- [x] Ensure animations respect reduced motion preferences
+
+## 4. Skeleton Loading Integration
+- [x] Audit usage of skeleton components across site
+- [x] Integrate skeleton loaders where missing during data fetching
+
+## Followup Steps
+- [ ] Test accordion animations on mobile devices
+- [ ] Test slider touch gestures on mobile devices
+- [ ] Verify skeleton loading appearance and behavior
+- [ ] Confirm animations respect user preferences for reduced motion
