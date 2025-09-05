@@ -61,6 +61,16 @@
   line-height: 1.5;
 }
 
+.urgencyText {
+  display: block;
+  font-weight: 700;
+  color: #ffeb3b;
+  margin-top: 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .bannerActions {
   flex-shrink: 0;
 }
