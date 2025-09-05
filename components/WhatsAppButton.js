@@ -10,6 +10,16 @@ export default function WhatsAppButton() {
   const phoneUrl = `tel:${phoneNumber}`;
   const emailUrl = `mailto:${email}?subject=Inquiry about repair parts&body=${encodeURIComponent(message)}`;
 
+  // Detect if user is on desktop (not mobile/tablet)
+  const isDesktop = typeof window !== 'undefined' && window.innerWidth > 768;
+
+  // Show alternatives by default on desktop
+  React.useEffect(() => {
+    if (isDesktop) {
+      setShowAlternatives(true);
+    }
+  }, [isDesktop]);
+
   const toggleAlternatives = () => {
     setShowAlternatives(!showAlternatives);
   };
