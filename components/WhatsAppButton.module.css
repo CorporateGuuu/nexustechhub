@@ -1,8 +1,16 @@
-/* Nexus TechHub WhatsApp Button Styles */
-.whatsappButton {
+/* Nexus TechHub Contact Button Styles */
+.contactContainer {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.whatsappButton {
   background-color: #25d366; /* WhatsApp green */
   color: white;
   border-radius: 3rem;
@@ -13,7 +21,6 @@
   text-decoration: none;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  z-index: 1000;
   max-width: 280px;
   animation: pulse 2s infinite;
 }
@@ -108,18 +115,127 @@
   }
 }
 
+/* Alternative Contact Methods Toggle */
+.alternativesToggle {
+  background-color: rgba(37, 211, 102, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 0.75rem;
+}
+
+.alternativesToggle:hover {
+  background-color: rgba(37, 211, 102, 1);
+  transform: scale(1.1);
+}
+
+.alternativesToggle:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Alternative Contact Methods Menu */
+.alternativesMenu {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem;
+  min-width: 200px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alternativeOption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: #333;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.alternativeOption:hover,
+.alternativeOption:focus {
+  background-color: #f8f9fa;
+  outline: none;
+}
+
+.altIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.altContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.altText {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.altDetail {
+  font-size: 0.75rem;
+  color: #666;
+  word-break: break-all;
+}
+
 /* Hide on very small screens to avoid overlap */
 @media (max-width: 320px) {
   .whatsappButton {
     padding: 0.75rem;
   }
-  
+
   .content {
     display: none;
   }
-  
+
   .icon {
     width: 2rem;
     height: 2rem;
+  }
+
+  .contactContainer {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .alternativesMenu {
+    min-width: 180px;
   }
 }

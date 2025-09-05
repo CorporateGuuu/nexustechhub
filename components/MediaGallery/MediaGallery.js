@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Thumbs, Navigation } from 'swiper/modules';
 import Image from 'next/image';
@@ -12,6 +12,30 @@ import 'swiper/css/navigation';
 
 const MediaGallery = ({ media = [], autoplay = true, autoplayDelay = 3000, showThumbs = true }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(autoplay);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  // Check for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e) => {
+      setPrefersReducedMotion(e.matches);
+      if (e.matches && isPlaying) {
+        setIsPlaying(false);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [isPlaying]);
+
+  // Toggle autoplay
+  const toggleAutoplay = () => {
+    setIsPlaying(!isPlaying);
+  };
 
   if (!media || media.length === 0) {
     return <div className={styles.noMedia}>No media available</div>;
@@ -19,15 +43,52 @@ const MediaGallery = ({ media = [], autoplay = true, autoplayDelay = 3000, showT
 
   return (
     <div className={styles.galleryContainer}>
+      {/* Autoplay Controls */}
+      {media.length > 1 && (
+        <div className={styles.controls}>
+          <button
+            onClick={toggleAutoplay}
+            className={styles.autoplayButton}
+            aria-label={isPlaying ? 'Pause autoplay' : 'Start autoplay'}
+            aria-pressed={isPlaying}
+          >
+            {isPlaying ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="5,3 19,12 5,21"></polygon>
+              </svg>
+            )}
+          </button>
+          <span className={styles.slideCounter} aria-live="polite">
+            {currentSlide + 1} of {media.length}
+          </span>
+        </div>
+      )}
+
       {/* Main Swiper */}
       <Swiper
         modules={[Autoplay, Thumbs, Navigation]}
         spaceBetween={10}
         slidesPerView={1}
         thumbs={{ swiper: thumbsSwiper }}
-        autoplay={autoplay ? { delay: autoplayDelay, disableOnInteraction: false } : false}
-        navigation
+        autoplay={isPlaying && !prefersReducedMotion ? { delay: autoplayDelay, disableOnInteraction: false } : false}
+        navigation={{
+          nextEl: '.gallery-next',
+          prevEl: '.gallery-prev',
+        }}
+        onSlideChange={(swiper) => setCurrentSlide(swiper.activeIndex)}
         className={styles.mainSwiper}
+        a11y={{
+          prevSlideMessage: 'Previous media item',
+          nextSlideMessage: 'Next media item',
+          firstSlideMessage: 'First media item',
+          lastSlideMessage: 'Last media item',
+          paginationBulletMessage: 'Go to media item {{index}}',
+        }}
       >
         {media.map((item, index) => (
           <SwiperSlide key={index}>
@@ -53,6 +114,24 @@ const MediaGallery = ({ media = [], autoplay = true, autoplayDelay = 3000, showT
         ))}
       </Swiper>
 
+      {/* Custom Navigation Buttons */}
+      {media.length > 1 && (
+        <>
+          <button
+            className={`${styles.navButton} ${styles.prevButton} gallery-prev`}
+            aria-label="Previous media item"
+          >
+            ‹
+          </button>
+          <button
+            className={`${styles.navButton} ${styles.nextButton} gallery-next`}
+            aria-label="Next media item"
+          >
+            ›
+          </button>
+        </>
+      )}
+
       {/* Thumbnails Swiper */}
       {showThumbs && media.length > 1 && (
         <Swiper
@@ -73,6 +152,11 @@ const MediaGallery = ({ media = [], autoplay = true, autoplayDelay = 3000, showT
               slidesPerView: 8,
             },
           }}
+          a11y={{
+            enabled: true,
+            prevSlideMessage: 'Previous thumbnail',
+            nextSlideMessage: 'Next thumbnail',
+          }}
         >
           {media.map((item, index) => (
             <SwiperSlide key={index}>
@@ -81,11 +165,12 @@ const MediaGallery = ({ media = [], autoplay = true, autoplayDelay = 3000, showT
                   src={item.src}
                   className={styles.thumbItem}
                   muted
+                  aria-label={`Video thumbnail ${index + 1}`}
                 />
               ) : (
                 <Image
                   src={item.src}
-                  alt={item.alt || `Thumbnail ${index + 1}`}
+                  alt={item.alt || `Thumbnail for media item ${index + 1}`}
                   fill
                   className={styles.thumbItem}
                 />
