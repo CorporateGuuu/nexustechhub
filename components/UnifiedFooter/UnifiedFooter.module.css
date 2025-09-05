@@ -429,11 +429,13 @@
   .footerLinks2 {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 0;
   }
 
   .footerLinks2.expanded {
-    max-height: 150px;
+    max-height: 500px; /* Increased for better content fit */
+    height: auto;
   }
 
   .footerBoxes2Mobile {

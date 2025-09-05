@@ -11,13 +11,22 @@ const UnifiedFooter = () => {
   const [expandedSections, setExpandedSections] = useState({});
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  // Toggle section expansion
+  // Toggle section expansion with smooth animation
   const toggleSection = (section) => {
     if (isMobile) {
       setExpandedSections(prev => ({
         ...prev,
         [section]: !prev[section]
       }));
+    }
+  };
+
+  // Handle accordion animation end
+  const handleAccordionTransitionEnd = (section) => {
+    // Reset any temporary styles after animation completes
+    const accordionElement = document.querySelector(`.${styles.accordion}[data-section="${section}"]`);
+    if (accordionElement) {
+      accordionElement.style.height = expandedSections[section] ? 'auto' : '0px';
     }
   };
 
@@ -155,7 +164,11 @@ const UnifiedFooter = () => {
             >
               Shop
             </h4>
-            <ul className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.shop ? styles.expanded : ''}`}>
+            <ul
+              className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.shop ? styles.expanded : ''}`}
+              data-section="shop"
+              onTransitionEnd={() => handleAccordionTransitionEnd('shop')}
+            >
               <li>
                 <Link href="/categories/iphone-parts">iPhone Parts</Link>
               </li>
@@ -183,7 +196,11 @@ const UnifiedFooter = () => {
             >
               Information
             </h4>
-            <ul className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.info ? styles.expanded : ''}`}>
+            <ul
+              className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.info ? styles.expanded : ''}`}
+              data-section="info"
+              onTransitionEnd={() => handleAccordionTransitionEnd('info')}
+            >
               <li>
                 <Link href="/about">About Us</Link>
               </li>
@@ -214,7 +231,11 @@ const UnifiedFooter = () => {
             >
               Services
             </h4>
-            <ul className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.services ? styles.expanded : ''}`}>
+            <ul
+              className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.services ? styles.expanded : ''}`}
+              data-section="services"
+              onTransitionEnd={() => handleAccordionTransitionEnd('services')}
+            >
               <li>
                 <Link href="/lcd-buyback">LCD Buyback</Link>
               </li>
@@ -242,7 +263,11 @@ const UnifiedFooter = () => {
             >
               Need Help?
             </h4>
-            <ul className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.help ? styles.expanded : ''}`}>
+            <ul
+              className={`${styles.accordion} ${styles.footerLinks2} ${expandedSections.help ? styles.expanded : ''}`}
+              data-section="help"
+              onTransitionEnd={() => handleAccordionTransitionEnd('help')}
+            >
               <li>
                 <Link href="/contact">Contact Us</Link>
               </li>
