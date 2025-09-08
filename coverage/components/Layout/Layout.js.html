@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>8/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -213,32 +213,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -347,43 +347,43 @@ import styles from './Layout.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 &nbsp;
 // Dynamically import PWA components to avoid SSR issues
-const PWAInstallPrompt = dynamic(
-  () =&gt; import('../PWAInstallPrompt/PWAInstallPrompt'),
+const PWAInstallPrompt = <span class="cstat-no" title="statement not covered" >dynamic(</span>
+<span class="fstat-no" title="function not covered" >  ()</span> =&gt; <span class="cstat-no" title="statement not covered" >import('../PWAInstallPrompt/PWAInstallPrompt'),</span>
   { ssr: false }
 );
 &nbsp;
-const EnhancedPWAManager = dynamic(
-  () =&gt; import('../PWA/EnhancedPWAManager'),
+const EnhancedPWAManager = <span class="cstat-no" title="statement not covered" >dynamic(</span>
+<span class="fstat-no" title="function not covered" >  ()</span> =&gt; <span class="cstat-no" title="statement not covered" >import('../PWA/EnhancedPWAManager'),</span>
   { ssr: false }
 );
 &nbsp;
-export default function Layout({
+export default function <span class="fstat-no" title="function not covered" >Layout(</span>{
   children,
   title,
   description,
-  seoProps = {},
-  showAdvancedSEO = true
+  seoProps = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span>
+  showAdvancedSEO = <span class="branch-0 cbranch-no" title="branch not covered" >true</span>
 }) {
-  const { data: session } = useSession();
+  const { data: session } = <span class="cstat-no" title="statement not covered" >useSession();</span>
 &nbsp;
-  const pageTitle = title
+  const pageTitle = <span class="cstat-no" title="statement not covered" >title</span>
     ? `${title} | Nexus TechHub`
-    : <span class="branch-1 cbranch-no" title="branch not covered" >'Nexus TechHub - Professional Mobile Repair Parts UAE';</span>
+    : 'Nexus TechHub - Professional Mobile Repair Parts UAE';
 &nbsp;
-  const pageDescription = description || <span class="branch-1 cbranch-no" title="branch not covered" >'Premium quality mobile device repair parts in UAE. iPhone, Samsung, iPad parts with warranty. Located in Ras Al Khaimah. Fast shipping across UAE.';</span>
+  const pageDescription = <span class="cstat-no" title="statement not covered" >description || 'Premium quality mobile device repair parts in UAE. iPhone, Samsung, iPad parts with warranty. Located in Ras Al Khaimah. Fast shipping across UAE.';</span>
 &nbsp;
-  return (
+<span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;div className={styles.layout}&gt;
       {/* Enhanced SEO */}
       {showAdvancedSEO ? (
         &lt;AdvancedSEO
           title={pageTitle}
           description={pageDescription}
-          canonicalUrl={typeof window !== 'undefined' ? window.location.href : <span class="branch-1 cbranch-no" title="branch not covered" >undefined}</span>
+          canonicalUrl={typeof window !== 'undefined' ? window.location.href : undefined}
           {...seoProps}
         /&gt;
       ) : (
-<span class="branch-1 cbranch-no" title="branch not covered" >        &lt;Head&gt;</span>
+        &lt;Head&gt;
           &lt;title&gt;{pageTitle}&lt;/title&gt;
           &lt;meta name="description" content={pageDescription} /&gt;
           &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" /&gt;
@@ -472,7 +472,7 @@ export default function Layout({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-05T00:51:08.257Z
+                at 2025-09-07T19:54:50.750Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
