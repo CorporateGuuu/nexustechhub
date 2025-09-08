@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -124,16 +124,30 @@
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -185,16 +199,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState } from 'react';
 import Link from 'next/link';
 import { LogoImage } from './OptimizedImage';
 import CartButton from './CartButton';
 import styles from './Header.module.css';
 &nbsp;
-export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function <span class="fstat-no" title="function not covered" >Header(</span>) {
+  const [mobileMenuOpen, setMobileMenuOpen] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
 &nbsp;
-  return (
+<span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;header className={styles.header}&gt;
       &lt;div className={styles.container}&gt;
         {/* Logo */}
@@ -204,7 +224,8 @@ export default function Header() {
         &lt;/Link&gt;
 &nbsp;
         {/* Desktop Navigation */}
-        &lt;nav className={styles.nav}&gt;
+        &lt;nav className={styles.nav} aria-label="Primary Navigation"&gt;
+          &lt;Link href="/products" className={styles.navLink}&gt;Products&lt;/Link&gt;
           &lt;Link href="/iphone-parts" className={styles.navLink}&gt;iPhone Parts&lt;/Link&gt;
           &lt;Link href="/samsung-parts" className={styles.navLink}&gt;Samsung Parts&lt;/Link&gt;
           &lt;Link href="/ipad-parts" className={styles.navLink}&gt;iPad Parts&lt;/Link&gt;
@@ -213,6 +234,9 @@ export default function Header() {
           &lt;Link href="/genuine-parts-program" className={`${styles.navLink} ${styles.genuinePartsLink}`}&gt;
             Genuine Parts Program
           &lt;/Link&gt;
+          &lt;Link href="/about" className={styles.navLink}&gt;About Us&lt;/Link&gt;
+          &lt;Link href="/contact" className={styles.navLink}&gt;Contact&lt;/Link&gt;
+          &lt;Link href="/blog" className={styles.navLink}&gt;Blog&lt;/Link&gt;
         &lt;/nav&gt;
 &nbsp;
         {/* Header Actions */}
@@ -224,6 +248,8 @@ export default function Header() {
             className={styles.mobileToggle}
             onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >setMobileMenuOpen(!mobileMenuOpen)}</span>
             aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           &gt;
             ☰
           &lt;/button&gt;
@@ -232,15 +258,19 @@ export default function Header() {
 &nbsp;
       {/* Mobile Menu */}
       {mobileMenuOpen &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >        &lt;div className={styles.mobileMenu}&gt;</span>
-          &lt;Link href="/iphone-parts" className={styles.mobileLink}&gt;iPhone Parts&lt;/Link&gt;
-          &lt;Link href="/samsung-parts" className={styles.mobileLink}&gt;Samsung Parts&lt;/Link&gt;
-          &lt;Link href="/ipad-parts" className={styles.mobileLink}&gt;iPad Parts&lt;/Link&gt;
-          &lt;Link href="/repair-tools" className={styles.mobileLink}&gt;Repair Tools&lt;/Link&gt;
-          &lt;Link href="/lcd-buyback" className={styles.mobileLink}&gt;LCD Buyback&lt;/Link&gt;
-          &lt;Link href="/genuine-parts-program" className={`${styles.mobileLink} ${styles.genuinePartsLink}`}&gt;
+        &lt;div className={styles.mobileMenu} id="mobile-menu" role="menu" aria-label="Mobile Navigation Menu"&gt;
+          &lt;Link href="/products" className={styles.mobileLink} role="menuitem"&gt;Products&lt;/Link&gt;
+          &lt;Link href="/iphone-parts" className={styles.mobileLink} role="menuitem"&gt;iPhone Parts&lt;/Link&gt;
+          &lt;Link href="/samsung-parts" className={styles.mobileLink} role="menuitem"&gt;Samsung Parts&lt;/Link&gt;
+          &lt;Link href="/ipad-parts" className={styles.mobileLink} role="menuitem"&gt;iPad Parts&lt;/Link&gt;
+          &lt;Link href="/repair-tools" className={styles.mobileLink} role="menuitem"&gt;Repair Tools&lt;/Link&gt;
+          &lt;Link href="/lcd-buyback" className={styles.mobileLink} role="menuitem"&gt;LCD Buyback&lt;/Link&gt;
+          &lt;Link href="/genuine-parts-program" className={`${styles.mobileLink} ${styles.genuinePartsLink}`} role="menuitem"&gt;
             Genuine Parts Program
           &lt;/Link&gt;
+          &lt;Link href="/about" className={styles.mobileLink} role="menuitem"&gt;About Us&lt;/Link&gt;
+          &lt;Link href="/contact" className={styles.mobileLink} role="menuitem"&gt;Contact&lt;/Link&gt;
+          &lt;Link href="/blog" className={styles.mobileLink} role="menuitem"&gt;Blog&lt;/Link&gt;
         &lt;/div&gt;
       )}
     &lt;/header&gt;
@@ -253,7 +283,7 @@ export default function Header() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-28T09:07:43.923Z
+                at 2025-09-05T00:51:07.594Z
             </div>
         <script src="../prettify.js"></script>
         <script>

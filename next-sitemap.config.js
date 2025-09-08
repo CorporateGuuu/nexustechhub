@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://nexustechhub.netlify.app',
+  siteUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://nexustechhub.com',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   exclude: [
@@ -27,7 +27,7 @@ module.exports = {
       }
     ],
     additionalSitemaps: [
-      'https://nexustechhub.netlify.app/sitemap.xml'
+      'https://nexustechhub.com/sitemap.xml'
     ]
   },
   transform: async (config, path) => {

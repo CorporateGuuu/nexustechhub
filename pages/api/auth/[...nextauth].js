@@ -692,6 +692,35 @@ export const authOptions = {
         // Don't throw for delete operations
       }
     },
+
+    async createVerificationToken({ identifier, token, expires }) {
+      try {
+        await query(
+          'INSERT INTO verification_tokens (identifier, token, expires) VALUES ($1, $2, $3)',
+          [identifier, token, expires]
+        );
+        return { identifier, token, expires };
+      } catch (error) {
+        console.error('Error creating verification token:', error);
+        throw error;
+      }
+    },
+
+    async useVerificationToken({ identifier, token }) {
+      try {
+        const result = await query(
+          'DELETE FROM verification_tokens WHERE identifier = $1 AND token = $2 RETURNING *',
+          [identifier, token]
+        );
+        if (result.rows.length === 0) {
+          return null;
+        }
+        return result.rows[0];
+      } catch (error) {
+        console.error('Error using verification token:', error);
+        throw error;
+      }
+    },
   },
   session: {
     strategy: 'jwt',

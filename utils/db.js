@@ -1,38 +1,11 @@
-// Database utilities for Nexus TechHub
-// Mock implementation for demo purposes
+// Database utilities for Nexus TechHub using Supabase
+// Re-exports from lib/db.js for consistency
 
-export const pool = {
-  query: async (sql, params = []) => {
-    console.log(`Utils pool query: ${sql}`, params);
-    return { rows: [], rowCount: 0 };
-  },
-  connect: async () => {
-    console.log('Utils pool connection established');
-    return {
-      query: async (sql, params = []) => {
-        console.log(`Utils connection query: ${sql}`, params);
-        return { rows: [], rowCount: 0 };
-      },
-      release: () => console.log('Utils connection released')
-    };
-  }
-};
-
-export const query = async (sql, params = []) => {
-  console.log(`Utils database query: ${sql}`, params);
-  return { rows: [], rowCount: 0 };
-};
-
-export const getConnection = async () => {
-  console.log('Getting utils database connection');
-  return {
-    query,
-    release: () => console.log('Utils connection released')
-  };
-};
+export { pool, query, getConnection, supabase } from '../lib/db.js';
 
 export default {
   pool,
   query,
-  getConnection
+  getConnection,
+  supabase
 };
