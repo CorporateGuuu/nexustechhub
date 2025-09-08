@@ -6,6 +6,24 @@
   min-height: 500px;
   display: flex;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: 10;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--primary-white, #ffffff);
+  transition: width 0.05s linear;
 }
 
 .container {
@@ -16,6 +34,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
+  position: relative;
+  z-index: 20;
 }
 
 .content {
@@ -125,6 +145,79 @@
   height: auto;
   border-radius: 1rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation Arrows */
+.navArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(16, 185, 129, 0.8);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.navArrow:hover {
+  background: var(--primary-green, #10b981);
+}
+
+.prevArrow {
+  left: 10px;
+}
+
+.nextArrow {
+  right: 10px;
+}
+
+/* Slide Indicators */
+.indicators {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 30;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.indicator:hover,
+.indicator:focus {
+  background: var(--primary-white, #ffffff);
+  outline: none;
+}
+
+.indicator.active {
+  background: var(--primary-white, #ffffff);
+}
+
+/* Pause Indicator */
+.pauseIndicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  z-index: 30;
+  color: var(--primary-white, #ffffff);
 }
 
 /* Responsive Design */
