@@ -1,155 +1,234 @@
-# MobileSentrix Scraper
+# Nexus TechHub - Professional Mobile Repair Parts UAE
 
-This project contains multiple implementations of a web scraper for the MobileSentrix website. Each implementation is designed to work with different environments and limitations.
+A modern, full-stack e-commerce website for mobile device repair parts and services in the UAE. Built with Next.js, featuring server-side rendering, user authentication, payment processing, and a comprehensive product catalog.
 
-## Table of Contents
+## 🚀 Features
 
-- [Installation](#installation)
-- [Scraper Implementations](#scraper-implementations)
-  - [Browser-Based Scraper with CORS Proxy](#browser-based-scraper-with-cors-proxy)
-  - [Node.js Scraper](#nodejs-scraper)
-  - [PHP Scraper](#php-scraper)
-  - [Python Scraper](#python-scraper)
-- [Command Line Developer Tools](#command-line-developer-tools)
-- [Output](#output)
-- [Troubleshooting](#troubleshooting)
+- **Server-Side Rendering**: Dynamic content with Next.js SSR
+- **User Authentication**: Secure login/signup with Supabase Auth
+- **E-commerce Functionality**: Shopping cart, checkout, order management
+- **Product Management**: Categories, products, reviews, and specifications
+- **Payment Processing**: Stripe integration for secure payments
+- **Admin Dashboard**: Product and order management
+- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **SEO Optimized**: Next.js SEO with sitemap generation
+- **PWA Ready**: Progressive Web App capabilities
 
-## Installation
+## 🛠️ Tech Stack
 
-No installation is required for the browser-based scraper. For other implementations, you'll need to have the respective runtime environments installed.
+### Frontend
+- **Next.js 15** - React framework with SSR
+- **React 18** - UI library
+- **Tailwind CSS** - Utility-first CSS framework
+- **Material-UI** - Component library
 
-## Scraper Implementations
+### Backend
+- **Supabase** - PostgreSQL database with real-time features
+- **Next.js API Routes** - Serverless API endpoints
+- **Supabase Auth** - User authentication
+- **Stripe** - Payment processing
 
-### Browser-Based Scraper with CORS Proxy
+### Development Tools
+- **TypeScript** - Type safety
+- **ESLint** - Code linting
+- **Jest** - Testing framework
+- **Cypress** - E2E testing
 
-The easiest way to run the scraper without any installation:
+## 📋 Prerequisites
 
-1. Open `cors_proxy_scraper.html` in your web browser
-2. Select a CORS proxy from the dropdown (needed to bypass browser security restrictions)
-3. Click "Scrape Website"
-4. View the results and download the report
+- Node.js 18+ and npm
+- Supabase account
+- Stripe account (for payments)
 
-**File:** `cors_proxy_scraper.html`
+## 🚀 Quick Start
 
-### Node.js Scraper
-
-For a more robust scraping experience with Node.js:
-
-1. Install Node.js from [nodejs.org](https://nodejs.org/)
-2. Open a terminal/command prompt
-3. Navigate to the directory containing the scraper
-4. Run the scraper:
-
-```bash
-node node_scraper.js
-```
-
-**File:** `node_scraper.js`
-
-### PHP Scraper
-
-If you have PHP installed or access to a PHP server:
-
-1. Make sure PHP is installed (version 7.0 or higher recommended)
-2. Open a terminal/command prompt
-3. Navigate to the directory containing the scraper
-4. Run the scraper:
+### 1. Clone and Install
 
 ```bash
-php php_scraper.php
+git clone <repository-url>
+cd nexus-techhub-website
+npm install
 ```
 
-Alternatively, upload to a PHP-enabled web server and access it through a browser.
+### 2. Environment Setup
 
-**File:** `php_scraper.php`
+Create a `.env.local` file in the root directory:
 
-### Python Scraper
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-For Python users, multiple options are available:
+# Stripe Configuration
+STRIPE_PUBLIC_KEY=your-stripe-public-key
+STRIPE_SECRET_KEY=your-stripe-secret-key
+STRIPE_WEBHOOK_SECRET=your-webhook-secret
 
-#### Simple Scraper (No External Dependencies)
+# NextAuth Configuration
+NEXTAUTH_URL=http://localhost:3006
+NEXTAUTH_SECRET=your-nextauth-secret
+
+# Email Configuration (SendGrid)
+SENDGRID_API_KEY=your-sendgrid-api-key
+```
+
+### 3. Database Setup
+
+Set up your Supabase database:
 
 ```bash
-python3 simple_scraper.py
+# Run database migrations and seed data
+npm run setup:db
 ```
 
-**File:** `simple_scraper.py`
+This will:
+- Create necessary tables (products, categories, orders, etc.)
+- Set up Row Level Security policies
+- Insert sample products and categories
+- Create user profiles trigger
 
-#### Resilient Scraper (No External Dependencies)
+### 4. Development Server
 
 ```bash
-python3 resilient_scraper.py
+npm run dev
 ```
 
-**File:** `resilient_scraper.py`
+Open [http://localhost:3006](http://localhost:3006) in your browser.
 
-#### Advanced Scraper (Requires External Libraries)
+## 📁 Project Structure
+
+```
+nexus-techhub-website/
+├── components/          # React components
+│   ├── FeaturedProducts/
+│   ├── UnifiedHeader/
+│   ├── Hero/
+│   └── ...
+├── lib/                 # Utility libraries
+│   ├── db.js           # Database functions
+│   └── ...
+├── pages/              # Next.js pages and API routes
+│   ├── api/            # API endpoints
+│   ├── index.js        # Homepage
+│   └── ...
+├── public/             # Static assets
+├── styles/             # CSS styles
+├── migrations/         # Database migrations
+├── Scripts/            # Utility scripts
+└── utils/              # Helper functions
+```
+
+## 🗄️ Database Schema
+
+The application uses the following main tables:
+
+- **categories** - Product categories
+- **products** - Product catalog with specifications
+- **product_images** - Product image gallery
+- **product_variants** - Product variations (color, size, etc.)
+- **carts** - Shopping cart data
+- **cart_items** - Cart contents
+- **orders** - Customer orders
+- **order_items** - Order line items
+- **reviews** - Product reviews
+- **profiles** - User profiles (auto-created via trigger)
+
+## 🔧 Available Scripts
 
 ```bash
-# Install dependencies
-pip3 install requests beautifulsoup4 pandas aiohttp
+# Development
+npm run dev              # Start development server
+npm run build           # Build for production
+npm run start           # Start production server
 
-# Run the scraper
-python3 mobilesentrix_scraper.py
+# Database
+npm run setup:db        # Setup database with migrations and seed data
+
+# Testing
+npm run test            # Run Jest tests
+npm run test:e2e        # Run Cypress E2E tests
+npm run test:coverage   # Run tests with coverage
+
+# Code Quality
+npm run lint            # Run ESLint
+npm run lint:css        # Run stylelint
+
+# Deployment
+npm run deploy:production  # Deploy to production
 ```
 
-**File:** `mobilesentrix_scraper.py`
+## 🔐 Authentication
 
-## Command Line Developer Tools
+The app uses Supabase Auth for user management:
 
-Some scrapers require the Command Line Developer Tools on macOS. To install:
+- **Sign Up**: Users can create accounts with email/password
+- **Sign In**: Secure login with session management
+- **Profile Management**: Users can update their profiles
+- **Password Reset**: Email-based password recovery
 
-1. Open Terminal
-2. Run the following command:
+## 💳 Payment Processing
 
-```bash
-xcode-select --install
-```
+Integrated with Stripe for secure payments:
 
-3. Follow the on-screen instructions to complete the installation
+- **Checkout Session**: Secure payment processing
+- **Order Management**: Automatic order creation
+- **Webhook Handling**: Real-time payment status updates
+- **VAT Calculation**: UAE VAT compliance
 
-For more details, see `install_dev_tools.md`.
+## 📱 Progressive Web App
 
-## Output
+The site is PWA-ready with:
 
-All scrapers save their output to an `output` directory, which includes:
+- Service worker for offline functionality
+- App manifest for mobile installation
+- Push notifications (configurable)
+- Background sync for forms
 
-- `mobilesentrix_report.html` - Interactive HTML report
-- `mobilesentrix_data.json` - Raw data in JSON format
-- `mobilesentrix_images.txt` - List of image URLs
-- `mobilesentrix_categories.txt` - List of categories
-- `mobilesentrix_products.txt` - Tab-separated product data
+## 🚀 Deployment
 
-## Troubleshooting
+### Netlify (Recommended)
 
-### CORS Issues with Browser-Based Scraper
+1. Connect your repository to Netlify
+2. Set environment variables in Netlify dashboard
+3. Configure build settings:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+4. Deploy!
 
-If you encounter CORS errors with the browser-based scraper:
+### Other Platforms
 
-1. Try a different CORS proxy from the dropdown
-2. Some proxies may have request limits or be temporarily unavailable
-3. As a last resort, use one of the other scraper implementations
+The app can be deployed to Vercel, AWS, or any Node.js hosting platform.
 
-### Python/Node.js/PHP Not Found
+## 🤝 Contributing
 
-If you get "command not found" errors:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-1. Make sure the respective runtime is installed
-2. Check that it's in your system PATH
-3. Try using the full path to the executable
+## 📄 License
 
-### SSL Certificate Errors
+This project is licensed under the MIT License.
 
-If you encounter SSL certificate errors:
+## 🆘 Support
 
-1. The scrapers are configured to ignore SSL verification for simplicity
-2. This is generally safe for scraping public websites
-3. If you're concerned, modify the code to enable SSL verification
+For support or questions:
 
-### Empty Results
+- Create an issue on GitHub
+- Check the documentation in `/docs`
+- Contact the development team
 
-If the scraper runs but returns no products:
+## 🔄 Migration from Static Site
 
-1. The website structure may have changed
-2. Try a different scraper implementation
-3. Check the website manually to confirm it's accessible
+This project was migrated from a static site to include:
+
+- **Server-side rendering** for dynamic content
+- **Database integration** with Supabase
+- **User authentication** and profiles
+- **E-commerce functionality** with cart and checkout
+- **Admin features** for content management
+- **API endpoints** for data operations
+
+The migration maintains all existing functionality while adding powerful backend capabilities.

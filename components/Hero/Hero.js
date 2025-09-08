@@ -16,35 +16,35 @@ const Hero = () => {
     {
       id: 1,
       imageUrl: "/images/hero-repair.jpg",
-      badge: "Premium Quality Parts & Tools",
-      title: "Nexus TechHub",
-      subtitle: "Your trusted partner for professional repair parts & tools. We provide high-quality components for iPhone, Samsung, iPad, and MacBook repairs.",
-      ctaText: "Shop Now",
+      badge: "Trusted by 10,000+ Professionals",
+      title: "Empower Your Repair Business",
+      subtitle: "Transform customer devices with confidence using our premium parts and expert tools. Join thousands of technicians who trust Nexus TechHub for reliable repairs.",
+      ctaText: "Start Repairing",
       ctaLink: "/products",
-      secondaryCtaText: "LCD Buyback",
-      secondaryCtaLink: "/lcd-buyback"
+      secondaryCtaText: "Get Expert Support",
+      secondaryCtaLink: "/contact"
     },
     {
       id: 2,
       imageUrl: "/images/hero-tools.jpg",
-      badge: "Professional Repair Tools",
-      title: "Expert Tools for Professionals",
-      subtitle: "Complete toolkit solutions for mobile device repairs. From screwdrivers to soldering stations, we have everything you need.",
-      ctaText: "Browse Tools",
+      badge: "Complete Tool Solutions",
+      title: "Everything You Need, One Place",
+      subtitle: "From precision screwdrivers to advanced diagnostic tools, access professional-grade equipment that ensures perfect repairs every time.",
+      ctaText: "Explore Tools",
       ctaLink: "/repair-tools",
-      secondaryCtaText: "View Kits",
+      secondaryCtaText: "Build Your Kit",
       secondaryCtaLink: "/products?category=repair-tools"
     },
     {
       id: 3,
       imageUrl: "/images/hero-parts.jpg",
-      badge: "Genuine Parts Program",
-      title: "Authentic OEM Parts",
-      subtitle: "Access to original manufacturer parts through our Genuine Parts Program. Quality guaranteed for professional repairs.",
-      ctaText: "Learn More",
+      badge: "Quality You Can Trust",
+      title: "Genuine Parts, Guaranteed Results",
+      subtitle: "Experience the difference with authentic OEM parts. Our rigorous testing ensures every component meets the highest standards for professional repairs.",
+      ctaText: "Shop Genuine Parts",
       ctaLink: "/genuine-parts-program",
-      secondaryCtaText: "Shop Parts",
-      secondaryCtaLink: "/products"
+      secondaryCtaText: "View Warranty",
+      secondaryCtaLink: "/quality-standards"
     }
   ];
 

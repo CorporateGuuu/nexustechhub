@@ -8,8 +8,8 @@ Disallow: /api/
 Disallow: /unauthorized
 
 # Host
-Host: https://nexustechhub.com
+Host: http://localhost:3006
 
 # Sitemaps
+Sitemap: http://localhost:3006/sitemap.xml
 Sitemap: https://nexustechhub.com/sitemap.xml
-Sitemap: https://nexustechhub.netlify.app/sitemap.xml

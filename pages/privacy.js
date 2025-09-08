@@ -12,7 +12,7 @@ function PrivacyPolicy() {
         <div className="container" style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto' }}>
           <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Privacy Policy</h1>
           <p style={{ marginBottom: '1.5rem', lineHeight: '1.6' }}>
-            Last Updated: June 1, 2023
+            Last Updated: October 15, 2024
           </p>
 
           <section style={{ marginBottom: '2rem' }}>
@@ -144,6 +144,59 @@ function PrivacyPolicy() {
             </ul>
             <p style={{ marginTop: '1rem', lineHeight: '1.6' }}>
               To exercise these rights, please contact us using the information provided in the "Contact Us" section below.
+            </p>
+          </section>
+
+          <section style={{ marginBottom: '2rem' }}>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>UAE Personal Data Protection Law (PDPL) Compliance</h2>
+            <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
+              As a business operating in the UAE, we are committed to complying with the UAE Personal Data Protection Law (PDPL)
+              and its implementing regulations. This section outlines our specific commitments and your rights under UAE data protection laws.
+            </p>
+
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', marginTop: '1.5rem' }}>Data Protection Officer</h3>
+            <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
+              We have appointed a Data Protection Officer (DPO) to oversee our data protection practices and ensure compliance with PDPL.
+              You can contact our DPO at privacy@mdtstech.store for any data protection related inquiries.
+            </p>
+
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', marginTop: '1.5rem' }}>Your PDPL Rights</h3>
+            <p style={{ marginBottom: '0.75rem', lineHeight: '1.6' }}>
+              Under PDPL, you have the following rights regarding your personal data:
+            </p>
+            <ul style={{ marginLeft: '1.5rem', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Access:</strong> Request information about how we process your personal data</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Rectification:</strong> Request correction of inaccurate or incomplete personal data</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Erasure:</strong> Request deletion of your personal data in certain circumstances</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Restriction:</strong> Request limitation of processing in specific situations</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Data Portability:</strong> Receive your personal data in a structured format</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Object:</strong> Object to processing based on legitimate interests or direct marketing</li>
+              <li style={{ marginBottom: '0.5rem' }}><strong>Right to Withdraw Consent:</strong> Withdraw consent for processing based on consent</li>
+            </ul>
+
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', marginTop: '1.5rem' }}>Data Breach Notification</h3>
+            <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
+              In the event of a personal data breach that poses a risk to individuals' rights and freedoms, we will notify the relevant
+              supervisory authority within 72 hours, unless the breach is unlikely to result in a risk. We will also notify affected
+              individuals without undue delay if the breach poses a high risk.
+            </p>
+
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', marginTop: '1.5rem' }}>International Data Transfers</h3>
+            <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
+              When transferring personal data outside the UAE, we ensure appropriate safeguards are in place, such as adequacy
+              decisions, standard contractual clauses, or other legally recognized mechanisms to protect your data.
+            </p>
+
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', marginTop: '1.5rem' }}>Data Retention</h3>
+            <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
+              We retain personal data only for as long as necessary to fulfill the purposes for which it was collected, or as required
+              by applicable laws. Our retention periods are determined based on the nature of the data and legal requirements.
+            </p>
+
+            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', marginTop: '1.5rem' }}>Children's Data</h3>
+            <p style={{ lineHeight: '1.6' }}>
+              We do not knowingly collect personal data from children under 13 years of age without parental consent, in compliance
+              with PDPL requirements for processing children's personal data.
             </p>
           </section>
 

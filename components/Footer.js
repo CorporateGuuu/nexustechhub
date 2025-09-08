@@ -1,4 +1,5 @@
 import React from 'react';
+import NewsletterSignup from './NewsletterSignup';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -53,6 +54,7 @@ export default function Footer() {
                 Email
               </a>
             </div>
+            <NewsletterSignup />
           </div>
         </div>
 

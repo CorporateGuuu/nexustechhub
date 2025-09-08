@@ -17,7 +17,7 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className={styles.nav}>
+        <nav className={styles.nav} aria-label="Primary Navigation">
           <Link href="/products" className={styles.navLink}>Products</Link>
           <Link href="/iphone-parts" className={styles.navLink}>iPhone Parts</Link>
           <Link href="/samsung-parts" className={styles.navLink}>Samsung Parts</Link>
@@ -41,6 +41,8 @@ export default function Header() {
             className={styles.mobileToggle}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle mobile menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             ☰
           </button>
@@ -49,19 +51,19 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className={styles.mobileMenu}>
-          <Link href="/products" className={styles.mobileLink}>Products</Link>
-          <Link href="/iphone-parts" className={styles.mobileLink}>iPhone Parts</Link>
-          <Link href="/samsung-parts" className={styles.mobileLink}>Samsung Parts</Link>
-          <Link href="/ipad-parts" className={styles.mobileLink}>iPad Parts</Link>
-          <Link href="/repair-tools" className={styles.mobileLink}>Repair Tools</Link>
-          <Link href="/lcd-buyback" className={styles.mobileLink}>LCD Buyback</Link>
-          <Link href="/genuine-parts-program" className={`${styles.mobileLink} ${styles.genuinePartsLink}`}>
+        <div className={styles.mobileMenu} id="mobile-menu" role="menu" aria-label="Mobile Navigation Menu">
+          <Link href="/products" className={styles.mobileLink} role="menuitem">Products</Link>
+          <Link href="/iphone-parts" className={styles.mobileLink} role="menuitem">iPhone Parts</Link>
+          <Link href="/samsung-parts" className={styles.mobileLink} role="menuitem">Samsung Parts</Link>
+          <Link href="/ipad-parts" className={styles.mobileLink} role="menuitem">iPad Parts</Link>
+          <Link href="/repair-tools" className={styles.mobileLink} role="menuitem">Repair Tools</Link>
+          <Link href="/lcd-buyback" className={styles.mobileLink} role="menuitem">LCD Buyback</Link>
+          <Link href="/genuine-parts-program" className={`${styles.mobileLink} ${styles.genuinePartsLink}`} role="menuitem">
             Genuine Parts Program
           </Link>
-          <Link href="/about" className={styles.mobileLink}>About Us</Link>
-          <Link href="/contact" className={styles.mobileLink}>Contact</Link>
-          <Link href="/blog" className={styles.mobileLink}>Blog</Link>
+          <Link href="/about" className={styles.mobileLink} role="menuitem">About Us</Link>
+          <Link href="/contact" className={styles.mobileLink} role="menuitem">Contact</Link>
+          <Link href="/blog" className={styles.mobileLink} role="menuitem">Blog</Link>
         </div>
       )}
     </header>

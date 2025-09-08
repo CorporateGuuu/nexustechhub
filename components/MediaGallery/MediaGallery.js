@@ -10,6 +10,83 @@ import 'swiper/css/autoplay';
 import 'swiper/css/thumbs';
 import 'swiper/css/navigation';
 
+// Lightbox Component
+const Lightbox = ({ media, currentIndex, onClose, onNext, onPrev }) => {
+  const currentItem = media[currentIndex];
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'Escape':
+          onClose();
+          break;
+        case 'ArrowLeft':
+          onPrev();
+          break;
+        case 'ArrowRight':
+          onNext();
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [onClose, onNext, onPrev]);
+
+  return (
+    <div className={styles.lightbox} onClick={onClose}>
+      <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.lightboxClose} onClick={onClose} aria-label="Close lightbox">
+          ×
+        </button>
+
+        {currentItem.type === 'video' ? (
+          <video
+            src={currentItem.src}
+            controls
+            autoPlay
+            className={styles.lightboxMedia}
+            poster={currentItem.poster}
+          />
+        ) : (
+          <Image
+            src={currentItem.src}
+            alt={currentItem.alt || `Media ${currentIndex + 1}`}
+            fill
+            className={styles.lightboxMedia}
+          />
+        )}
+
+        {currentItem.caption && (
+          <div className={styles.lightboxCaption}>
+            {currentItem.caption}
+          </div>
+        )}
+
+        {media.length > 1 && (
+          <>
+            <button className={`${styles.lightboxNav} ${styles.lightboxPrev}`} onClick={onPrev} aria-label="Previous">
+              ‹
+            </button>
+            <button className={`${styles.lightboxNav} ${styles.lightboxNext}`} onClick={onNext} aria-label="Next">
+              ›
+            </button>
+          </>
+        )}
+
+        <div className={styles.lightboxCounter}>
+          {currentIndex + 1} of {media.length}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const MediaGallery = ({ media = [], autoplay = true, autoplayDelay = 3000, showThumbs = true }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [isPlaying, setIsPlaying] = useState(autoplay);

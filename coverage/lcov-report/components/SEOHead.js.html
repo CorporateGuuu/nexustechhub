@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.28% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.5% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/24</span>
+                <span class='fraction'>0/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.38% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/13</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
@@ -238,9 +238,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -388,20 +388,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Head from 'next/head';
 import { BusinessStructuredData, WebsiteStructuredData } from './StructuredData';
 &nbsp;
-export default function SEOHead({
+export default function <span class="fstat-no" title="function not covered" >SEOHead(</span>{
   title = <span class="branch-0 cbranch-no" title="branch not covered" >"Nexus TechHub - Professional Mobile Repair Parts UAE",</span>
   description = <span class="branch-0 cbranch-no" title="branch not covered" >"Professional mobile device repair parts and services in UAE. Specializing in iPhone, Samsung, and iPad replacement parts with quality guarantee. Located in Ras Al Khaimah.",</span>
   keywords = <span class="branch-0 cbranch-no" title="branch not covered" >"mobile repair parts UAE, iPhone parts Dubai, Samsung repair UAE, iPad parts Abu Dhabi, phone repair tools, mobile parts supplier UAE, Ras Al Khaimah repair parts",</span>
   canonicalUrl = <span class="branch-0 cbranch-no" title="branch not covered" >"https://nexustechhub.netlify.app",</span>
-  ogImage = "https://nexustechhub.netlify.app/images/NexusLogo.jpg",
-  ogType = "website",
-  twitterCard = "summary_large_image",
-  noIndex = false,
-  structuredData = true
+  ogImage = <span class="branch-0 cbranch-no" title="branch not covered" >"https://nexustechhub.netlify.app/images/NexusLogo.jpg",</span>
+  ogType = <span class="branch-0 cbranch-no" title="branch not covered" >"website",</span>
+  twitterCard = <span class="branch-0 cbranch-no" title="branch not covered" >"summary_large_image",</span>
+  noIndex = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
+  structuredData = <span class="branch-0 cbranch-no" title="branch not covered" >true</span>
 }) {
-  const fullTitle = title.includes('Nexus TechHub') ? title : <span class="branch-1 cbranch-no" title="branch not covered" >`${title} | Nexus TechHub`;</span>
+  const fullTitle = <span class="cstat-no" title="statement not covered" >title.includes('Nexus TechHub') ? title : `${title} | Nexus TechHub`;</span>
 &nbsp;
-  return (
+<span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;&gt;
       &lt;Head&gt;
         {/* Basic Meta Tags */}
@@ -416,7 +416,7 @@ export default function SEOHead({
         &lt;link rel="canonical" href={canonicalUrl} /&gt;
 &nbsp;
         {/* Robots */}
-        {noIndex &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >&lt;meta name="robots" content="noindex, nofollow" /&gt;}</span>
+        {noIndex &amp;&amp; &lt;meta name="robots" content="noindex, nofollow" /&gt;}
 &nbsp;
         {/* Open Graph Meta Tags */}
         &lt;meta property="og:title" content={fullTitle} /&gt;
@@ -553,7 +553,7 @@ export function <span class="fstat-no" title="function not covered" >CategorySEO
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-28T09:07:43.923Z
+                at 2025-09-05T00:51:07.594Z
             </div>
         <script src="../prettify.js"></script>
         <script>
