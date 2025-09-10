@@ -2,7 +2,8 @@ const config = require('../config');
 
 const testEndpoint = async (endpoint, method = 'GET', body = null, params = {}) => {
   const apiKey = config.apiKey;
-  const url = `${config.baseURL}${endpoint}?api_key=${apiKey}`;
+  // Corrected endpoint to include /api/appointment prefix
+  const url = `${config.baseURL}/api/appointment${endpoint}?api_key=${apiKey}`;
   try {
     const response = await fetch(url, {
       method,
@@ -34,7 +35,8 @@ describe('External RepairDesk API Tests - Inventory', () => {
   // Add more tests as needed for different scenarios
   test('GET /inventory with invalid API key should return empty object', async () => {
     const invalidTestEndpoint = async (endpoint) => {
-      const url = `${config.baseURL}${endpoint}?api_key=invalid_key`;
+      // Corrected endpoint to include /api/appointment prefix
+      const url = `${config.baseURL}/api/appointment${endpoint}?api_key=invalid_key`;
       try {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Status: ${response.status}`);

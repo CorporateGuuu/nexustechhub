@@ -2,13 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { Pool } = require('pg');
 const { isAuthenticated } = require('../../middleware/auth');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_your_test_key');
+const config = require('../../config');
+const stripe = require('stripe')(config.stripeSecretKey);
 const { sendOrderConfirmation } = require('../../utils/email');
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({
-  connectionString: 'postgresql://postgres:postgres@localhost:5432/phone_electronics_store',
-  ssl: false,
+  connectionString: config.databaseUrl,
+  ssl: config.nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 // Create checkout session
@@ -248,7 +249,7 @@ router.get('/success', async (req, res) => {
 // Webhook for Stripe events
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_your_webhook_secret';
+  const endpointSecret = config.stripeWebhookSecret;
 
   let event;
 
