@@ -57,7 +57,8 @@ const MOCK_USER = {
   image: '/images/avatar-placeholder.png',
   first_name: 'Demo',
   last_name: 'User',
-  email_verified: true
+  email_verified: true,
+  role: 'customer'
 };
 
 export const authOptions = {
@@ -77,7 +78,8 @@ export const authOptions = {
               id: MOCK_USER.id,
               name: MOCK_USER.name,
               email: MOCK_USER.email,
-              image: MOCK_USER.image
+              image: MOCK_USER.image,
+              role: MOCK_USER.role
             };
           }
 
@@ -104,12 +106,13 @@ export const authOptions = {
           const twoFactorSettings = await getUserTwoFactorSettings(user.id);
 
           if (twoFactorSettings?.enabled) {
-            // Return user with requiresTwoFactor flag
+            // Return user with requiresTwoFactor flag and role
             return {
               id: user.id,
               name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email.split('@')[0],
               email: user.email,
               image: user.image,
+              role: user.role || 'customer',
               requiresTwoFactor: true,
               twoFactorMethods: {
                 email_enabled: twoFactorSettings.email_enabled,
@@ -120,12 +123,13 @@ export const authOptions = {
             };
           }
 
-          // Return user object without password
+          // Return user object without password but with role
           return {
             id: user.id,
             name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email.split('@')[0],
             email: user.email,
-            image: user.image
+            image: user.image,
+            role: user.role || 'customer'
           };
         } catch (error) {
           console.error('Authentication error:', error);
@@ -137,7 +141,8 @@ export const authOptions = {
               id: MOCK_USER.id,
               name: MOCK_USER.name,
               email: MOCK_USER.email,
-              image: MOCK_USER.image
+              image: MOCK_USER.image,
+              role: MOCK_USER.role
             };
           }
 
@@ -166,7 +171,8 @@ export const authOptions = {
               id: MOCK_USER.id,
               name: MOCK_USER.name,
               email: MOCK_USER.email,
-              image: MOCK_USER.image
+              image: MOCK_USER.image,
+              role: MOCK_USER.role
             };
           }
 
@@ -187,7 +193,8 @@ export const authOptions = {
             id: user.id,
             name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email.split('@')[0],
             email: user.email,
-            image: user.image
+            image: user.image,
+            role: user.role || 'customer'
           };
         } catch (error) {
           console.error('2FA completion error:', error);
@@ -199,7 +206,8 @@ export const authOptions = {
               id: MOCK_USER.id,
               name: MOCK_USER.name,
               email: MOCK_USER.email,
-              image: MOCK_USER.image
+              image: MOCK_USER.image,
+              role: MOCK_USER.role
             };
           }
 
@@ -316,6 +324,7 @@ export const authOptions = {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role || 'customer';
 
         // Handle 2FA
         if (user.requiresTwoFactor) {
@@ -333,6 +342,7 @@ export const authOptions = {
     },
     async session({ session, token }) {
       session.user.id = token.id;
+      session.user.role = token.role || 'customer';
 
       // Add 2FA status to session
       if (token.requiresTwoFactor) {
