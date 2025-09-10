@@ -34,3 +34,19 @@ Website Content/Videos/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python virtual environments
+venv/
+env/
+ENV/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
