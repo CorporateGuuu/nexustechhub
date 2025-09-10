@@ -416,6 +416,19 @@
       "alwaysOutputData": true
     },
     {
+      "id": "validate-stock-input",
+      "name": "Validate Stock Update Input",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        7550,
+        3910
+      ],
+      "parameters": {
+        "jsCode": "try {\n  const input = $input.all()[0].json;\n\n  // Required fields for stock update\n  const requiredFields = ['Product ID', 'Updated Current Stock', 'Material Name', 'Measurement Unit'];\n  for (const field of requiredFields) {\n    if (!input[field] && input[field] !== 0) {\n      throw new Error(`Missing required field: ${field}`);\n    }\n  }\n\n  // Validate Product ID\n  if (typeof input['Product ID'] !== 'string' || input['Product ID'].trim() === '') {\n    throw new Error(`Invalid Product ID: ${input['Product ID']}`);\n  }\n\n  // Validate Updated Current Stock\n  const stock = parseFloat(input['Updated Current Stock']);\n  if (isNaN(stock) || stock < 0) {\n    throw new Error(`Invalid Updated Current Stock: ${input['Updated Current Stock']}`);\n  }\n\n  // Validate Material Name\n  if (typeof input['Material Name'] !== 'string' || input['Material Name'].trim() === '') {\n    throw new Error(`Invalid Material Name: ${input['Material Name']}`);\n  }\n\n  // Validate Measurement Unit\n  if (typeof input['Measurement Unit'] !== 'string' || input['Measurement Unit'].trim() === '') {\n    throw new Error(`Invalid Measurement Unit: ${input['Measurement Unit']}`);\n  }\n\n  // Add validation timestamp\n  input['Validation Timestamp'] = new Date().toISOString();\n\n  return { json: input };\n} catch (error) {\n  console.error('Validation Error:', error.message);\n  throw new Error(`Stock update validation failed: ${error.message}`);\n}"
+      },
+      "typeVersion": 2
+    },
+    {
       "id": "0cc01e7c-aa88-4783-af20-5b98f8795935",
       "name": "Update Current Stock1",
       "type": "n8n-nodes-base.googleSheets",
@@ -519,7 +532,11 @@
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         },
-        "options": {},
+        "options": {
+          "retryOnFail": true,
+          "maxRetries": 3,
+          "retryDelay": 2000
+        },
         "operation": "update",
         "sheetName": {
           "__rl": true,
@@ -539,11 +556,83 @@
       "typeVersion": 4.5
     },
     {
+      "id": "handle-update-errors",
+      "name": "Handle Update Errors",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        7880,
+        3960
+      ],
+      "parameters": {
+        "jsCode": "try {\n  // Check if the previous node failed\n  const input = $input.all()[0];\n  if (input.error) {\n    console.error('Stock update failed:', input.error.message);\n    \n    // Log to Sentry if available\n    if (typeof Sentry !== 'undefined') {\n      Sentry.captureException(new Error(`Stock update failed for Product ID: ${input.json['Product ID'] || 'Unknown'}`));\n    }\n    \n    // Send error notification\n    return {\n      json: {\n        ...input.json,\n        error: input.error.message,\n        status: 'failed',\n        timestamp: new Date().toISOString()\n      }\n    };\n  }\n  \n  // Success case\n  console.log('Stock update successful for Product ID:', input.json['Product ID']);\n  return {\n    json: {\n      ...input.json,\n      status: 'success',\n      timestamp: new Date().toISOString()\n    }\n  };\n} catch (error) {\n  console.error('Error in Handle Update Errors:', error.message);\n  throw error;\n}"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "call-nexus-api",
+      "name": "Call Nexus API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        8320,
+        3960
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.NEXUS_API_URL || 'https://api.nexus.com/stock/update' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $env.NEXUS_API_KEY ? `Bearer ${$env.NEXUS_API_KEY}` : '' }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "product_id",
+              "value": "={{ $json['Product ID'] }}"
+            },
+            {
+              "name": "material_name",
+              "value": "={{ $json['Material Name'] }}"
+            },
+            {
+              "name": "current_stock",
+              "value": "={{ $json['Updated Current Stock'] }}"
+            },
+            {
+              "name": "measurement_unit",
+              "value": "={{ $json['Measurement Unit'] }}"
+            },
+            {
+              "name": "last_updated",
+              "value": "={{ $json['Last Updated'] }}"
+            },
+            {
+              "name": "status",
+              "value": "={{ $json.status || 'success' }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 5000
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
       "id": "67cf6b2c-7166-4075-904b-67c82d94df70",
       "name": "LookUp Current stock1",
       "type": "n8n-nodes-base.googleSheets",
       "position": [
-        7880,
+        8540,
         3960
       ],
       "parameters": {
@@ -771,7 +860,7 @@
         2040
       ],
       "parameters": {
-        "jsCode": "// Get the input data\nconst input = $input.all()[0].json;\n\n// Debug: Log the entire input to see all available fields\nconsole.log(\"Complete Input Data:\", JSON.stringify(input, null, 2));\n\n// Improved number parser that handles different formats\nconst getNumber = (value) => {\n  if (value === undefined || value === null || value === \"\") return null;\n  \n  // Remove any currency symbols, commas, or extra spaces\n  const cleaned = String(value)\n    .replace(/[^\\d.-]/g, '')\n    .trim();\n    \n  const num = parseFloat(cleaned);\n  return isNaN(num) ? null : num;\n};\n\n// Use EXACT field names from your webhook payload\nconst quantity = getNumber(input[\"Quantity Received\"]);  // Not \"Quantity Received\"\nconst unitPrice = getNumber(input[\"Unit Price\"]);    // Not \"Unit Price\"\n\n// Validate\nif (quantity === null) throw new Error(`Invalid quantity: ${input[\"Quantity Received\"]}`);\nif (unitPrice === null) throw new Error(`Invalid price: ${input[\"Unit Price\"]}`);\n\n// Calculate total\nconst totalPrice = quantity * unitPrice;\n\n// Return results\n// Return clean output without debug info\nreturn {\n  json: {\n    \"Timestamp\": new Date().toISOString(),\n    \"Product ID\": input[\"Product ID\"],\n    \"Supplier Name\": input[\"Supplier Name\"],\n    \"Material Name\": input[\"Material Name\"],\n    \"Quantity Received\": quantity,\n    \"Description\": input[\"Description\"] || \"\",\n    \"Measurement Unit\": input[\"Measurement Unit\"],\n    \"Unit Price\": unitPrice,\n    \"Total Price\": totalPrice.toFixed(2),\n    \"Date of Delivery\": input[\"Date of Delivery\"],\n    \"Received By\": input[\"Received By\"],\n    \"Submission ID\": input[\"Submission ID\"]\n  }\n};"
+        "jsCode": "try {\n  // Get the input data\n  const input = $input.all()[0].json;\n\n  // Log input for debugging\n  console.log(\"Calculate Total Price - Input Data:\", JSON.stringify(input, null, 2));\n\n  // Validate required fields\n  const requiredFields = ['Product ID', 'Quantity Received', 'Unit Price', 'Material Name', 'Measurement Unit', 'Submission ID'];\n  for (const field of requiredFields) {\n    if (!input[field] && input[field] !== 0) {\n      throw new Error(`Missing required field: ${field}`);\n    }\n  }\n\n  // Improved number parser that handles different formats\n  const getNumber = (value) => {\n    if (value === undefined || value === null || value === \"\") return null;\n    \n    // Remove any currency symbols, commas, or extra spaces\n    const cleaned = String(value)\n      .replace(/[^\\d.-]/g, '')\n      .trim();\n      \n    const num = parseFloat(cleaned);\n    return isNaN(num) ? null : num;\n  };\n\n  // Parse and validate numeric fields\n  const quantity = getNumber(input[\"Quantity Received\"]);\n  const unitPrice = getNumber(input[\"Unit Price\"]);\n\n  if (quantity === null || quantity <= 0) {\n    throw new Error(`Invalid quantity received: ${input[\"Quantity Received\"]} - must be a positive number`);\n  }\n  if (unitPrice === null || unitPrice < 0) {\n    throw new Error(`Invalid unit price: ${input[\"Unit Price\"]} - must be a non-negative number`);\n  }\n\n  // Calculate total\n  const totalPrice = quantity * unitPrice;\n\n  // Log successful calculation\n  console.log(`Calculated total price: ${quantity} * ${unitPrice} = ${totalPrice}`);\n\n  // Return results\n  return {\n    json: {\n      \"Timestamp\": input[\"Timestamp\"] || new Date().toISOString(),\n      \"Product ID\": input[\"Product ID\"],\n      \"Supplier Name\": input[\"Supplier Name\"] || \"\",\n      \"Material Name\": input[\"Material Name\"],\n      \"Quantity Received\": quantity,\n      \"Description\": input[\"Description\"] || \"\",\n      \"Measurement Unit\": input[\"Measurement Unit\"],\n      \"Unit Price\": unitPrice,\n      \"Total Price\": totalPrice.toFixed(2),\n      \"Date of Delivery\": input[\"Date of Delivery\"] || new Date().toISOString().split('T')[0],\n      \"Received By\": input[\"Received By\"] || \"\",\n      \"Submission ID\": input[\"Submission ID\"]\n    }\n  };\n} catch (error) {\n  console.error(\"Error in Calculate Total Price:\", error.message);\n  throw new Error(`Failed to calculate total price: ${error.message}`);\n}"
       },
       "typeVersion": 2
     },
@@ -785,7 +874,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const existingStock = parseFloat(\n$('Lookup Existing Stock').first().json['Current Stock']\n|| 0);\nconst newQuantity = parseFloat(\n  $('Validate Quantity Received').first().json['Quantity Received']);\nconst updatedStock = existingStock + newQuantity;\n\n\n  \nreturn {\n  json: {\n    ...$json,\n    \"Updated Current Stock\": updatedStock\n  }\n};"
+        "jsCode": "try {\n  // Get data from previous nodes\n  const lookupData = $('Lookup Existing Stock').first().json;\n  const validateData = $('Validate Quantity Received').first().json;\n\n  // Log inputs for debugging\n  console.log(\"Calculate Updated Current Stock - Lookup Data:\", JSON.stringify(lookupData, null, 2));\n  console.log(\"Calculate Updated Current Stock - Validate Data:\", JSON.stringify(validateData, null, 2));\n\n  // Parse and validate existing stock\n  const existingStockRaw = lookupData['Current Stock'];\n  const existingStock = (existingStockRaw !== undefined && existingStockRaw !== null && existingStockRaw !== '') \n    ? parseFloat(existingStockRaw) \n    : 0;\n\n  if (isNaN(existingStock)) {\n    throw new Error(`Invalid existing stock value: ${existingStockRaw}`);\n  }\n  if (existingStock < 0) {\n    console.warn(`Negative existing stock detected: ${existingStock} for Product ID: ${validateData['Product ID']}`);\n  }\n\n  // Parse and validate new quantity\n  const newQuantityRaw = validateData['Quantity Received'];\n  const newQuantity = parseFloat(newQuantityRaw);\n\n  if (isNaN(newQuantity)) {\n    throw new Error(`Invalid new quantity value: ${newQuantityRaw}`);\n  }\n  if (newQuantity <= 0) {\n    throw new Error(`New quantity must be positive: ${newQuantity}`);\n  }\n\n  // Calculate updated stock\n  const updatedStock = existingStock + newQuantity;\n\n  // Validate updated stock\n  if (updatedStock < 0) {\n    throw new Error(`Updated stock cannot be negative: ${updatedStock}`);\n  }\n  if (!Number.isFinite(updatedStock)) {\n    throw new Error(`Updated stock is not a finite number: ${updatedStock}`);\n  }\n\n  // Log calculation\n  console.log(`Stock update: ${existingStock} + ${newQuantity} = ${updatedStock} for Product ID: ${validateData['Product ID']}`);\n\n  return {\n    json: {\n      ...$json,\n      \"Updated Current Stock\": updatedStock,\n      \"Previous Stock\": existingStock,\n      \"Added Quantity\": newQuantity,\n      \"Product ID\": validateData['Product ID'],\n      \"Material Name\": validateData['Material Name'],\n      \"Measurement Unit\": validateData['Measurement Unit'],\n      \"Last Updated\": new Date().toISOString(),\n      \"Update Type\": \"Receiving\"\n    }\n  };\n} catch (error) {\n  console.error(\"Error in Calculate Updated Current Stock:\", error.message);\n  throw new Error(`Failed to calculate updated stock: ${error.message}`);\n}"
       },
       "typeVersion": 2
     },
@@ -798,7 +887,7 @@
         1820
       ],
       "parameters": {
-        "jsCode": "const input = $input.all()[0].json;\n\nconst getNumber = (value) => {\n  if (!value) return 0; // Default to 0 if null/undefined\n  const cleaned = String(value).replace(/[^\\d.-]/g, '').trim();\n  const num = parseFloat(cleaned);\n  return isNaN(num) ? 0 : num;\n};\n\n\n// Use EXACT field names from your webhook payload\nconst quantity = getNumber(input[\"Quantity Received\"]);  // Not \"Quantity Received\"\nif (quantity === 0) throw new Error(`Invalid quantity: ${input[\"Quantity Received\"]}`);\n\nreturn {\n  json: {\n    ...input,\n    \"Quantity Received\": quantity // Ensure it’s a number\n  }\n};"
+        "jsCode": "try {\n  const input = $input.all()[0].json;\n\n  // Log input for debugging\n  console.log(\"Validate Quantity Received - Input:\", JSON.stringify(input, null, 2));\n\n  // Validate required fields\n  if (!input[\"Product ID\"]) {\n    throw new Error(\"Product ID is required for validation\");\n  }\n  if (!input[\"Quantity Received\"] && input[\"Quantity Received\"] !== 0) {\n    throw new Error(\"Quantity Received is required\");\n  }\n\n  // Improved number parser\n  const getNumber = (value) => {\n    if (value === undefined || value === null || value === \"\") {\n      return null;\n    }\n    const cleaned = String(value).replace(/[^\\d.-]/g, '').trim();\n    const num = parseFloat(cleaned);\n    return isNaN(num) ? null : num;\n  };\n\n  const quantity = getNumber(input[\"Quantity Received\"]);\n\n  // Validate quantity\n  if (quantity === null) {\n    throw new Error(`Invalid quantity format: ${input[\"Quantity Received\"]} - cannot parse as number`);\n  }\n  if (quantity < 0) {\n    throw new Error(`Invalid quantity: ${quantity} - must be non-negative`);\n  }\n  if (quantity === 0) {\n    throw new Error(\"Quantity received cannot be zero\");\n  }\n  if (!Number.isFinite(quantity)) {\n    throw new Error(`Invalid quantity: ${quantity} - must be a finite number`);\n  }\n\n  // Log successful validation\n  console.log(`Validated quantity: ${quantity} for Product ID: ${input[\"Product ID\"]}`);\n\n  return {\n    json: {\n      ...input,\n      \"Quantity Received\": quantity,\n      \"Validation Timestamp\": new Date().toISOString()\n    }\n  };\n} catch (error) {\n  console.error(\"Error in Validate Quantity Received:\", error.message);\n  throw new Error(`Quantity validation failed: ${error.message}`);\n}"
       },
       "typeVersion": 2
     },
@@ -913,6 +1002,20 @@
       "typeVersion": 4.5
     },
     {
+      "id": "validate-stock-update-data",
+      "name": "Validate Stock Update Data",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        7640,
+        1940
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "try {\n  // Get input data from Calculate Updated Current Stock\n  const input = $input.all()[0].json;\n\n  // Log input data for debugging\n  console.log(\"Validate Stock Update Data - Input:\", JSON.stringify(input, null, 2));\n\n  // Validate required fields\n  const requiredFields = ['Product ID', 'Updated Current Stock', 'Material Name', 'Measurement Unit'];\n  for (const field of requiredFields) {\n    if (!input[field] && input[field] !== 0) {\n      throw new Error(`Missing required field for stock update: ${field}`);\n    }\n  }\n\n  // Validate Product ID\n  if (typeof input['Product ID'] !== 'string' || input['Product ID'].trim() === '') {\n    throw new Error(`Invalid Product ID: ${input['Product ID']}`);\n  }\n\n  // Validate Updated Current Stock\n  const updatedStockRaw = input['Updated Current Stock'];\n  const updatedStock = parseFloat(updatedStockRaw);\n  if (isNaN(updatedStock)) {\n    throw new Error(`Invalid Updated Current Stock value: ${updatedStockRaw}`);\n  }\n  if (updatedStock < 0) {\n    console.warn(`Negative stock detected for Product ID ${input['Product ID']}: ${updatedStock}`);\n  }\n  if (!Number.isFinite(updatedStock)) {\n    throw new Error(`Updated Current Stock is not a finite number: ${updatedStock}`);\n  }\n\n  // Validate Material Name\n  if (typeof input['Material Name'] !== 'string' || input['Material Name'].trim() === '') {\n    throw new Error(`Invalid Material Name: ${input['Material Name']}`);\n  }\n\n  // Validate Measurement Unit\n  if (typeof input['Measurement Unit'] !== 'string' || input['Measurement Unit'].trim() === '') {\n    throw new Error(`Invalid Measurement Unit: ${input['Measurement Unit']}`);\n  }\n\n  // Validate Minimum Stock Level (optional, defaults to 50)\n  let minStockLevel = 50; // default\n  if (input['Minimum Stock Level'] !== undefined && input['Minimum Stock Level'] !== null) {\n    const minStockRaw = input['Minimum Stock Level'];\n    minStockLevel = parseFloat(minStockRaw);\n    if (isNaN(minStockLevel) || minStockLevel < 0) {\n      console.warn(`Invalid Minimum Stock Level: ${minStockRaw}, using default: 50`);\n      minStockLevel = 50;\n    }\n  }\n\n  // Prepare validated data for Google Sheets update\n  const validatedData = {\n    ...input,\n    \"Updated Current Stock\": updatedStock,\n    \"Minimum Stock Level\": minStockLevel,\n    \"Last Updated\": input['Last Updated'] || new Date().toISOString(),\n    \"Update Type\": input['Update Type'] || 'Receiving',\n    \"Validation Timestamp\": new Date().toISOString()\n  };\n\n  // Log successful validation\n  console.log(`Stock update validation successful for Product ID: ${input['Product ID']}, New Stock: ${updatedStock} ${input['Measurement Unit']}`);\n\n  return {\n    json: validatedData\n  };\n} catch (error) {\n  console.error(\"Error in Validate Stock Update Data:\", error.message);\n  throw new Error(`Stock update validation failed: ${error.message}`);\n}"
+      },
+      "typeVersion": 2
+    },
+    {
       "id": "4f102052-db49-4767-b856-41d5e4a6cf33",
       "name": "Update Current Stock",
       "type": "n8n-nodes-base.googleSheets",
@@ -928,7 +1031,7 @@
             "Current Stock": "={{ $json['Updated Current Stock'] }}",
             "Material Name": "={{ $json['Material Name'] }}",
             "Measurement Unit": "={{ $json['Measurement Unit'] }}",
-            "Minimum Stock Level": "50"
+            "Minimum Stock Level": "={{ $json['Minimum Stock Level'] || 50 }}"
           },
           "schema": [
             {
@@ -2039,6 +2142,17 @@
       "main": [
         [
           {
+            "node": "validate-stock-input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validate-stock-input": {
+      "main": [
+        [
+          {
             "node": "Update Current Stock1",
             "type": "main",
             "index": 0
@@ -2301,6 +2415,28 @@
       "main": [
         [
           {
+            "node": "handle-update-errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "handle-update-errors": {
+      "main": [
+        [
+          {
+            "node": "call-nexus-api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "call-nexus-api": {
+      "main": [
+        [
+          {
             "node": "LookUp Current stock1",
             "type": "main",
             "index": 0
@@ -2455,12 +2591,23 @@
       "main": [
         [
           {
-            "node": "Update Current Stock",
+            "node": "Validate Stock Update Data",
             "type": "main",
             "index": 0
           },
           {
             "node": "Current Stock Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Stock Update Data": {
+      "main": [
+        [
+          {
+            "node": "Update Current Stock",
             "type": "main",
             "index": 0
           }

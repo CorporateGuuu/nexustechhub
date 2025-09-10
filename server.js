@@ -23,6 +23,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const cartRoutes = require('./routes/cart');
 const searchRoutes = require('./routes/search');
+const geographicRoutes = require('./routes/geographic');
 const apiCartRoutes = require('./routes/api/cart');
 const apiCheckoutRoutes = require('./routes/api/checkout');
 const apiReviewsRoutes = require('./routes/api/reviews');
@@ -30,6 +31,8 @@ const apiWishlistRoutes = require('./routes/api/wishlist');
 const apiProblemsRoutes = require('./routes/api/problems');
 const apiCustomerRoutes = require('./routes/api/customer');
 const repairCategoriesRoutes = require('./routes/api/repaircategories');
+const apiTicketsRoutes = require('./routes/api/tickets');
+const apiInvoicesRoutes = require('./routes/api/invoices');
 
 // Create Express app
 const app = express();
@@ -329,6 +332,8 @@ app.use('/api/wishlist', apiWishlistRoutes);
 app.use('/api/problems', apiProblemsRoutes);
 app.use('/api/customer', apiCustomerRoutes);
 app.use('/api/repaircategories', repairCategoriesRoutes);
+app.use('/api/tickets', apiTicketsRoutes);
+app.use('/api/invoices', apiInvoicesRoutes);
 
 // CSRF error handler
 app.use(handleCsrfError);

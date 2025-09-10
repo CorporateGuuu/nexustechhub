@@ -6,6 +6,7 @@ import Head from 'next/head';
 import Layout from '../../components/Layout/Layout';
 import ProductFilters from '../../components/ProductFilters/ProductFilters';
 import MediaGallery from '../../components/MediaGallery/MediaGallery';
+import SkeletonProduct from '../../components/skeleton/SkeletonProduct';
 import styles from '../../styles/ProductsPage.module.css';
 
 export default function Products() {
@@ -341,9 +342,13 @@ export default function Products() {
           {/* Product Grid */}
           <div className={styles.productsContent}>
             {loading ? (
-              <div className="loading-container">
-                <div className="loading-spinner"></div>
-                <p>Loading products...</p>
+              <div className={styles.productsGrid}>
+                {Array.from({ length: 8 }, (_, index) => (
+                  <SkeletonProduct
+                    key={`skeleton-${index}`}
+                    className={styles.productCard}
+                  />
+                ))}
               </div>
             ) : error ? (
               <div className="error-message">

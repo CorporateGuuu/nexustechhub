@@ -1,0 +1,54 @@
+{
+  "passed": 1,
+  "failed": 7,
+  "tests": [
+    {
+      "name": "Raw Materials Receiving - New Product",
+      "success": false,
+      "message": "Request failed with status code 404",
+      "timestamp": "2025-09-08T09:29:14.684Z"
+    },
+    {
+      "name": "Raw Materials Receiving - Existing Product",
+      "success": false,
+      "message": "Request failed with status code 404",
+      "timestamp": "2025-09-08T09:29:15.084Z"
+    },
+    {
+      "name": "Material Issue Request - Sufficient Stock",
+      "success": false,
+      "message": "Request failed with status code 404",
+      "timestamp": "2025-09-08T09:29:15.495Z"
+    },
+    {
+      "name": "Material Issue Request - Insufficient Stock",
+      "success": false,
+      "message": "Request failed with status code 404",
+      "timestamp": "2025-09-08T09:29:15.814Z"
+    },
+    {
+      "name": "Low Stock Detection",
+      "success": false,
+      "message": "Manual test - requires stock reduction setup first",
+      "timestamp": "2025-09-08T09:29:15.814Z"
+    },
+    {
+      "name": "Error Handling - Invalid Data",
+      "success": true,
+      "message": "Error handling working correctly",
+      "timestamp": "2025-09-08T09:29:16.212Z"
+    },
+    {
+      "name": "Nexus API Integration",
+      "success": false,
+      "message": "Nexus API test failed: Request failed with status code 526",
+      "timestamp": "2025-09-08T09:29:16.447Z"
+    },
+    {
+      "name": "Retry Logic and Error Recovery",
+      "success": false,
+      "message": "All 3 retry attempts failed",
+      "timestamp": "2025-09-08T09:29:22.845Z"
+    }
+  ]
+}

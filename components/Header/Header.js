@@ -35,7 +35,9 @@ const Header = () => {
       {/* Placeholder for new header design */}
       <div className={styles.headerPlaceholder}>
         <div className={styles.logo}>
-          <Link href="/">Nexus TechHub</Link>
+          <Link href="/">
+            <img src="/images/nexus-logo.svg" alt="Nexus TechHub Logo" />
+          </Link>
         </div>
 
         {/* Mobile menu button - keeping this for mobile functionality */}

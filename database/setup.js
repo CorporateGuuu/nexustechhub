@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const readline = require('readline');
 
 // Database connection configuration
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/postgres';
+const connectionString = process.env.DATABASE_URL || 'postgresql://apple@localhost:5432/postgres';
 const dbName = 'phone_electronics_store';
 
 async function setupDatabase() {

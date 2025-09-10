@@ -19,7 +19,7 @@ const UnifiedHeader = () => {
     hidden: false
   });
 
-  // Define mega menu items with updated structure
+  // Define simplified mega menu items
   const megaMenuItems = [
     {
       id: 1,
@@ -28,37 +28,21 @@ const UnifiedHeader = () => {
       submenu: [
         {
           id: 101,
-          title: 'By Model',
+          title: 'Popular Models',
           items: [
             { id: 1011, title: 'iPhone 15 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-15' },
             { id: 1012, title: 'iPhone 14 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-14' },
             { id: 1013, title: 'iPhone 13 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-13' },
-            { id: 1014, title: 'iPhone 12 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-12' },
-            { id: 1015, title: 'iPhone 11 Series', url: '/products?category=iphone-parts&model=iphone-11' },
-            { id: 1016, title: 'iPhone X Series', url: '/products?category=iphone-parts&model=iphone-x' },
-            { id: 1017, title: 'iPhone 8 Series', url: '/products?category=iphone-parts&model=iphone-8' },
-            { id: 1018, title: 'iPhone 7 Series', url: '/products?category=iphone-parts&model=iphone-7' },
           ]
         },
         {
           id: 102,
-          title: 'By Part Type',
+          title: 'Parts',
           items: [
             { id: 1021, title: 'Screens & LCDs', url: '/products?category=iphone-parts&subcategory=iphone-parts/screens' },
             { id: 1022, title: 'Batteries', url: '/products?category=iphone-parts&subcategory=iphone-parts/batteries' },
             { id: 1023, title: 'Charging Ports', url: '/products?category=iphone-parts&subcategory=iphone-parts/charging-ports' },
-            { id: 1024, title: 'Back Glass', url: '/products?category=iphone-parts&part=back-glass' },
-            { id: 1025, title: 'Cameras', url: '/products?category=iphone-parts&part=camera' },
-            { id: 1026, title: 'Speakers', url: '/products?category=iphone-parts&part=speaker' },
-          ]
-        },
-        {
-          id: 103,
-          title: 'Featured',
-          items: [
-            { id: 1031, title: 'New Arrivals', url: '/products?category=iphone-parts&sort=newest' },
-            { id: 1032, title: 'Best Sellers', url: '/products?category=iphone-parts&sort=bestselling' },
-            { id: 1033, title: 'Special Offers', url: '/products?category=iphone-parts&discount=true' },
+            { id: 1024, title: 'Cameras', url: '/products?category=iphone-parts&part=camera' },
           ]
         }
       ]
@@ -70,33 +54,21 @@ const UnifiedHeader = () => {
       submenu: [
         {
           id: 201,
-          title: 'By Model',
+          title: 'Popular Models',
           items: [
             { id: 2011, title: 'Galaxy S Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-s' },
             { id: 2012, title: 'Galaxy Note Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-note' },
             { id: 2013, title: 'Galaxy A Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-a' },
-            { id: 2014, title: 'Galaxy Z Series', url: '/products?category=samsung-parts&model=galaxy-z' },
-            { id: 2015, title: 'Galaxy Tab Series', url: '/products?category=samsung-parts&model=galaxy-tab' },
           ]
         },
         {
           id: 202,
-          title: 'By Part Type',
+          title: 'Parts',
           items: [
             { id: 2021, title: 'Screens & LCDs', url: '/products?category=samsung-parts&subcategory=samsung-parts/screens' },
             { id: 2022, title: 'Batteries', url: '/products?category=samsung-parts&subcategory=samsung-parts/batteries' },
             { id: 2023, title: 'Charging Ports', url: '/products?category=samsung-parts&part=charging-port' },
-            { id: 2024, title: 'Back Glass', url: '/products?category=samsung-parts&part=back-glass' },
-            { id: 2025, title: 'Cameras', url: '/products?category=samsung-parts&part=camera' },
-          ]
-        },
-        {
-          id: 203,
-          title: 'Featured',
-          items: [
-            { id: 2031, title: 'New Arrivals', url: '/products?category=samsung-parts&sort=newest' },
-            { id: 2032, title: 'Best Sellers', url: '/products?category=samsung-parts&sort=bestselling' },
-            { id: 2033, title: 'Special Offers', url: '/products?category=samsung-parts&discount=true' },
+            { id: 2024, title: 'Cameras', url: '/products?category=samsung-parts&part=camera' },
           ]
         }
       ]
@@ -108,85 +80,45 @@ const UnifiedHeader = () => {
       submenu: [
         {
           id: 301,
-          title: 'By Model',
+          title: 'Models',
           items: [
             { id: 3011, title: 'iPad Pro', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-pro' },
             { id: 3012, title: 'iPad Air', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-air' },
             { id: 3013, title: 'iPad Mini', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-mini' },
-            { id: 3014, title: 'iPad Standard', url: '/products?category=ipad-parts&model=ipad-standard' },
           ]
         },
         {
           id: 302,
-          title: 'By Part Type',
+          title: 'Parts',
           items: [
             { id: 3021, title: 'Screens & LCDs', url: '/products?category=ipad-parts&subcategory=ipad-parts/screens' },
             { id: 3022, title: 'Batteries', url: '/products?category=ipad-parts&part=battery' },
             { id: 3023, title: 'Charging Ports', url: '/products?category=ipad-parts&part=charging-port' },
-            { id: 3024, title: 'Cameras', url: '/products?category=ipad-parts&part=camera' },
           ]
         }
       ]
     },
     {
       id: 4,
-      title: 'MacBook Parts',
-      url: '/products?category=macbook-parts',
-      submenu: [
-        {
-          id: 401,
-          title: 'By Model',
-          items: [
-            { id: 4011, title: 'MacBook Pro', url: '/products?category=macbook-parts&subcategory=macbook-parts/macbook-pro' },
-            { id: 4012, title: 'MacBook Air', url: '/products?category=macbook-parts&subcategory=macbook-parts/macbook-air' },
-          ]
-        },
-        {
-          id: 402,
-          title: 'By Part Type',
-          items: [
-            { id: 4021, title: 'Screens', url: '/products?category=macbook-parts&subcategory=macbook-parts/screens' },
-            { id: 4022, title: 'Keyboards', url: '/products?category=macbook-parts&subcategory=macbook-parts/keyboards' },
-            { id: 4023, title: 'Batteries', url: '/products?category=macbook-parts&subcategory=macbook-parts/batteries' },
-            { id: 4024, title: 'Trackpads', url: '/products?category=macbook-parts&part=trackpad' },
-            { id: 4025, title: 'Logic Boards', url: '/products?category=macbook-parts&part=logic-board' },
-          ]
-        }
-      ]
-    },
-    {
-      id: 5,
       title: 'Repair Tools',
       url: '/products?category=repair-tools',
       submenu: [
         {
-          id: 501,
+          id: 401,
           title: 'Tool Types',
           items: [
-            { id: 5011, title: 'Tool Kits', url: '/products?category=repair-tools&subcategory=repair-tools/tool-kits' },
-            { id: 5012, title: 'Screwdrivers', url: '/products?category=repair-tools&subcategory=repair-tools/screwdrivers' },
-            { id: 5013, title: 'Heat Guns', url: '/products?category=repair-tools&subcategory=repair-tools/heat-guns' },
-            { id: 5014, title: 'Soldering Equipment', url: '/products?category=repair-tools&subcategory=repair-tools/soldering' },
-            { id: 5015, title: 'Adhesives & Tapes', url: '/products?category=repair-tools&subcategory=repair-tools/adhesives' },
+            { id: 4011, title: 'Tool Kits', url: '/products?category=repair-tools&subcategory=repair-tools/tool-kits' },
+            { id: 4012, title: 'Screwdrivers', url: '/products?category=repair-tools&subcategory=repair-tools/screwdrivers' },
+            { id: 4013, title: 'Heat Guns', url: '/products?category=repair-tools&subcategory=repair-tools/heat-guns' },
           ]
         },
         {
-          id: 502,
-          title: 'By Brand',
+          id: 402,
+          title: 'Brands',
           items: [
-            { id: 5021, title: 'iFixit', url: '/products?category=repair-tools&brand=ifixit' },
-            { id: 5022, title: 'Nexus TechHub Tools', url: '/products?category=repair-tools&brand=nexustechhub' },
-            { id: 5023, title: 'JAKEMY', url: '/products?category=repair-tools&brand=jakemy' },
-            { id: 5024, title: 'QIANLI', url: '/products?category=repair-tools&brand=qianli' },
-          ]
-        },
-        {
-          id: 503,
-          title: 'Featured',
-          items: [
-            { id: 5031, title: 'New Arrivals', url: '/products?category=repair-tools&sort=newest' },
-            { id: 5032, title: 'Best Sellers', url: '/products?category=repair-tools&sort=bestselling' },
-            { id: 5033, title: 'Special Offers', url: '/products?category=repair-tools&discount=true' },
+            { id: 4021, title: 'iFixit', url: '/products?category=repair-tools&brand=ifixit' },
+            { id: 4022, title: 'Nexus TechHub', url: '/products?category=repair-tools&brand=nexustechhub' },
+            { id: 4023, title: 'JAKEMY', url: '/products?category=repair-tools&brand=jakemy' },
           ]
         }
       ]

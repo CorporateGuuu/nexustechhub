@@ -113,8 +113,8 @@ export default function AdvancedSEO({
         },
         sameAs: [
           'https://www.facebook.com/nexustechhub',
-          'https://www.instagram.com/nexustechhub',
-          'https://www.linkedin.com/company/nexustechhub',
+          'https://www.instagram.com/nexustechhubuae/',
+          'https://www.linkedin.com/company/nexus-tech-hub/?viewAsMember=true',
           'https://twitter.com/nexustechhub'
         ]
       });
