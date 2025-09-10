@@ -355,7 +355,7 @@ const UnifiedFooter = () => {
               <li className={styles.linkedin}>
                 <a
                   aria-label="linkedin"
-                  href="https://www.linkedin.com/in/fitzgerald-amaniampong-0a2962324/"
+                  href="https://www.linkedin.com/company/nexus-tech-hub/?viewAsMember=true"
                   title="linkedin"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -366,7 +366,7 @@ const UnifiedFooter = () => {
               <li className={styles.instagram}>
                 <a
                   aria-label="instagram"
-                  href="https://www.instagram.com/nexustechhub/"
+                  href="https://www.instagram.com/nexustechhubuae/"
                   title="instagram"
                   target="_blank"
                   rel="noopener noreferrer"

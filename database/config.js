@@ -8,7 +8,7 @@ const path = require('path');
 const isProduction = process.env.NODE_ENV === 'production';
 
 // Database connection configuration
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/phone_electronics_store';
+const connectionString = process.env.DATABASE_URL || 'postgresql://apple@localhost:5432/phone_electronics_store';
 
 // Create a connection pool
 const pool = new Pool({
