@@ -51,6 +51,7 @@ export default function SignIn({ csrfToken }) {
         redirect: false,
         email,
         password,
+        csrfToken, // Include csrfToken here for proper CSRF protection
         callbackUrl: callbackUrl || '/'
       });
 
@@ -125,15 +126,16 @@ export default function SignIn({ csrfToken }) {
 
             {error && (
               <div className={styles.formError}>
-                {error}
-              </div>
-            )}
+              {error}
+            </div>
+          )}
 
-            {successMessage && (
-              <div className={styles.successMessage}>
-                {successMessage}
-              </div>
-            )}
+          {/* Removed undefined successMessage rendering */}
+          {/* {successMessage && (
+            <div className={styles.successMessage}>
+              {successMessage}
+            </div>
+          )} */}
 
             <form onSubmit={handleSubmit} className={styles.authForm}>
               <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
