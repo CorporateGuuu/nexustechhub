@@ -1,0 +1,92 @@
+{
+  "environment_variables": {
+    "NEXUS_API_URL": "https://api.nexus.com/stock/update",
+    "NEXUS_API_KEY": "test-api-key-12345",
+    "REPAIRDESK_API_URL": "https://api.repairdesk.com/v1",
+    "REPAIRDESK_API_KEY": "test-repairdesk-api-key-12345",
+    "STRIPE_API_URL": "https://api.stripe.com/v1",
+    "STRIPE_SECRET_KEY": "sk_test_stripe_secret_key_12345",
+    "SENTRY_DSN": "https://test-sentry-dsn@test.ingest.sentry.io/test",
+    "ADMIN_EMAIL": "admin@repairshop.com",
+    "GOOGLE_SHEETS_CREDENTIALS": {
+      "type": "service_account",
+      "project_id": "test-project",
+      "private_key_id": "test-key-id",
+      "private_key": "-----BEGIN PRIVATE KEY-----\ntest-private-key\n-----END PRIVATE KEY-----\n",
+      "client_email": "test@test-project.iam.gserviceaccount.com",
+      "client_id": "test-client-id",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/test%40test-project.iam.gserviceaccount.com"
+    },
+    "SUPABASE_URL": "https://test-project.supabase.co",
+    "SUPABASE_ANON_KEY": "test-anon-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "test-service-role-key",
+    "GMAIL_CREDENTIALS": {
+      "client_id": "test-gmail-client-id",
+      "client_secret": "test-gmail-client-secret",
+      "refresh_token": "test-refresh-token"
+    }
+  },
+  "test_google_sheets": {
+    "spreadsheet_id": "1q0S6AVK7uxZG8sUQkpcZr01KToHPjOZ0gG3zKHLR6lw",
+    "sheets": {
+      "raw_materials": {
+        "name": "Raw Materials",
+        "gid": 1680576943
+      },
+      "current_stock": {
+        "name": "Current Stock",
+        "gid": 1019183415
+      },
+      "materials_issued": {
+        "name": "Materials Issued",
+        "gid": 328307238
+      }
+    }
+  },
+  "test_endpoints": {
+    "raw_materials_webhook": "http://localhost:5678/webhook/Pb-raw-materials",
+    "issue_request_webhook": "http://localhost:5678/webhook/raw-materials-issue",
+    "approval_webhook": "http://localhost:5678/webhook/approve-issue"
+  },
+  "test_emails": {
+    "approval_recipient": "test-approver@example.com",
+    "low_stock_recipient": "test-stock-manager@example.com"
+  },
+  "mock_services": {
+    "nexus_api_mock": {
+      "enabled": true,
+      "responses": {
+        "success": {
+          "status": 200,
+          "body": {
+            "success": true,
+            "message": "Stock updated successfully",
+            "updated_at": "2024-06-01T10:00:00Z"
+          }
+        },
+        "error": {
+          "status": 500,
+          "body": {
+            "success": false,
+            "error": "Internal server error"
+          }
+        }
+      }
+    },
+    "google_sheets_mock": {
+      "enabled": false,
+      "simulate_failures": false,
+      "failure_rate": 0.1
+    }
+  },
+  "test_settings": {
+    "timeout": 30000,
+    "retry_attempts": 3,
+    "retry_delay": 2000,
+    "enable_logging": true,
+    "log_level": "debug"
+  }
+}

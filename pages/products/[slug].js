@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
+import SkeletonProductDetail from '../../components/skeleton/SkeletonProductDetail';
 import styles from '../../styles/ProductDetail.module.css';
 
 // Mock function to get all products - in production, this would come from a database/API
@@ -152,10 +153,7 @@ export default function ProductDetail() {
     return (
       <>
         <Header />
-        <div className={styles.loading}>
-          <div className="loading-spinner"></div>
-          <p>Loading product details...</p>
-        </div>
+        <SkeletonProductDetail />
         <Footer />
         <WhatsAppButton />
       </>
