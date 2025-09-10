@@ -1,0 +1,37 @@
+/* Pulse.module.css */
+.pulse {
+  display: inline-block;
+  animation-fill-mode: both;
+}
+
+.pulseHidden {
+  opacity: 0;
+  transform: scale(1);
+}
+
+.pulseVisible {
+  animation-name: pulse;
+  animation-duration: var(--pulse-duration, 2s);
+  animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  animation-iteration-count: var(--pulse-timing, infinite);
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(var(--pulse-scale, 1.05));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pulseVisible {
+    animation: none;
+  }
+}

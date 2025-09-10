@@ -1,0 +1,219 @@
+/* SkeletonSlider Component Styles */
+
+.skeletonSlider {
+  padding: 2rem 0;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeletonHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.skeletonTitle {
+  height: 2rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  width: 250px;
+  border-radius: 0.25rem;
+}
+
+.skeletonSubtitle {
+  height: 1.25rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  width: 400px;
+  border-radius: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.skeletonLink {
+  height: 2.5rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  width: 120px;
+  border-radius: 0.375rem;
+}
+
+.skeletonCarousel {
+  position: relative;
+}
+
+.skeletonSlides {
+  display: flex;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+.skeletonSlide {
+  flex: 0 0 calc(25% - 1.125rem);
+  min-width: 0;
+}
+
+.skeletonNavButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.skeletonPrevButton {
+  left: -1.5rem;
+}
+
+.skeletonNextButton {
+  right: -1.5rem;
+}
+
+.skeletonPagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.skeletonPaginationBullet {
+  width: 0.75rem;
+  height: 0.75rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  border-radius: 50%;
+}
+
+.skeletonProgressBar {
+  position: absolute;
+  bottom: -2rem;
+  left: 0;
+  right: 0;
+  height: 0.25rem;
+  background: #e5e7eb;
+  border-radius: 0.125rem;
+  overflow: hidden;
+}
+
+.skeletonProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  width: 30%;
+}
+
+/* Animations */
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 1280px) {
+  .skeletonSlide {
+    flex: 0 0 calc(33.333% - 1rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .skeletonHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .skeletonTitle {
+    width: 200px;
+  }
+
+  .skeletonSubtitle {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .skeletonLink {
+    align-self: flex-end;
+    width: 100px;
+  }
+
+  .skeletonSlides {
+    gap: 1rem;
+  }
+
+  .skeletonSlide {
+    flex: 0 0 calc(50% - 0.5rem);
+  }
+
+  .skeletonNavButton {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .skeletonPrevButton {
+    left: -1rem;
+  }
+
+  .skeletonNextButton {
+    right: -1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .skeletonSlider {
+    padding: 1rem 0;
+  }
+
+  .skeletonHeader {
+    margin-bottom: 1rem;
+  }
+
+  .skeletonTitle {
+    height: 1.75rem;
+    width: 180px;
+  }
+
+  .skeletonSubtitle {
+    height: 1rem;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .skeletonSlides {
+    gap: 0.75rem;
+  }
+
+  .skeletonSlide {
+    flex: 0 0 100%;
+  }
+
+  .skeletonNavButton {
+    display: none; /* Hide navigation on very small screens */
+  }
+
+  .skeletonPagination {
+    margin-top: 1rem;
+  }
+}

@@ -71,8 +71,8 @@ export default async function handler(req, res) {
       errors.push('A valid email address is required.');
     }
 
-    if (!phone || !isValidPhone(phone)) {
-      errors.push('A valid UAE phone number is required (e.g., +971 50 123 4567).');
+    if (phone && !isValidPhone(phone)) {
+      errors.push('Please provide a valid UAE phone number (e.g., +971 50 123 4567).');
     }
 
     if (!message || message.trim().length < 10) {
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     const sanitizedData = {
       name: sanitizeInput(name),
       email: sanitizeInput(email),
-      phone: sanitizeInput(phone),
+      phone: sanitizeInput(phone || ''),
       company: sanitizeInput(company || ''),
       subject: sanitizeInput(subject || 'General Inquiry'),
       message: sanitizeInput(message),

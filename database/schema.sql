@@ -218,3 +218,45 @@ CREATE TRIGGER update_orders_updated_at
 BEFORE UPDATE ON orders
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+-- Inventory Transfers Table
+CREATE TABLE inventory_transfers (
+    id SERIAL PRIMARY KEY,
+    transfer_id VARCHAR(50) NOT NULL UNIQUE,
+    status VARCHAR(20) NOT NULL DEFAULT 'Pending', -- 'Pending', 'Completed', 'Cancelled'
+    created_by VARCHAR(100),
+    from_store_id INTEGER,
+    to_store_id INTEGER,
+    from_store_name VARCHAR(100),
+    to_store_name VARCHAR(100),
+    type VARCHAR(50) DEFAULT 'Transaction Out',
+    transaction_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Inventory Transfer Items Table
+CREATE TABLE inventory_transfer_items (
+    id SERIAL PRIMARY KEY,
+    transfer_id INTEGER REFERENCES inventory_transfers(id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
+    quantity INTEGER NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    gst DECIMAL(10, 2) DEFAULT 0.00,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for inventory transfers
+CREATE INDEX idx_inventory_transfers_transfer_id ON inventory_transfers(transfer_id);
+CREATE INDEX idx_inventory_transfers_status ON inventory_transfers(status);
+CREATE INDEX idx_inventory_transfers_from_store ON inventory_transfers(from_store_id);
+CREATE INDEX idx_inventory_transfers_to_store ON inventory_transfers(to_store_id);
+CREATE INDEX idx_inventory_transfers_date ON inventory_transfers(transaction_date);
+CREATE INDEX idx_inventory_transfer_items_transfer_id ON inventory_transfer_items(transfer_id);
+CREATE INDEX idx_inventory_transfer_items_product_id ON inventory_transfer_items(product_id);
+
+-- Create trigger for inventory transfers updated_at
+CREATE TRIGGER update_inventory_transfers_updated_at
+BEFORE UPDATE ON inventory_transfers
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();

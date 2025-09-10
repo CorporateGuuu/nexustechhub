@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination, A11y } from 'swiper/modules';
+import SkeletonSlider from '../skeleton/SkeletonSlider';
 import styles from './FeaturedProducts.module.css';
 
 // Import Swiper styles
@@ -13,6 +14,17 @@ import 'swiper/css/autoplay';
 
 const FeaturedProducts = ({ products }) => {
   const swiperRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -49,6 +61,14 @@ const FeaturedProducts = ({ products }) => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [products]);
 
+  if (isLoading) {
+    return (
+      <section className={styles.featuredProducts}>
+        <SkeletonSlider slidesPerView={4} />
+      </section>
+    );
+  }
+
   if (!products || products.length === 0) {
     return (
       <section className={styles.featuredProducts}>
@@ -65,6 +85,27 @@ const FeaturedProducts = ({ products }) => {
       </section>
     );
   }
+
+  // Progress tracking for autoplay
+  const updateProgress = () => {
+    if (swiperRef.current && swiperRef.current.autoplay) {
+      const autoplay = swiperRef.current.autoplay;
+      const progressValue = (autoplay.timeLeft / autoplay.delay) * 100;
+      setProgress(100 - progressValue);
+    }
+  };
+
+  const toggleAutoplay = () => {
+    if (swiperRef.current && swiperRef.current.autoplay) {
+      if (isPlaying) {
+        swiperRef.current.autoplay.stop();
+        setIsPlaying(false);
+      } else {
+        swiperRef.current.autoplay.start();
+        setIsPlaying(true);
+      }
+    }
+  };
 
   return (
     <section className={styles.featuredProducts}>
@@ -103,6 +144,13 @@ const FeaturedProducts = ({ products }) => {
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
           }}
+          onAutoplayTimeLeft={(swiper, timeLeft, percentage) => {
+            setProgress((1 - percentage) * 100);
+          }}
+          onAutoplayStart={() => setIsPlaying(true)}
+          onAutoplayStop={() => setIsPlaying(false)}
+          onAutoplayPause={() => setIsPlaying(false)}
+          onAutoplayResume={() => setIsPlaying(true)}
           breakpoints={{
             640: {
               slidesPerView: 2,
@@ -192,6 +240,23 @@ const FeaturedProducts = ({ products }) => {
 
         {/* Custom Pagination */}
         <div className={`${styles.pagination} featured-products-pagination`}></div>
+
+        {/* Progress Bar */}
+        <div className={styles.progressContainer}>
+          <div
+            className={styles.progressBar}
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+
+        {/* Autoplay Control */}
+        <button
+          className={styles.autoplayControl}
+          onClick={toggleAutoplay}
+          aria-label={isPlaying ? 'Pause autoplay' : 'Resume autoplay'}
+        >
+          {isPlaying ? '⏸️' : '▶️'}
+        </button>
       </div>
     </section>
   );
