@@ -14,7 +14,23 @@ Add the following environment variables to your `.env.local` file:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_JWT_SECRET=your-legacy-jwt-secret
 ```
+
+### JWT Secret Configuration
+
+The `SUPABASE_JWT_SECRET` is used for verifying JWTs signed with the legacy HS256 algorithm. This is particularly important for:
+
+- Verifying access tokens issued by Supabase Auth
+- Server-side JWT validation in API routes
+- Custom authentication middleware
+
+**Important Notes:**
+- The legacy JWT secret should be kept secure and never committed to version control
+- Access tokens expire after 3600 seconds (1 hour) by default
+- The application supports both HS256 (legacy) and RS256 (current) JWT verification
+- If `SUPABASE_JWT_SECRET` is not set, the application will fall back to RS256 verification using JWKS
 
 ## Database Schema
 

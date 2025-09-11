@@ -1,16 +1,23 @@
-# Security Hardening: Remove Hardcoded Secrets
+# JWT Secret Integration Tasks
 
-## Tasks
-- [ ] Create a centralized config module for environment variables
-- [x] Update routes/api/checkout.js to use config module
-- [ ] Update routes/api/tickets.js to use config module
-- [ ] Update routes/api/invoices.js to use config module
-- [ ] Update routes/api/customer.js to use config module
-- [ ] Update .env.example with required environment variables
-- [ ] Test API routes with environment variables only
+## Current Status
+- [x] Analyze current Supabase JWT setup
+- [x] Understand legacy HS256 secret requirements
+- [x] Plan integration approach
 
-## Completed
-- [x] Analyze backend API route files for hardcoded secrets
-- [x] Create implementation plan
-- [x] Get user confirmation
-- [x] Create a centralized config module for environment variables
+## Completed Tasks
+- [x] Update lib/supabase.js to support HS256 JWT verification
+- [x] Add SUPABASE_JWT_SECRET environment variable documentation
+- [x] Update SUPABASE_SETUP.md with JWT secret configuration
+
+## Pending Tasks
+- [ ] Set SUPABASE_JWT_SECRET environment variable in deployment environment
+- [ ] Test JWT verification with legacy secret
+- [ ] Verify access token expiry configuration (3600 seconds) in Supabase dashboard
+
+## Files to Modify
+- lib/supabase.js - Add HS256 verification support
+- SUPABASE_SETUP.md - Update environment variables section
+
+## Environment Variables to Add
+- SUPABASE_JWT_SECRET - Legacy JWT secret for HS256 verification

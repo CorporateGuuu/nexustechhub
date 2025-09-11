@@ -41,17 +41,6 @@ function AboutUs() {
             </p>
           </section>
 
-          <section style={{ marginBottom: '2rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Why Choose Us</h2>
-            <ul style={{ marginLeft: '1.5rem', lineHeight: '1.6' }}>
-              <li style={{ marginBottom: '0.5rem' }}>Quality Assurance: All our parts undergo rigorous testing to ensure reliability and performance.</li>
-              <li style={{ marginBottom: '0.5rem' }}>Competitive Pricing: We offer fair prices without compromising on quality.</li>
-              <li style={{ marginBottom: '0.5rem' }}>Expert Support: Our team of technicians is available to provide guidance and troubleshooting assistance.</li>
-              <li style={{ marginBottom: '0.5rem' }}>Fast Shipping: Orders are processed quickly to minimize downtime for repair businesses.</li>
-              <li style={{ marginBottom: '0.5rem' }}>Satisfaction Guarantee: We stand behind our products with a comprehensive return policy.</li>
-            </ul>
-          </section>
-
           <section>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Our Team</h2>
             <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>

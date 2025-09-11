@@ -13,16 +13,6 @@ import dynamic from 'next/dynamic';
 import styles from './Layout.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Dynamically import PWA components to avoid SSR issues
-const PWAInstallPrompt = dynamic(
-  () => import('../PWAInstallPrompt/PWAInstallPrompt'),
-  { ssr: false }
-);
-
-const EnhancedPWAManager = dynamic(
-  () => import('../PWA/EnhancedPWAManager'),
-  { ssr: false }
-);
 
 export default function Layout({
   children,
@@ -98,16 +88,6 @@ export default function Layout({
 
       <ErrorBoundary>
         <WhatsAppButton />
-      </ErrorBoundary>
-
-      {/* Enhanced PWA Manager */}
-      <ErrorBoundary>
-        <EnhancedPWAManager />
-      </ErrorBoundary>
-
-      {/* PWA Install Prompt (Legacy) */}
-      <ErrorBoundary>
-        <PWAInstallPrompt />
       </ErrorBoundary>
 
       {/* Toast Notifications */}

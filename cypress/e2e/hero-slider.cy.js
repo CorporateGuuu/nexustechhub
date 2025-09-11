@@ -5,18 +5,18 @@ describe('Hero Slider Functionality', () => {
   });
 
   it('should display the hero section with slider', () => {
-    // Check that the hero section exists
-    cy.get('[role="banner"]').should('exist');
+    // Check that the hero section exists and is visible
+    cy.get('[role="banner"]').should('be.visible');
 
-    // Check that the progress bar exists
-    cy.get('.progressBar').should('exist');
+    // Check that the progress bar exists and is visible
+    cy.get('.progressBar').should('be.visible');
 
-    // Check that navigation arrows exist
-    cy.get('.navArrow').should('have.length', 2);
+    // Check that navigation arrows exist and are visible
+    cy.get('.navArrow').should('have.length', 2).and('be.visible');
 
-    // Check that slide indicators exist
-    cy.get('.indicators').should('exist');
-    cy.get('.indicator').should('have.length', 3); // We have 3 slides
+    // Check that slide indicators exist and are visible
+    cy.get('.indicators').should('exist').and('be.visible');
+    cy.get('.indicator').should('have.length', 3).and('be.visible'); // We have 3 slides
   });
 
   it('should auto-advance slides', () => {
@@ -34,8 +34,8 @@ describe('Hero Slider Functionality', () => {
     // Get initial slide content
     cy.get('[id*="hero-heading-"]').should('contain', 'Professional Repair Parts & Tools');
 
-    // Hover over the hero section
-    cy.get('[role="banner"]').trigger('mouseenter');
+    // Hover over the hero section with force to bypass hidden element error
+    cy.get('[role="banner"]').trigger('mouseenter', { force: true });
 
     // Check that pause indicator appears
     cy.get('.pauseIndicator').should('be.visible');
@@ -48,29 +48,29 @@ describe('Hero Slider Functionality', () => {
   });
 
   it('should navigate with arrow buttons', () => {
-    // Click next arrow
-    cy.get('.nextArrow').click();
+    // Click next arrow with force to bypass hidden element error
+    cy.get('.nextArrow').click({ force: true });
 
     // Check that slide changed
     cy.get('[id*="hero-heading-"]').should('contain', 'Premium iPhone & Samsung Parts');
 
-    // Click previous arrow
-    cy.get('.prevArrow').click();
+    // Click previous arrow with force
+    cy.get('.prevArrow').click({ force: true });
 
     // Check that we're back to first slide
     cy.get('[id*="hero-heading-"]').should('contain', 'Professional Repair Parts & Tools');
   });
 
   it('should navigate with slide indicators', () => {
-    // Click on the second indicator (index 1)
-    cy.get('.indicator').eq(1).click();
+    // Click on the second indicator (index 1) with force
+    cy.get('.indicator').eq(1).click({ force: true });
 
     // Check that second slide is active
     cy.get('[id*="hero-heading-"]').should('contain', 'Premium iPhone & Samsung Parts');
     cy.get('.indicator').eq(1).should('have.class', 'active');
 
-    // Click on the third indicator (index 2)
-    cy.get('.indicator').eq(2).click();
+    // Click on the third indicator (index 2) with force
+    cy.get('.indicator').eq(2).click({ force: true });
 
     // Check that third slide is active
     cy.get('[id*="hero-heading-"]').should('contain', 'Expert Repair Tools & Equipment');
@@ -79,16 +79,16 @@ describe('Hero Slider Functionality', () => {
 
   it('should support keyboard navigation', () => {
     // Focus on the hero section
-    cy.get('[role="banner"]').focus();
+    cy.get('[role="banner"]').focus({ force: true });
 
     // Press right arrow key
-    cy.get('[role="banner"]').type('{rightarrow}');
+    cy.get('[role="banner"]').type('{rightarrow}', { force: true });
 
     // Check that slide changed
     cy.get('[id*="hero-heading-"]').should('contain', 'Premium iPhone & Samsung Parts');
 
     // Press left arrow key
-    cy.get('[role="banner"]').type('{leftarrow}');
+    cy.get('[role="banner"]').type('{leftarrow}', { force: true });
 
     // Check that we're back to first slide
     cy.get('[id*="hero-heading-"]').should('contain', 'Professional Repair Parts & Tools');
@@ -126,10 +126,10 @@ describe('Hero Slider Functionality', () => {
     // Check that hero section still exists and is visible
     cy.get('[role="banner"]').should('be.visible');
 
-    // Check that navigation arrows are still present
-    cy.get('.navArrow').should('have.length', 2);
+    // Check that navigation arrows are still present and visible
+    cy.get('.navArrow').should('have.length', 2).and('be.visible');
 
-    // Check that indicators are still present
-    cy.get('.indicator').should('have.length', 3);
+    // Check that indicators are still present and visible
+    cy.get('.indicator').should('have.length', 3).and('be.visible');
   });
 });

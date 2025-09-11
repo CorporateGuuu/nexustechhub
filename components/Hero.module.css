@@ -8,6 +8,8 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  visibility: visible;
 }
 
 .progressBar {
@@ -156,8 +158,8 @@
   border: none;
   color: white;
   font-size: 2rem;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   cursor: pointer;
   z-index: 30;
@@ -165,6 +167,8 @@
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s ease;
+  visibility: visible;
+  opacity: 1;
 }
 
 .navArrow:hover {
@@ -172,32 +176,35 @@
 }
 
 .prevArrow {
-  left: 10px;
+  left: 20px;
 }
 
 .nextArrow {
-  right: 10px;
+  right: 20px;
 }
 
 /* Slide Indicators */
 .indicators {
   position: absolute;
-  bottom: 15px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 10px;
+  gap: 12px;
   z-index: 30;
+  visibility: visible;
 }
 
 .indicator {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  visibility: visible;
+  opacity: 1;
 }
 
 .indicator:hover,
@@ -208,16 +215,22 @@
 
 .indicator.active {
   background: var(--primary-white, #ffffff);
+  transform: scale(1.2);
 }
 
 /* Pause Indicator */
 .pauseIndicator {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   font-size: 1.5rem;
   z-index: 30;
   color: var(--primary-white, #ffffff);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 50%;
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Responsive Design */

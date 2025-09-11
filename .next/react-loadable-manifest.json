@@ -1,16 +1,4 @@
 {
-  "components/Layout/Layout.js -> ../PWA/EnhancedPWAManager": {
-    "id": "components/Layout/Layout.js -> ../PWA/EnhancedPWAManager",
-    "files": [
-      "static/chunks/_pages-dir-browser_components_PWA_EnhancedPWAManager_js.js"
-    ]
-  },
-  "components/Layout/Layout.js -> ../PWAInstallPrompt/PWAInstallPrompt": {
-    "id": "components/Layout/Layout.js -> ../PWAInstallPrompt/PWAInstallPrompt",
-    "files": [
-      "static/chunks/_pages-dir-browser_components_PWAInstallPrompt_PWAInstallPrompt_js.js"
-    ]
-  },
   "components/WebVitals.js -> web-vitals": {
     "id": "components/WebVitals.js -> web-vitals",
     "files": [
