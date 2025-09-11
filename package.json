@@ -31,7 +31,20 @@
     "precommit": "npm run lint && npm run test",
     "validate:build": "echo 'Build validation completed'",
     "analyze": "cross-env ANALYZE=true npm run build",
-    "setup:db": "node Scripts/setup_database.js"
+    "setup:db": "node Scripts/setup_database.js",
+    "dev:fresh": "node scripts/dev-clean.js && npm run dev",
+    "deploy:production": "node scripts/deploy-production.js",
+    "validate:production": "node scripts/validate-production.js",
+    "deploy:phase9": "node scripts/phase-9-deployment.js",
+    "setup:services": "node scripts/guided-service-setup.js",
+    "deploy:execute": "node scripts/execute-production-deployment.js",
+    "setup:local": "node scripts/setup-local-env.js",
+    "diagnose:deployment": "node scripts/diagnose-deployment.js",
+    "audit:security": "npm audit --audit-level=moderate",
+    "audit:fix": "npm audit fix",
+    "precommit": "npm run lint && npm run test",
+    "validate:build": "echo 'Build validation completed'",
+    "analyze": "cross-env ANALYZE=true npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
