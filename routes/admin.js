@@ -390,33 +390,38 @@ router.get('/categories', isAdmin, async (req, res) => {
   }
 });
 
-// Add/Edit category form
-router.get('/categories/edit/:id?', isAdmin, async (req, res) => {
+// Add category form
+router.get('/categories/add', isAdmin, async (req, res) => {
+  try {
+    res.render('admin/category-form', {
+      title: 'Add Category',
+      category: {},
+      isNew: true
+    });
+  } catch (error) {
+    console.error('Error loading add category form:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Edit category form
+router.get('/categories/edit/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    
-    if (id) {
-      // Edit existing category
-      const categoryQuery = 'SELECT * FROM categories WHERE id = $1';
-      const categoryResult = await pool.query(categoryQuery, [id]);
-      
-      if (categoryResult.rows.length === 0) {
-        return res.status(404).render('404', { message: 'Category not found' });
-      }
-      
-      res.render('admin/category-form', {
-        title: 'Edit Category',
-        category: categoryResult.rows[0],
-        isNew: false
-      });
-    } else {
-      // Add new category
-      res.render('admin/category-form', {
-        title: 'Add Category',
-        category: {},
-        isNew: true
-      });
+
+    // Edit existing category
+    const categoryQuery = 'SELECT * FROM categories WHERE id = $1';
+    const categoryResult = await pool.query(categoryQuery, [id]);
+
+    if (categoryResult.rows.length === 0) {
+      return res.status(404).render('404', { message: 'Category not found' });
     }
+
+    res.render('admin/category-form', {
+      title: 'Edit Category',
+      category: categoryResult.rows[0],
+      isNew: false
+    });
   } catch (error) {
     console.error('Error fetching category:', error);
     res.status(500).send('Server error');
@@ -514,33 +519,38 @@ router.get('/users', isAdmin, async (req, res) => {
   }
 });
 
-// Add/Edit user form
-router.get('/users/edit/:id?', isAdmin, async (req, res) => {
+// Add user form
+router.get('/users/add', isAdmin, async (req, res) => {
+  try {
+    res.render('admin/user-form', {
+      title: 'Add User',
+      user: {},
+      isNew: true
+    });
+  } catch (error) {
+    console.error('Error loading add user form:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Edit user form
+router.get('/users/edit/:id', isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    
-    if (id) {
-      // Edit existing user
-      const userQuery = 'SELECT id, email, first_name, last_name, phone, is_admin FROM users WHERE id = $1';
-      const userResult = await pool.query(userQuery, [id]);
-      
-      if (userResult.rows.length === 0) {
-        return res.status(404).render('404', { message: 'User not found' });
-      }
-      
-      res.render('admin/user-form', {
-        title: 'Edit User',
-        user: userResult.rows[0],
-        isNew: false
-      });
-    } else {
-      // Add new user
-      res.render('admin/user-form', {
-        title: 'Add User',
-        user: {},
-        isNew: true
-      });
+
+    // Edit existing user
+    const userQuery = 'SELECT id, email, first_name, last_name, phone, is_admin FROM users WHERE id = $1';
+    const userResult = await pool.query(userQuery, [id]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).render('404', { message: 'User not found' });
     }
+
+    res.render('admin/user-form', {
+      title: 'Edit User',
+      user: userResult.rows[0],
+      isNew: false
+    });
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).send('Server error');

@@ -1,126 +1,78 @@
-import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Link from 'next/link';
-import Header from '../../components/Header';
+import { useRouter } from 'next/router';
+import SEOHead from '../../components/SEOHead';
+import UnifiedHeader from '../../components/UnifiedHeader/UnifiedHeader';
 import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
 import SkeletonProductDetail from '../../components/skeleton/SkeletonProductDetail';
+import { supabase } from '../../lib/db';
 import styles from '../../styles/ProductDetail.module.css';
-
-// Mock function to get all products - in production, this would come from a database/API
-const getAllProducts = () => {
-  return [
-    // iPhone Parts
-    {
-      id: 'ip15-screen-oled',
-      name: 'iPhone 15 Pro OLED Screen Assembly',
-      category: 'iPhone Parts',
-      model: 'iPhone 15 Pro',
-      price: 299.99,
-      originalPrice: 349.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'High-quality OLED replacement screen for iPhone 15 Pro with advanced touch sensitivity and vibrant color reproduction.',
-      specifications: ['OLED Display', 'Touch Digitizer Included', '6-Month Warranty', 'True Tone Compatible'],
-      compatibility: ['iPhone 15 Pro'],
-      sku: 'NTH-IP15P-SCREEN-001',
-      installationDifficulty: 'Advanced',
-      warranty: '6 Months',
-      bulkPricing: [
-        { quantity: '1-4', price: 299.99 },
-        { quantity: '5-9', price: 279.99 },
-        { quantity: '10+', price: 259.99 }
-      ]
-    },
-    {
-      id: 'ip14-battery',
-      name: 'iPhone 14 Battery Replacement',
-      category: 'iPhone Parts',
-      model: 'iPhone 14',
-      price: 89.99,
-      originalPrice: null,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'Original capacity battery replacement for iPhone 14 with advanced battery management system.',
-      specifications: ['3279mAh Capacity', 'Li-ion Technology', '1-Year Warranty', 'Battery Health Optimization'],
-      compatibility: ['iPhone 14'],
-      sku: 'NTH-IP14-BAT-001',
-      installationDifficulty: 'Intermediate',
-      warranty: '1 Year',
-      bulkPricing: [
-        { quantity: '1-4', price: 89.99 },
-        { quantity: '5-9', price: 79.99 },
-        { quantity: '10+', price: 69.99 }
-      ]
-    },
-    // Samsung Parts
-    {
-      id: 'sg-s24-screen-oled',
-      name: 'Samsung Galaxy S24 OLED Screen Assembly',
-      category: 'Samsung Parts',
-      model: 'Galaxy S24',
-      price: 249.99,
-      originalPrice: 279.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'High-quality OLED replacement screen for Samsung Galaxy S24 with Dynamic AMOLED technology.',
-      specifications: ['OLED Display', 'Touch Digitizer Included', '6-Month Warranty', 'Always-On Display Compatible'],
-      compatibility: ['Samsung Galaxy S24'],
-      sku: 'NTH-SGS24-SCREEN-001',
-      installationDifficulty: 'Advanced',
-      warranty: '6 Months',
-      bulkPricing: [
-        { quantity: '1-4', price: 249.99 },
-        { quantity: '5-9', price: 229.99 },
-        { quantity: '10+', price: 209.99 }
-      ]
-    },
-    // Repair Tools
-    {
-      id: 'toolkit-pro-50pc',
-      name: 'Professional Repair Tool Kit - 50 Pieces',
-      category: 'Repair Tools',
-      model: 'Universal',
-      price: 149.99,
-      originalPrice: 179.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'Complete professional repair tool kit for mobile device technicians with premium quality tools.',
-      specifications: ['50+ Precision Tools', 'Anti-Static Mat Included', 'Carrying Case', 'Lifetime Tool Warranty'],
-      compatibility: ['iPhone', 'Samsung', 'iPad', 'Universal'],
-      sku: 'NTH-TOOLS-PRO50-001',
-      installationDifficulty: 'Beginner',
-      warranty: 'Lifetime on Tools',
-      bulkPricing: [
-        { quantity: '1-4', price: 149.99 },
-        { quantity: '5-9', price: 139.99 },
-        { quantity: '10+', price: 129.99 }
-      ]
-    }
-  ];
-};
-
-// Mock function to get product by slug
-const getProductBySlug = (slug) => {
-  const products = getAllProducts();
-  return products.find(product => product.id === slug);
-};
 
 export default function ProductDetail() {
   const router = useRouter();
   const { slug } = router.query;
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    if (router.isReady && slug) {
-      const foundProduct = getProductBySlug(slug);
-      setProduct(foundProduct);
+    if (slug) {
+      fetchProduct();
+    }
+  }, [slug]);
+
+  const fetchProduct = async () => {
+    try {
+      setLoading(true);
+
+      // Get product with all related data
+      const { data: productData, error } = await supabase
+        .from('products')
+        .select(`
+          *,
+          categories (
+            name,
+            slug
+          ),
+          product_images (
+            image_url,
+            is_primary,
+            display_order
+          ),
+          product_specifications (*),
+          reviews (
+            id,
+            rating,
+            title,
+            comment,
+            created_at,
+            user_id
+          )
+        `)
+        .eq('slug', slug)
+        .single();
+
+      if (error) throw error;
+
+      setProduct(productData);
+    } catch (error) {
+      console.error('Error fetching product:', error);
+    } finally {
       setLoading(false);
     }
-  }, [router.isReady, slug]);
+  };
+
+  const getProductImages = () => {
+    if (!product?.product_images?.length) {
+      return [product?.image_url || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=400&fit=crop'];
+    }
+
+    return product.product_images
+      .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+      .map(img => img.image_url);
+  };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-AE', {
@@ -129,33 +81,49 @@ export default function ProductDetail() {
     }).format(price);
   };
 
-  const getCurrentPrice = () => {
-    if (!product || quantity < 10) return product?.price;
-
-    const bulkTier = product.bulkPricing.find(tier => {
-      const [min, max] = tier.quantity.split('-').map(q => q.replace('+', ''));
-      if (tier.quantity.includes('+')) {
-        return quantity >= parseInt(min);
-      }
-      return quantity >= parseInt(min) && quantity <= parseInt(max);
-    });
-
-    return bulkTier ? bulkTier.price : product.price;
+  const calculateDiscountedPrice = () => {
+    if (!product?.discount_percentage) return product?.price;
+    return product.price * (1 - product.discount_percentage / 100);
   };
 
-  const handleQuantityChange = (newQuantity) => {
-    if (newQuantity >= 1) {
-      setQuantity(newQuantity);
+  const handleQuantityChange = (change) => {
+    setQuantity(prev => Math.max(1, prev + change));
+  };
+
+  const handleAddToCart = () => {
+    // TODO: Implement cart functionality
+    alert(`Added ${quantity} ${product.name}(s) to cart`);
+  };
+
+  const handleBuyNow = () => {
+    // TODO: Implement buy now functionality
+    alert(`Proceeding to checkout with ${quantity} ${product.name}(s)`);
+  };
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={i <= rating ? styles.starFilled : styles.starEmpty}>
+          ★
+        </span>
+      );
     }
+    return stars;
   };
+
+  const averageRating = product?.reviews?.length
+    ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
+    : 0;
 
   if (loading) {
     return (
       <>
-        <Header />
-        <SkeletonProductDetail />
+        <UnifiedHeader />
+        <div className={styles.loading}>
+          <SkeletonProductDetail />
+        </div>
         <Footer />
-        <WhatsAppButton />
       </>
     );
   }
@@ -163,167 +131,236 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <>
-        <Header />
+        <UnifiedHeader />
         <div className={styles.notFound}>
           <h1>Product Not Found</h1>
           <p>The product you're looking for doesn't exist.</p>
-          <Link href="/search" className={styles.backButton}>
-            Browse All Products
-          </Link>
+          <button onClick={() => router.push('/products')} className={styles.backButton}>
+            Back to Products
+          </button>
         </div>
         <Footer />
-        <WhatsAppButton />
       </>
     );
   }
 
+  const images = getProductImages();
+
   return (
     <>
-      <Head>
-        <title>{product.name} | Nexus TechHub</title>
-        <meta name="description" content={product.description} />
-        <meta name="keywords" content={`${product.name}, ${product.category}, ${product.model}, repair parts, UAE`} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href={`https://nexustechhub.ae/products/${product.id}`} />
-      </Head>
+      <SEOHead
+        title={`${product.name} | Nexus TechHub UAE`}
+        description={product.description}
+        keywords={`${product.name}, ${product.categories?.name}, iPhone parts, mobile repair, UAE`}
+        image={images[0]}
+      />
 
-      <Header />
+      <UnifiedHeader />
 
-      <main className={styles.productDetail}>
+      <main className={styles.main}>
         <div className={styles.container}>
           {/* Breadcrumb */}
           <nav className={styles.breadcrumb}>
-            <Link href="/">Home</Link>
-            <span>/</span>
-            <Link href={`/${product.category.toLowerCase().replace(' ', '-')}`}>
-              {product.category}
-            </Link>
-            <span>/</span>
+            <a href="/">Home</a> /
+            <a href="/products">Products</a> /
+            <a href={`/products?category=${product.category_id}`}>{product.categories?.name}</a> /
             <span>{product.name}</span>
           </nav>
 
-          <div className={styles.productContent}>
-            <div className={styles.productImage}>
-              <img
-                src={product.image}
-                alt={product.name}
-                className={styles.mainImage}
-              />
-              {product.originalPrice && (
-                <span className={styles.saleTag}>Sale</span>
-              )}
-              {!product.inStock && (
-                <span className={styles.outOfStockTag}>Out of Stock</span>
+          <div className={styles.productDetail}>
+            {/* Product Images */}
+            <div className={styles.imageSection}>
+              <div className={styles.mainImage}>
+                <img
+                  src={images[selectedImage]}
+                  alt={product.name}
+                  onError={(e) => {
+                    e.target.src = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=400&fit=crop';
+                  }}
+                />
+              </div>
+
+              {images.length > 1 && (
+                <div className={styles.thumbnailGrid}>
+                  {images.map((image, index) => (
+                    <div
+                      key={index}
+                      className={`${styles.thumbnail} ${selectedImage === index ? styles.active : ''}`}
+                      onClick={() => setSelectedImage(index)}
+                    >
+                      <img
+                        src={image}
+                        alt={`${product.name} ${index + 1}`}
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=100&h=80&fit=crop';
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
 
-            <div className={styles.productInfo}>
-              <h1 className={styles.productName}>{product.name}</h1>
-              <p className={styles.productModel}>{product.model}</p>
-              <p className={styles.productSku}>SKU: {product.sku}</p>
-
-              <div className={styles.priceSection}>
-                <div className={styles.currentPrice}>
-                  {formatPrice(getCurrentPrice())}
+            {/* Product Info */}
+            <div className={styles.infoSection}>
+              <div className={styles.productHeader}>
+                <h1>{product.name}</h1>
+                <div className={styles.productMeta}>
+                  <span className={styles.category}>{product.categories?.name}</span>
+                  <span className={styles.sku}>SKU: {product.sku}</span>
                 </div>
-                {product.originalPrice && (
-                  <div className={styles.originalPrice}>
-                    {formatPrice(product.originalPrice)}
+
+                {/* Rating */}
+                {product.reviews?.length > 0 && (
+                  <div className={styles.rating}>
+                    <div className={styles.stars}>
+                      {renderStars(Math.round(averageRating))}
+                    </div>
+                    <span className={styles.ratingText}>
+                      {averageRating.toFixed(1)} ({product.reviews.length} reviews)
+                    </span>
                   </div>
                 )}
               </div>
 
+              {/* Price */}
+              <div className={styles.priceSection}>
+                <div className={styles.priceContainer}>
+                  <span className={styles.currentPrice}>
+                    {formatPrice(calculateDiscountedPrice())}
+                  </span>
+                  {product.discount_percentage > 0 && (
+                    <>
+                      <span className={styles.originalPrice}>
+                        {formatPrice(product.price)}
+                      </span>
+                      <span className={styles.discountBadge}>
+                        {product.discount_percentage}% OFF
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Stock Status */}
               <div className={styles.stockStatus}>
-                {product.inStock ? (
-                  <span className={styles.inStock}>✓ In Stock</span>
+                {product.stock_quantity > 0 ? (
+                  <span className={styles.inStock}>
+                    ✅ In Stock ({product.stock_quantity} available)
+                  </span>
                 ) : (
-                  <span className={styles.outOfStock}>⚠ Out of Stock</span>
+                  <span className={styles.outOfStock}>
+                    ❌ Out of Stock
+                  </span>
                 )}
               </div>
 
+              {/* Description */}
               <div className={styles.description}>
+                <h3>Description</h3>
                 <p>{product.description}</p>
               </div>
 
-              <div className={styles.specifications}>
-                <h3>Specifications:</h3>
-                <ul>
-                  {product.specifications.map((spec, index) => (
-                    <li key={index}>{spec}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className={styles.compatibility}>
-                <h3>Compatibility:</h3>
-                <div className={styles.compatibilityList}>
-                  {product.compatibility.map((device, index) => (
-                    <span key={index} className={styles.compatibilityTag}>
-                      {device}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className={styles.quantitySection}>
-                <label>Quantity:</label>
-                <div className={styles.quantityControls}>
-                  <button
-                    onClick={() => handleQuantityChange(quantity - 1)}
-                    disabled={quantity <= 1}
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
-                    min="1"
-                  />
-                  <button onClick={() => handleQuantityChange(quantity + 1)}>
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {quantity >= 10 && (
-                <div className={styles.bulkPricing}>
-                  <h3>Bulk Pricing:</h3>
-                  <div className={styles.pricingTiers}>
-                    {product.bulkPricing.map((tier, index) => (
-                      <div key={index} className={styles.pricingTier}>
-                        <span className={styles.tierQuantity}>{tier.quantity}</span>
-                        <span className={styles.tierPrice}>{formatPrice(tier.price)} each</span>
-                      </div>
-                    ))}
+              {/* Specifications */}
+              {product.product_specifications && product.product_specifications.length > 0 && (
+                <div className={styles.specifications}>
+                  <h3>Specifications</h3>
+                  <div className={styles.specGrid}>
+                    {Object.entries(product.product_specifications[0])
+                      .filter(([key]) => !['id', 'product_id', 'created_at', 'updated_at'].includes(key))
+                      .map(([key, value]) => (
+                        <div key={key} className={styles.specItem}>
+                          <span className={styles.specLabel}>
+                            {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:
+                          </span>
+                          <span className={styles.specValue}>{value || 'N/A'}</span>
+                        </div>
+                      ))}
                   </div>
                 </div>
               )}
 
-              <div className={styles.actions}>
-                <button
-                  className={styles.quoteButton}
-                  disabled={!product.inStock}
-                >
-                  Request Quote
-                </button>
-                <button className={styles.contactButton}>
-                  Contact Sales
-                </button>
-              </div>
+              {/* Quantity and Actions */}
+              {product.stock_quantity > 0 && (
+                <div className={styles.purchaseSection}>
+                  <div className={styles.quantitySelector}>
+                    <button
+                      onClick={() => handleQuantityChange(-1)}
+                      disabled={quantity <= 1}
+                      className={styles.quantityButton}
+                    >
+                      -
+                    </button>
+                    <span className={styles.quantity}>{quantity}</span>
+                    <button
+                      onClick={() => handleQuantityChange(1)}
+                      disabled={quantity >= product.stock_quantity}
+                      className={styles.quantityButton}
+                    >
+                      +
+                    </button>
+                  </div>
 
-              <div className={styles.productFeatures}>
-                <div className={styles.feature}>
-                  <span>🚚 Fast UAE Delivery</span>
+                  <div className={styles.actionButtons}>
+                    <button
+                      onClick={handleAddToCart}
+                      className={styles.addToCartButton}
+                    >
+                      Add to Cart
+                    </button>
+                    <button
+                      onClick={handleBuyNow}
+                      className={styles.buyNowButton}
+                    >
+                      Buy Now
+                    </button>
+                  </div>
                 </div>
-                <div className={styles.feature}>
-                  <span>🛡️ {product.warranty} Warranty</span>
-                </div>
-                <div className={styles.feature}>
-                  <span>📞 24/7 Support</span>
-                </div>
+              )}
+
+              {/* Badges */}
+              <div className={styles.badges}>
+                {product.is_featured && <span className={styles.featuredBadge}>Featured Product</span>}
+                {product.is_new && <span className={styles.newBadge}>New Arrival</span>}
               </div>
             </div>
+          </div>
+
+          {/* Reviews Section */}
+          {product.reviews && product.reviews.length > 0 && (
+            <div className={styles.reviewsSection}>
+              <h2>Customer Reviews</h2>
+              <div className={styles.reviewsGrid}>
+                {product.reviews.map((review) => (
+                  <div key={review.id} className={styles.reviewCard}>
+                    <div className={styles.reviewHeader}>
+                      <div className={styles.reviewStars}>
+                        {renderStars(review.rating)}
+                      </div>
+                      <span className={styles.reviewDate}>
+                        {new Date(review.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {review.title && (
+                      <h4 className={styles.reviewTitle}>{review.title}</h4>
+                    )}
+                    <p className={styles.reviewComment}>{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Related Products */}
+          <div className={styles.relatedSection}>
+            <h2>Related Products</h2>
+            <p>Check out similar products in the {product.categories?.name} category</p>
+            <button
+              onClick={() => router.push(`/products?category=${product.category_id}`)}
+              className={styles.viewAllButton}
+            >
+              View All {product.categories?.name}
+            </button>
           </div>
         </div>
       </main>

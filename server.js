@@ -1,3 +1,6 @@
+// Load environment variables
+require('dotenv').config();
+
 const express = require('express');
 const { Pool } = require('pg');
 const path = require('path');
@@ -33,6 +36,7 @@ const apiCustomerRoutes = require('./routes/api/customer');
 const repairCategoriesRoutes = require('./routes/api/repaircategories');
 const apiTicketsRoutes = require('./routes/api/tickets');
 const apiInvoicesRoutes = require('./routes/api/invoices');
+const repairdeskRoutes = require('./routes/api/repairdesk');
 
 // Create Express app
 const app = express();
@@ -54,7 +58,7 @@ app.use(cookieParser());
 // Apply rate limiting to API routes
 app.use('/api/', apiLimiter);
 
-// Session configuration
+ // Session configuration
 app.use(session({
   store: new pgSession({
     pool: pool,
@@ -334,9 +338,10 @@ app.use('/api/customer', apiCustomerRoutes);
 app.use('/api/repaircategories', repairCategoriesRoutes);
 app.use('/api/tickets', apiTicketsRoutes);
 app.use('/api/invoices', apiInvoicesRoutes);
+app.use('/api/repairdesk', repairdeskRoutes);
 
 // CSRF error handler
-app.use(handleCsrfError);
+// app.use(handleCsrfError);
 
 // 403 page
 app.use('/403', (req, res) => {

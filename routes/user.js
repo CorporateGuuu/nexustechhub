@@ -137,37 +137,42 @@ router.get('/addresses', isAuthenticated, async (req, res) => {
   }
 });
 
-// Add/Edit address form
-router.get('/addresses/edit/:id?', isAuthenticated, async (req, res) => {
+// Add address form
+router.get('/addresses/add', isAuthenticated, async (req, res) => {
+  try {
+    res.render('user/address-form', {
+      title: 'Add Address',
+      address: {},
+      isNew: true
+    });
+  } catch (error) {
+    console.error('Error loading add address form:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Edit address form
+router.get('/addresses/edit/:id', isAuthenticated, async (req, res) => {
   try {
     const { id } = req.params;
 
-    if (id) {
-      // Edit existing address
-      const addressQuery = `
-        SELECT id, address_line1, address_line2, city, state, postal_code, country, is_default
-        FROM user_addresses
-        WHERE id = $1 AND user_id = $2
-      `;
-      const addressResult = await pool.query(addressQuery, [id, req.session.userId]);
+    // Edit existing address
+    const addressQuery = `
+      SELECT id, address_line1, address_line2, city, state, postal_code, country, is_default
+      FROM user_addresses
+      WHERE id = $1 AND user_id = $2
+    `;
+    const addressResult = await pool.query(addressQuery, [id, req.session.userId]);
 
-      if (addressResult.rows.length === 0) {
-        return res.status(404).render('404', { message: 'Address not found' });
-      }
-
-      res.render('user/address-form', {
-        title: 'Edit Address',
-        address: addressResult.rows[0],
-        isNew: false
-      });
-    } else {
-      // Add new address
-      res.render('user/address-form', {
-        title: 'Add Address',
-        address: {},
-        isNew: true
-      });
+    if (addressResult.rows.length === 0) {
+      return res.status(404).render('404', { message: 'Address not found' });
     }
+
+    res.render('user/address-form', {
+      title: 'Edit Address',
+      address: addressResult.rows[0],
+      isNew: false
+    });
   } catch (error) {
     console.error('Error fetching address:', error);
     res.status(500).send('Server error');

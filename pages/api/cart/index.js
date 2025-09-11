@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/react';
-import { query } from '../../../lib/db';
+import { supabase } from '../../../lib/db';
 
 // Mock cart data for development
 const mockCart = {
@@ -192,40 +192,62 @@ async function getCart(req, res, userId, sessionId) {
     // Get or create cart
     let cart = await getOrCreateCart(userId, sessionId);
 
-    // Get cart items with product details
-    const cartItemsResult = await query(`
-      SELECT ci.id, ci.quantity, p.id as product_id, p.name, p.price,
-             p.discount_percentage, p.image_url, p.slug
-      FROM cart_items ci
-      JOIN products p ON ci.product_id = p.id
-      WHERE ci.cart_id = $1
-    `, [cart.id]);
+    // Get cart items with product details using Supabase
+    const { data: cartItems, error } = await supabase
+      .from('cart_items')
+      .select(`
+        id,
+        quantity,
+        products (
+          id,
+          name,
+          price,
+          discount_percentage,
+          image_url,
+          slug
+        )
+      `)
+      .eq('cart_id', cart.id);
+
+    if (error) {
+      console.error('Error fetching cart items:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error getting cart items'
+      });
+    }
 
     // Calculate totals
-    const cartItems = cartItemsResult.rows.map(item => {
-      const price = parseFloat(item.price);
-      const discountPercentage = parseFloat(item.discount_percentage || 0);
+    const processedCartItems = cartItems.map(item => {
+      const product = item.products;
+      const price = parseFloat(product.price);
+      const discountPercentage = parseFloat(product.discount_percentage || 0);
       const discountedPrice = discountPercentage > 0
         ? price * (1 - discountPercentage / 100)
         : price;
 
       return {
-        ...item,
+        id: item.id,
+        product_id: product.id,
+        name: product.name,
         price,
         discount_percentage: discountPercentage,
         discounted_price: parseFloat(discountedPrice.toFixed(2)),
-        total: parseFloat((discountedPrice * item.quantity).toFixed(2))
+        total: parseFloat((discountedPrice * item.quantity).toFixed(2)),
+        quantity: item.quantity,
+        image_url: product.image_url,
+        slug: product.slug
       };
     });
 
-    const subtotal = cartItems.reduce((sum, item) => sum + item.total, 0);
+    const subtotal = processedCartItems.reduce((sum, item) => sum + item.total, 0);
 
     return res.status(200).json({
       success: true,
       cart: {
         id: cart.id,
-        items: cartItems,
-        item_count: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+        items: processedCartItems,
+        item_count: processedCartItems.reduce((sum, item) => sum + item.quantity, 0),
         subtotal: parseFloat(subtotal.toFixed(2))
       }
     });
@@ -250,9 +272,14 @@ async function addToCart(req, res, userId, sessionId) {
       });
     }
 
-    // Validate product exists
-    const productResult = await query('SELECT id FROM products WHERE id = $1', [productId]);
-    if (productResult.rows.length === 0) {
+    // Validate product exists using Supabase
+    const { data: product, error: productError } = await supabase
+      .from('products')
+      .select('id')
+      .eq('id', productId)
+      .single();
+
+    if (productError || !product) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
@@ -262,27 +289,55 @@ async function addToCart(req, res, userId, sessionId) {
     // Get or create cart
     const cart = await getOrCreateCart(userId, sessionId);
 
-    // Check if product already in cart
-    const existingItemResult = await query(
-      'SELECT id, quantity FROM cart_items WHERE cart_id = $1 AND product_id = $2',
-      [cart.id, productId]
-    );
+    // Check if product already in cart using Supabase
+    const { data: existingItem, error: checkError } = await supabase
+      .from('cart_items')
+      .select('id, quantity')
+      .eq('cart_id', cart.id)
+      .eq('product_id', productId)
+      .single();
 
-    if (existingItemResult.rows.length > 0) {
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('Error checking existing cart item:', checkError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error checking cart'
+      });
+    }
+
+    if (existingItem) {
       // Update quantity if product already in cart
-      const existingItem = existingItemResult.rows[0];
       const newQuantity = existingItem.quantity + quantity;
 
-      await query(
-        'UPDATE cart_items SET quantity = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
-        [newQuantity, existingItem.id]
-      );
+      const { error: updateError } = await supabase
+        .from('cart_items')
+        .update({ quantity: newQuantity })
+        .eq('id', existingItem.id);
+
+      if (updateError) {
+        console.error('Error updating cart item:', updateError);
+        return res.status(500).json({
+          success: false,
+          message: 'Error updating cart item'
+        });
+      }
     } else {
       // Add new item to cart
-      await query(
-        'INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, $3)',
-        [cart.id, productId, quantity]
-      );
+      const { error: insertError } = await supabase
+        .from('cart_items')
+        .insert({
+          cart_id: cart.id,
+          product_id: productId,
+          quantity
+        });
+
+      if (insertError) {
+        console.error('Error adding to cart:', insertError);
+        return res.status(500).json({
+          success: false,
+          message: 'Error adding to cart'
+        });
+      }
     }
 
     // Return updated cart
@@ -318,19 +373,19 @@ async function updateCartItem(req, res, userId, sessionId) {
     // Get cart
     const cart = await getOrCreateCart(userId, sessionId);
 
-    // Update item quantity
-    const updateResult = await query(
-      `UPDATE cart_items
-       SET quantity = $1, updated_at = CURRENT_TIMESTAMP
-       WHERE id = $2 AND cart_id = $3
-       RETURNING id`,
-      [quantity, itemId, cart.id]
-    );
+    // Update item quantity using Supabase
+    const { data: updatedItem, error: updateError } = await supabase
+      .from('cart_items')
+      .update({ quantity })
+      .eq('id', itemId)
+      .eq('cart_id', cart.id)
+      .select()
+      .single();
 
-    if (updateResult.rows.length === 0) {
+    if (updateError || !updatedItem) {
       return res.status(404).json({
         success: false,
-        message: 'Cart item not found'
+        message: 'Cart item not found or error updating'
       });
     }
 
@@ -360,11 +415,20 @@ async function removeFromCart(req, res, userId, sessionId) {
     // Get cart
     const cart = await getOrCreateCart(userId, sessionId);
 
-    // Remove item from cart
-    await query(
-      'DELETE FROM cart_items WHERE id = $1 AND cart_id = $2',
-      [itemId, cart.id]
-    );
+    // Remove item from cart using Supabase
+    const { error: deleteError } = await supabase
+      .from('cart_items')
+      .delete()
+      .eq('id', itemId)
+      .eq('cart_id', cart.id);
+
+    if (deleteError) {
+      console.error('Error removing cart item:', deleteError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error removing from cart'
+      });
+    }
 
     // Return updated cart
     return getCart(req, res, userId, sessionId);
@@ -379,37 +443,65 @@ async function removeFromCart(req, res, userId, sessionId) {
 
 // Helper function to get or create cart
 async function getOrCreateCart(userId, sessionId) {
-  let cartResult;
+  let cart;
 
   if (userId) {
-    // Try to find cart by user ID
-    cartResult = await query(
-      'SELECT id FROM carts WHERE user_id = $1',
-      [userId]
-    );
+    // Try to find cart by user ID using Supabase
+    const { data: existingCart, error: findError } = await supabase
+      .from('carts')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
 
-    if (cartResult.rows.length === 0) {
+    if (findError && findError.code !== 'PGRST116') {
+      throw new Error('Error finding user cart');
+    }
+
+    if (existingCart) {
+      cart = existingCart;
+    } else {
       // Create new cart for user
-      cartResult = await query(
-        'INSERT INTO carts (user_id) VALUES ($1) RETURNING id',
-        [userId]
-      );
+      const { data: newCart, error: createError } = await supabase
+        .from('carts')
+        .insert({ user_id: userId })
+        .select('id')
+        .single();
+
+      if (createError) {
+        throw new Error('Error creating user cart');
+      }
+
+      cart = newCart;
     }
   } else {
-    // Try to find cart by session ID
-    cartResult = await query(
-      'SELECT id FROM carts WHERE session_id = $1',
-      [sessionId]
-    );
+    // Try to find cart by session ID using Supabase
+    const { data: existingCart, error: findError } = await supabase
+      .from('carts')
+      .select('id')
+      .eq('session_id', sessionId)
+      .single();
 
-    if (cartResult.rows.length === 0) {
+    if (findError && findError.code !== 'PGRST116') {
+      throw new Error('Error finding session cart');
+    }
+
+    if (existingCart) {
+      cart = existingCart;
+    } else {
       // Create new cart for session
-      cartResult = await query(
-        'INSERT INTO carts (session_id) VALUES ($1) RETURNING id',
-        [sessionId]
-      );
+      const { data: newCart, error: createError } = await supabase
+        .from('carts')
+        .insert({ session_id: sessionId })
+        .select('id')
+        .single();
+
+      if (createError) {
+        throw new Error('Error creating session cart');
+      }
+
+      cart = newCart;
     }
   }
 
-  return cartResult.rows[0];
+  return cart;
 }

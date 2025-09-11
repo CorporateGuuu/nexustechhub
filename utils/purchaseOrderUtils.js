@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // Environment variables for RepairDesk API
-const API_BASE_URL = process.env.API_BASE_URL || 'https://api.repairdesk.co';
+const API_BASE_URL = process.env.API_BASE_URL || 'https://api.repairdesk.co/api/web/v1';
 const API_KEY = process.env.API_KEY;
 
 // Axios instance for RepairDesk API
@@ -105,7 +105,7 @@ async function getPurchaseOrders({ api_key, page, pagesize, filters = {} }) {
 
     // Make API request to RepairDesk with retry logic
     const response = await retryWithBackoff(async () => {
-      return await axiosInstance.get(`/purchaseorderdetails?${queryParams.toString()}`);
+      return await axiosInstance.get(`/inventory/list?${queryParams.toString()}`);
     });
 
     // Handle successful response
