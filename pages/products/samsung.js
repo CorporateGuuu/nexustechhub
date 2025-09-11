@@ -2,45 +2,40 @@ import React from 'react';
 import Layout from '../../components/Layout/Layout';
 import ProductList from '../../components/ProductList/ProductList';
 
-// Sample Samsung parts data
-const samsungParts = [
-  {
-    id: 201,
-    name: 'Samsung Galaxy S22 OLED Screen',
-    category: 'Samsung Parts',
-    price: 149.99,
-    discount_percentage: 15,
-    imageUrl: '/images/placeholder.svg',
-    badge: '15% OFF'
-  },
-  {
-    id: 202,
-    name: 'Samsung Galaxy S21 Battery',
-    category: 'Samsung Parts',
-    price: 39.99,
-    discount_percentage: 0,
-    imageUrl: '/images/placeholder.svg'
-  },
-  {
-    id: 203,
-    name: 'Samsung Galaxy Note 20 Charging Port',
-    category: 'Samsung Parts',
-    price: 24.99,
-    discount_percentage: 10,
-    imageUrl: '/images/placeholder.svg',
-    badge: '10% OFF'
-  },
-  {
-    id: 204,
-    name: 'Samsung Galaxy A53 Camera Module',
-    category: 'Samsung Parts',
-    price: 59.99,
-    discount_percentage: 0,
-    imageUrl: '/images/placeholder.svg'
-  }
-];
+import React, { useState, useEffect } from 'react';
+import Layout from '../../components/Layout/Layout';
+import ProductList from '../../components/ProductList/ProductList';
+import SkeletonProduct from '../../components/skeleton/SkeletonProduct';
 
 function SamsungParts() {
+  const [samsungParts, setSamsungParts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSamsungParts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/products?category=samsung-parts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch Samsung parts');
+        }
+        const data = await response.json();
+        if (data.success) {
+          setSamsungParts(data.products);
+        } else {
+          setSamsungParts([]);
+        }
+      } catch (error) {
+        console.error('Error fetching Samsung parts:', error);
+        setSamsungParts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSamsungParts();
+  }, []);
+
   return (
     <Layout
       title="Samsung Parts - Midas Technical Solutions"
@@ -53,7 +48,15 @@ function SamsungParts() {
           charging ports, cameras, and more to help you repair your Samsung device.
         </p>
 
-        <ProductList products={samsungParts} title="Samsung Replacement Parts" />
+        {loading ? (
+          <div className="skeleton-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonProduct key={index} />
+            ))}
+          </div>
+        ) : (
+          <ProductList products={samsungParts} title="Samsung Replacement Parts" />
+        )}
       </div>
     </Layout>
   );

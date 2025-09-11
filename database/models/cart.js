@@ -1,73 +1,100 @@
-const db = require('../config');
+const { supabase } = require('../../lib/db');
 
 const CartModel = {
   // Get cart by user ID or session ID
   async getCart(userId, sessionId) {
-    let query;
-    let params;
-    
+    let cartQuery;
+
     if (userId) {
-      query = `
-        SELECT c.id, c.user_id, c.created_at, c.updated_at
-        FROM carts c
-        WHERE c.user_id = $1
-        ORDER BY c.updated_at DESC
-        LIMIT 1
-      `;
-      params = [userId];
+      cartQuery = supabase
+        .from('carts')
+        .select('id, user_id, session_id, created_at, updated_at')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false })
+        .limit(1);
     } else if (sessionId) {
-      query = `
-        SELECT c.id, c.session_id, c.created_at, c.updated_at
-        FROM carts c
-        WHERE c.session_id = $1
-        ORDER BY c.updated_at DESC
-        LIMIT 1
-      `;
-      params = [sessionId];
+      cartQuery = supabase
+        .from('carts')
+        .select('id, user_id, session_id, created_at, updated_at')
+        .eq('session_id', sessionId)
+        .order('updated_at', { ascending: false })
+        .limit(1);
     } else {
       throw new Error('Either userId or sessionId must be provided');
     }
-    
-    const { rows } = await db.query(query, params);
-    
-    if (rows.length === 0) {
+
+    const { data: cartData, error: cartError } = await cartQuery;
+
+    if (cartError) {
+      console.error('Error fetching cart:', cartError);
+      throw cartError;
+    }
+
+    if (!cartData || cartData.length === 0) {
       return null;
     }
-    
-    // Get cart items
-    const cartId = rows[0].id;
-    const itemsQuery = `
-      SELECT ci.id, ci.product_id, ci.variant_id, ci.quantity, ci.price_at_addition,
-             p.name as product_name, p.image_url, p.price as current_price,
-             p.discount_percentage,
-             pv.variant_type, pv.variant_value, pv.price_adjustment
-      FROM cart_items ci
-      JOIN products p ON ci.product_id = p.id
-      LEFT JOIN product_variants pv ON ci.variant_id = pv.id
-      WHERE ci.cart_id = $1
-    `;
-    const itemsResult = await db.query(itemsQuery, [cartId]);
-    
+
+    const cart = cartData[0];
+
+    // Get cart items with product details
+    const { data: itemsData, error: itemsError } = await supabase
+      .from('cart_items')
+      .select(`
+        id,
+        product_id,
+        variant_id,
+        quantity,
+        price_at_addition,
+        products (
+          name,
+          image_url,
+          price,
+          discount_percentage
+        ),
+        product_variants (
+          variant_type,
+          variant_value,
+          price_adjustment
+        )
+      `)
+      .eq('cart_id', cart.id);
+
+    if (itemsError) {
+      console.error('Error fetching cart items:', itemsError);
+      throw itemsError;
+    }
+
     // Calculate totals
     let subtotal = 0;
-    const items = itemsResult.rows.map(item => {
+    const items = (itemsData || []).map(item => {
       // Calculate item price with variant adjustment and discount
       let itemPrice = item.price_at_addition;
-      if (item.variant_id) {
-        itemPrice += item.price_adjustment || 0;
+      if (item.variant_id && item.product_variants?.price_adjustment) {
+        itemPrice += item.product_variants.price_adjustment;
       }
-      
+
       const itemTotal = itemPrice * item.quantity;
       subtotal += itemTotal;
-      
+
       return {
-        ...item,
+        id: item.id,
+        product_id: item.product_id,
+        variant_id: item.variant_id,
+        quantity: item.quantity,
+        price_at_addition: item.price_at_addition,
+        product_name: item.products?.name,
+        image_url: item.products?.image_url,
+        current_price: item.products?.price,
+        discount_percentage: item.products?.discount_percentage,
+        variant_type: item.product_variants?.variant_type,
+        variant_value: item.product_variants?.variant_value,
+        price_adjustment: item.product_variants?.price_adjustment,
         total: itemTotal
       };
     });
-    
+
     return {
-      ...rows[0],
+      ...cart,
       items,
       subtotal,
       item_count: items.reduce((sum, item) => sum + item.quantity, 0)
@@ -76,15 +103,24 @@ const CartModel = {
   
   // Create a new cart
   async createCart(userId, sessionId) {
-    const query = `
-      INSERT INTO carts (user_id, session_id)
-      VALUES ($1, $2)
-      RETURNING id, user_id, session_id, created_at, updated_at
-    `;
-    const { rows } = await db.query(query, [userId || null, sessionId || null]);
-    
+    const cartData = {
+      user_id: userId || null,
+      session_id: sessionId || null
+    };
+
+    const { data, error } = await supabase
+      .from('carts')
+      .insert(cartData)
+      .select('id, user_id, session_id, created_at, updated_at')
+      .single();
+
+    if (error) {
+      console.error('Error creating cart:', error);
+      throw error;
+    }
+
     return {
-      ...rows[0],
+      ...data,
       items: [],
       subtotal: 0,
       item_count: 0
@@ -103,149 +139,181 @@ const CartModel = {
   
   // Add item to cart
   async addItemToCart(cartId, productId, quantity, variantId = null) {
-    const client = await db.getClient();
-    
     try {
-      await client.query('BEGIN');
-      
       // Get product information
-      const productQuery = `
-        SELECT p.price, pv.price_adjustment
-        FROM products p
-        LEFT JOIN product_variants pv ON pv.id = $1
-        WHERE p.id = $2
-      `;
-      const productResult = await client.query(productQuery, [variantId, productId]);
-      
-      if (productResult.rows.length === 0) {
+      let productQuery = supabase
+        .from('products')
+        .select('price')
+        .eq('id', productId);
+
+      if (variantId) {
+        productQuery = supabase
+          .from('products')
+          .select(`
+            price,
+            product_variants!inner(price_adjustment)
+          `)
+          .eq('id', productId)
+          .eq('product_variants.id', variantId);
+      }
+
+      const { data: productData, error: productError } = await productQuery.single();
+
+      if (productError || !productData) {
         throw new Error('Product not found');
       }
-      
-      const product = productResult.rows[0];
-      let price = product.price;
-      
+
+      let price = productData.price;
+
       // Add variant price adjustment if applicable
-      if (variantId && product.price_adjustment) {
-        price += product.price_adjustment;
+      if (variantId && productData.product_variants?.price_adjustment) {
+        price += productData.product_variants.price_adjustment;
       }
-      
+
       // Check if item already exists in cart
-      const checkQuery = `
-        SELECT id, quantity
-        FROM cart_items
-        WHERE cart_id = $1 AND product_id = $2 AND (variant_id = $3 OR (variant_id IS NULL AND $3 IS NULL))
-      `;
-      const checkResult = await client.query(checkQuery, [cartId, productId, variantId]);
-      
-      if (checkResult.rows.length > 0) {
+      const { data: existingItems, error: checkError } = await supabase
+        .from('cart_items')
+        .select('id, quantity')
+        .eq('cart_id', cartId)
+        .eq('product_id', productId)
+        .eq('variant_id', variantId);
+
+      if (checkError) {
+        console.error('Error checking existing cart item:', checkError);
+        throw checkError;
+      }
+
+      if (existingItems && existingItems.length > 0) {
         // Update existing item
-        const existingItem = checkResult.rows[0];
+        const existingItem = existingItems[0];
         const newQuantity = existingItem.quantity + quantity;
-        
-        const updateQuery = `
-          UPDATE cart_items
-          SET quantity = $1, price_at_addition = $2
-          WHERE id = $3
-          RETURNING *
-        `;
-        await client.query(updateQuery, [newQuantity, price, existingItem.id]);
+
+        const { error: updateError } = await supabase
+          .from('cart_items')
+          .update({
+            quantity: newQuantity,
+            price_at_addition: price
+          })
+          .eq('id', existingItem.id);
+
+        if (updateError) {
+          console.error('Error updating cart item:', updateError);
+          throw updateError;
+        }
       } else {
         // Add new item
-        const insertQuery = `
-          INSERT INTO cart_items (cart_id, product_id, variant_id, quantity, price_at_addition)
-          VALUES ($1, $2, $3, $4, $5)
-          RETURNING *
-        `;
-        await client.query(insertQuery, [cartId, productId, variantId, quantity, price]);
+        const { error: insertError } = await supabase
+          .from('cart_items')
+          .insert({
+            cart_id: cartId,
+            product_id: productId,
+            variant_id: variantId,
+            quantity: quantity,
+            price_at_addition: price
+          });
+
+        if (insertError) {
+          console.error('Error inserting cart item:', insertError);
+          throw insertError;
+        }
       }
-      
+
       // Update cart timestamp
-      const updateCartQuery = `
-        UPDATE carts
-        SET updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-      `;
-      await client.query(updateCartQuery, [cartId]);
-      
-      await client.query('COMMIT');
-      
+      const { error: cartUpdateError } = await supabase
+        .from('carts')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', cartId);
+
+      if (cartUpdateError) {
+        console.error('Error updating cart timestamp:', cartUpdateError);
+        throw cartUpdateError;
+      }
+
+      // Get cart information to return updated cart
+      const { data: cartInfo, error: cartInfoError } = await supabase
+        .from('carts')
+        .select('user_id, session_id')
+        .eq('id', cartId)
+        .single();
+
+      if (cartInfoError) {
+        console.error('Error getting cart info:', cartInfoError);
+        throw cartInfoError;
+      }
+
       // Get updated cart
-      if (client.lastQuery[0].includes('user_id')) {
-        const userId = client.lastQuery[1][0];
-        return this.getCart(userId, null);
+      if (cartInfo.user_id) {
+        return this.getCart(cartInfo.user_id, null);
       } else {
-        const sessionId = client.lastQuery[1][0];
-        return this.getCart(null, sessionId);
+        return this.getCart(null, cartInfo.session_id);
       }
     } catch (error) {
-      await client.query('ROLLBACK');
+      console.error('Error adding item to cart:', error);
       throw error;
-    } finally {
-      client.release();
     }
   },
   
   // Update cart item quantity
   async updateCartItem(cartId, itemId, quantity) {
-    const client = await db.getClient();
-    
     try {
-      await client.query('BEGIN');
-      
       if (quantity <= 0) {
         // Remove item if quantity is 0 or negative
-        const deleteQuery = `
-          DELETE FROM cart_items
-          WHERE id = $1 AND cart_id = $2
-          RETURNING *
-        `;
-        await client.query(deleteQuery, [itemId, cartId]);
+        const { error: deleteError } = await supabase
+          .from('cart_items')
+          .delete()
+          .eq('id', itemId)
+          .eq('cart_id', cartId);
+
+        if (deleteError) {
+          console.error('Error deleting cart item:', deleteError);
+          throw deleteError;
+        }
       } else {
         // Update quantity
-        const updateQuery = `
-          UPDATE cart_items
-          SET quantity = $1
-          WHERE id = $2 AND cart_id = $3
-          RETURNING *
-        `;
-        await client.query(updateQuery, [quantity, itemId, cartId]);
+        const { error: updateError } = await supabase
+          .from('cart_items')
+          .update({ quantity })
+          .eq('id', itemId)
+          .eq('cart_id', cartId);
+
+        if (updateError) {
+          console.error('Error updating cart item quantity:', updateError);
+          throw updateError;
+        }
       }
-      
+
       // Update cart timestamp
-      const updateCartQuery = `
-        UPDATE carts
-        SET updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-      `;
-      await client.query(updateCartQuery, [cartId]);
-      
-      await client.query('COMMIT');
-      
-      // Get cart information to return
-      const cartQuery = `
-        SELECT user_id, session_id
-        FROM carts
-        WHERE id = $1
-      `;
-      const cartResult = await db.query(cartQuery, [cartId]);
-      
-      if (cartResult.rows.length === 0) {
-        throw new Error('Cart not found');
+      const { error: cartUpdateError } = await supabase
+        .from('carts')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', cartId);
+
+      if (cartUpdateError) {
+        console.error('Error updating cart timestamp:', cartUpdateError);
+        throw cartUpdateError;
       }
-      
-      const cart = cartResult.rows[0];
-      
+
+      // Get cart information to return
+      const { data: cartData, error: cartDataError } = await supabase
+        .from('carts')
+        .select('user_id, session_id')
+        .eq('id', cartId)
+        .single();
+
+      if (cartDataError) {
+        console.error('Error fetching cart info:', cartDataError);
+        throw cartDataError;
+      }
+
       // Get updated cart
-      if (cart.user_id) {
-        return this.getCart(cart.user_id, null);
+      if (cartData.user_id) {
+        return this.getCart(cartData.user_id, null);
       } else {
-        return this.getCart(null, cart.session_id);
+        return this.getCart(null, cartData.session_id);
       }
     } catch (error) {
-      await client.query('ROLLBACK');
+      console.error('Error updating cart item:', error);
       throw error;
-    } finally {
-      client.release();
     }
   },
   
@@ -253,164 +321,187 @@ const CartModel = {
   async removeCartItem(cartId, itemId) {
     return this.updateCartItem(cartId, itemId, 0);
   },
-  
+
   // Clear cart
   async clearCart(cartId) {
-    const client = await db.getClient();
-    
     try {
-      await client.query('BEGIN');
-      
       // Delete all items
-      const deleteQuery = `
-        DELETE FROM cart_items
-        WHERE cart_id = $1
-      `;
-      await client.query(deleteQuery, [cartId]);
-      
-      // Update cart timestamp
-      const updateCartQuery = `
-        UPDATE carts
-        SET updated_at = CURRENT_TIMESTAMP
-        WHERE id = $1
-      `;
-      await client.query(updateCartQuery, [cartId]);
-      
-      await client.query('COMMIT');
-      
-      // Get cart information to return
-      const cartQuery = `
-        SELECT user_id, session_id
-        FROM carts
-        WHERE id = $1
-      `;
-      const cartResult = await db.query(cartQuery, [cartId]);
-      
-      if (cartResult.rows.length === 0) {
-        throw new Error('Cart not found');
+      const { error: deleteError } = await supabase
+        .from('cart_items')
+        .delete()
+        .eq('cart_id', cartId);
+
+      if (deleteError) {
+        console.error('Error clearing cart items:', deleteError);
+        throw deleteError;
       }
-      
-      const cart = cartResult.rows[0];
-      
+
+      // Update cart timestamp
+      const { error: cartUpdateError } = await supabase
+        .from('carts')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', cartId);
+
+      if (cartUpdateError) {
+        console.error('Error updating cart timestamp:', cartUpdateError);
+        throw cartUpdateError;
+      }
+
+      // Get cart information to return
+      const { data: cartData, error: cartDataError } = await supabase
+        .from('carts')
+        .select('user_id, session_id')
+        .eq('id', cartId)
+        .single();
+
+      if (cartDataError) {
+        console.error('Error fetching cart info:', cartDataError);
+        throw cartDataError;
+      }
+
       // Get updated cart
-      if (cart.user_id) {
-        return this.getCart(cart.user_id, null);
+      if (cartData.user_id) {
+        return this.getCart(cartData.user_id, null);
       } else {
-        return this.getCart(null, cart.session_id);
+        return this.getCart(null, cartData.session_id);
       }
     } catch (error) {
-      await client.query('ROLLBACK');
+      console.error('Error clearing cart:', error);
       throw error;
-    } finally {
-      client.release();
     }
   },
   
   // Transfer guest cart to user cart
   async transferCart(sessionId, userId) {
-    const client = await db.getClient();
-    
     try {
-      await client.query('BEGIN');
-      
       // Get session cart
-      const sessionCartQuery = `
-        SELECT id
-        FROM carts
-        WHERE session_id = $1
-        ORDER BY updated_at DESC
-        LIMIT 1
-      `;
-      const sessionCartResult = await client.query(sessionCartQuery, [sessionId]);
-      
-      if (sessionCartResult.rows.length === 0) {
+      const { data: sessionCartData, error: sessionCartError } = await supabase
+        .from('carts')
+        .select('id')
+        .eq('session_id', sessionId)
+        .order('updated_at', { ascending: false })
+        .limit(1);
+
+      if (sessionCartError) {
+        console.error('Error fetching session cart:', sessionCartError);
+        throw sessionCartError;
+      }
+
+      if (!sessionCartData || sessionCartData.length === 0) {
         // No session cart, nothing to transfer
-        await client.query('COMMIT');
         return this.getOrCreateCart(userId, null);
       }
-      
-      const sessionCartId = sessionCartResult.rows[0].id;
-      
+
+      const sessionCartId = sessionCartData[0].id;
+
       // Get user cart or create one
-      const userCartQuery = `
-        SELECT id
-        FROM carts
-        WHERE user_id = $1
-        ORDER BY updated_at DESC
-        LIMIT 1
-      `;
-      const userCartResult = await client.query(userCartQuery, [userId]);
-      
-      let userCartId;
-      
-      if (userCartResult.rows.length === 0) {
-        // Create new user cart
-        const createCartQuery = `
-          INSERT INTO carts (user_id)
-          VALUES ($1)
-          RETURNING id
-        `;
-        const createCartResult = await client.query(createCartQuery, [userId]);
-        userCartId = createCartResult.rows[0].id;
-      } else {
-        userCartId = userCartResult.rows[0].id;
+      const { data: userCartData, error: userCartError } = await supabase
+        .from('carts')
+        .select('id')
+        .eq('user_id', userId)
+        .order('updated_at', { ascending: false })
+        .limit(1);
+
+      if (userCartError) {
+        console.error('Error fetching user cart:', userCartError);
+        throw userCartError;
       }
-      
+
+      let userCartId;
+
+      if (!userCartData || userCartData.length === 0) {
+        // Create new user cart
+        const { data: newCartData, error: createError } = await supabase
+          .from('carts')
+          .insert({ user_id: userId })
+          .select('id')
+          .single();
+
+        if (createError) {
+          console.error('Error creating user cart:', createError);
+          throw createError;
+        }
+
+        userCartId = newCartData.id;
+      } else {
+        userCartId = userCartData[0].id;
+      }
+
       // Get session cart items
-      const itemsQuery = `
-        SELECT product_id, variant_id, quantity, price_at_addition
-        FROM cart_items
-        WHERE cart_id = $1
-      `;
-      const itemsResult = await client.query(itemsQuery, [sessionCartId]);
-      
+      const { data: sessionItems, error: itemsError } = await supabase
+        .from('cart_items')
+        .select('product_id, variant_id, quantity, price_at_addition')
+        .eq('cart_id', sessionCartId);
+
+      if (itemsError) {
+        console.error('Error fetching session cart items:', itemsError);
+        throw itemsError;
+      }
+
       // For each session cart item
-      for (const item of itemsResult.rows) {
+      for (const item of sessionItems || []) {
         // Check if item already exists in user cart
-        const checkQuery = `
-          SELECT id, quantity
-          FROM cart_items
-          WHERE cart_id = $1 AND product_id = $2 AND (variant_id = $3 OR (variant_id IS NULL AND $3 IS NULL))
-        `;
-        const checkResult = await client.query(checkQuery, [userCartId, item.product_id, item.variant_id]);
-        
-        if (checkResult.rows.length > 0) {
+        const { data: existingItems, error: checkError } = await supabase
+          .from('cart_items')
+          .select('id, quantity')
+          .eq('cart_id', userCartId)
+          .eq('product_id', item.product_id)
+          .eq('variant_id', item.variant_id);
+
+        if (checkError) {
+          console.error('Error checking existing user cart item:', checkError);
+          throw checkError;
+        }
+
+        if (existingItems && existingItems.length > 0) {
           // Update existing item
-          const existingItem = checkResult.rows[0];
+          const existingItem = existingItems[0];
           const newQuantity = existingItem.quantity + item.quantity;
-          
-          const updateQuery = `
-            UPDATE cart_items
-            SET quantity = $1
-            WHERE id = $2
-          `;
-          await client.query(updateQuery, [newQuantity, existingItem.id]);
+
+          const { error: updateError } = await supabase
+            .from('cart_items')
+            .update({ quantity: newQuantity })
+            .eq('id', existingItem.id);
+
+          if (updateError) {
+            console.error('Error updating user cart item:', updateError);
+            throw updateError;
+          }
         } else {
           // Add new item
-          const insertQuery = `
-            INSERT INTO cart_items (cart_id, product_id, variant_id, quantity, price_at_addition)
-            VALUES ($1, $2, $3, $4, $5)
-          `;
-          await client.query(insertQuery, [userCartId, item.product_id, item.variant_id, item.quantity, item.price_at_addition]);
+          const { error: insertError } = await supabase
+            .from('cart_items')
+            .insert({
+              cart_id: userCartId,
+              product_id: item.product_id,
+              variant_id: item.variant_id,
+              quantity: item.quantity,
+              price_at_addition: item.price_at_addition
+            });
+
+          if (insertError) {
+            console.error('Error inserting user cart item:', insertError);
+            throw insertError;
+          }
         }
       }
-      
+
       // Delete session cart
-      const deleteCartQuery = `
-        DELETE FROM carts
-        WHERE id = $1
-      `;
-      await client.query(deleteCartQuery, [sessionCartId]);
-      
-      await client.query('COMMIT');
-      
+      const { error: deleteError } = await supabase
+        .from('carts')
+        .delete()
+        .eq('id', sessionCartId);
+
+      if (deleteError) {
+        console.error('Error deleting session cart:', deleteError);
+        throw deleteError;
+      }
+
       // Return updated user cart
       return this.getCart(userId, null);
     } catch (error) {
-      await client.query('ROLLBACK');
+      console.error('Error transferring cart:', error);
       throw error;
-    } finally {
-      client.release();
     }
   }
 };

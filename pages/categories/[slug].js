@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import ProductFilters from '../../components/ProductFilters/ProductFilters';
+import SkeletonProduct from '../../components/skeleton/SkeletonProduct';
 import styles from '../../styles/CategoryPage.module.css';
 
 export default function CategoryPage() {
@@ -276,9 +277,10 @@ export default function CategoryPage() {
           {/* Product Grid */}
           <div className={styles.productsContent}>
             {loading ? (
-              <div className="loading-container">
-                <div className="loading-spinner"></div>
-                <p>Loading products...</p>
+              <div className={styles.productsGrid}>
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <SkeletonProduct key={index} />
+                ))}
               </div>
             ) : error ? (
               <div className="error-message">

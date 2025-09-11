@@ -1,81 +1,107 @@
 const express = require('express');
 const router = express.Router();
-const { Pool } = require('pg');
+const { supabase } = require('../../lib/db');
 const { isAuthenticated } = require('../../middleware/auth');
 
-// Create a PostgreSQL connection pool
-const pool = new Pool({
-  connectionString: 'postgresql://postgres:postgres@localhost:5432/phone_electronics_store',
-  ssl: false,
-});
+// Helper function to get or create cart ID
+async function getOrCreateCartId(userId, session) {
+  if (userId) {
+    // Try to get existing cart for user
+    let { data: cart, error } = await supabase
+      .from('carts')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      throw error;
+    }
+
+    if (!cart) {
+      // Create new cart for user
+      const { data: newCart, error: insertError } = await supabase
+        .from('carts')
+        .insert({ user_id: userId })
+        .select()
+        .single();
+
+      if (insertError) {
+        throw insertError;
+      }
+      return newCart.id;
+    }
+    return cart.id;
+  } else {
+    // Guest user: use session cart ID or create new
+    if (session.cartId) {
+      return session.cartId;
+    } else {
+      const { data: newCart, error } = await supabase
+        .from('carts')
+        .insert({ user_id: null })
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+      session.cartId = newCart.id;
+      return newCart.id;
+    }
+  }
+}
 
 // Get cart items
 router.get('/', async (req, res) => {
   try {
-    let cartId;
-    
-    if (req.session.userId) {
-      // Get cart for logged in user
-      const cartResult = await pool.query(
-        'SELECT id FROM carts WHERE user_id = $1',
-        [req.session.userId]
-      );
-      
-      if (cartResult.rows.length === 0) {
-        // Create a new cart for the user
-        const newCartResult = await pool.query(
-          'INSERT INTO carts (user_id) VALUES ($1) RETURNING id',
-          [req.session.userId]
-        );
-        
-        cartId = newCartResult.rows[0].id;
-      } else {
-        cartId = cartResult.rows[0].id;
-      }
-    } else {
-      // Use session cart ID for guest users
-      cartId = req.session.cartId;
-      
-      if (!cartId) {
-        // Create a new cart for the guest
-        const newCartResult = await pool.query(
-          'INSERT INTO carts (user_id) VALUES (NULL) RETURNING id'
-        );
-        
-        cartId = newCartResult.rows[0].id;
-        req.session.cartId = cartId;
-      }
+    const cartId = await getOrCreateCartId(req.session.userId, req.session);
+
+    const { data: cartItems, error } = await supabase
+      .from('cart_items')
+      .select(`
+        id,
+        quantity,
+        product_id,
+        products (
+          name,
+          slug,
+          price,
+          discount_percentage,
+          image_url
+        )
+      `)
+      .eq('cart_id', cartId);
+
+    if (error) {
+      throw error;
     }
-    
-    // Get cart items
-    const cartItemsQuery = `
-      SELECT ci.id, ci.quantity, ci.product_id,
-             p.name, p.slug, p.price, p.discount_percentage, p.image_url
-      FROM cart_items ci
-      JOIN products p ON ci.product_id = p.id
-      WHERE ci.cart_id = $1
-    `;
-    const cartItemsResult = await pool.query(cartItemsQuery, [cartId]);
-    
-    // Calculate totals
+
     let subtotal = 0;
-    const items = cartItemsResult.rows.map(item => {
-      const discountedPrice = item.price * (1 - (item.discount_percentage / 100));
+    const items = cartItems.map(item => {
+      const price = parseFloat(item.products.price);
+      const discount = parseFloat(item.products.discount_percentage || 0);
+      const discountedPrice = price * (1 - discount / 100);
       const itemTotal = discountedPrice * item.quantity;
       subtotal += itemTotal;
-      
+
       return {
-        ...item,
-        price: parseFloat(item.price),
+        id: item.id,
+        quantity: item.quantity,
+        product_id: item.product_id,
+        name: item.products.name,
+        slug: item.products.slug,
+        price: price,
+        discount_percentage: discount,
         discounted_price: parseFloat(discountedPrice.toFixed(2)),
-        item_total: parseFloat(itemTotal.toFixed(2))
+        item_total: parseFloat(itemTotal.toFixed(2)),
+        image_url: item.products.image_url
       };
     });
-    
+
     res.json({
       success: true,
       cart_id: cartId,
-      items: items,
+      items,
       item_count: items.length,
       subtotal: parseFloat(subtotal.toFixed(2))
     });
@@ -92,85 +118,69 @@ router.get('/', async (req, res) => {
 router.post('/add', async (req, res) => {
   try {
     const { product_id, quantity = 1 } = req.body;
-    
+
     if (!product_id) {
       return res.status(400).json({
         success: false,
         message: 'Product ID is required'
       });
     }
-    
+
     // Check if product exists
-    const productResult = await pool.query(
-      'SELECT id, price FROM products WHERE id = $1',
-      [product_id]
-    );
-    
-    if (productResult.rows.length === 0) {
+    const { data: product, error: productError } = await supabase
+      .from('products')
+      .select('id, price')
+      .eq('id', product_id)
+      .single();
+
+    if (productError) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
-    
-    let cartId;
-    
-    if (req.session.userId) {
-      // Get cart for logged in user
-      const cartResult = await pool.query(
-        'SELECT id FROM carts WHERE user_id = $1',
-        [req.session.userId]
-      );
-      
-      if (cartResult.rows.length === 0) {
-        // Create a new cart for the user
-        const newCartResult = await pool.query(
-          'INSERT INTO carts (user_id) VALUES ($1) RETURNING id',
-          [req.session.userId]
-        );
-        
-        cartId = newCartResult.rows[0].id;
-      } else {
-        cartId = cartResult.rows[0].id;
-      }
-    } else {
-      // Use session cart ID for guest users
-      cartId = req.session.cartId;
-      
-      if (!cartId) {
-        // Create a new cart for the guest
-        const newCartResult = await pool.query(
-          'INSERT INTO carts (user_id) VALUES (NULL) RETURNING id'
-        );
-        
-        cartId = newCartResult.rows[0].id;
-        req.session.cartId = cartId;
-      }
-    }
-    
+
+    const cartId = await getOrCreateCartId(req.session.userId, req.session);
+
     // Check if item already exists in cart
-    const existingItemResult = await pool.query(
-      'SELECT id, quantity FROM cart_items WHERE cart_id = $1 AND product_id = $2',
-      [cartId, product_id]
-    );
-    
-    if (existingItemResult.rows.length > 0) {
+    const { data: existingItems, error: existingError } = await supabase
+      .from('cart_items')
+      .select('id, quantity')
+      .eq('cart_id', cartId)
+      .eq('product_id', product_id);
+
+    if (existingError) {
+      throw existingError;
+    }
+
+    if (existingItems.length > 0) {
       // Update quantity of existing item
-      const existingItem = existingItemResult.rows[0];
+      const existingItem = existingItems[0];
       const newQuantity = existingItem.quantity + parseInt(quantity);
-      
-      await pool.query(
-        'UPDATE cart_items SET quantity = $1 WHERE id = $2',
-        [newQuantity, existingItem.id]
-      );
+
+      const { error: updateError } = await supabase
+        .from('cart_items')
+        .update({ quantity: newQuantity })
+        .eq('id', existingItem.id);
+
+      if (updateError) {
+        throw updateError;
+      }
     } else {
       // Add new item to cart
-      await pool.query(
-        'INSERT INTO cart_items (cart_id, product_id, quantity) VALUES ($1, $2, $3)',
-        [cartId, product_id, quantity]
-      );
+      const { error: insertError } = await supabase
+        .from('cart_items')
+        .insert({
+          cart_id: cartId,
+          product_id,
+          quantity
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
     }
-    
+
     res.json({
       success: true,
       message: 'Item added to cart'
@@ -189,55 +199,31 @@ router.put('/update/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
-    
+
     if (!quantity || quantity < 1) {
       return res.status(400).json({
         success: false,
         message: 'Quantity must be at least 1'
       });
     }
-    
-    // Get cart ID
-    let cartId;
-    
-    if (req.session.userId) {
-      const cartResult = await pool.query(
-        'SELECT id FROM carts WHERE user_id = $1',
-        [req.session.userId]
-      );
-      
-      if (cartResult.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: 'Cart not found'
-        });
-      }
-      
-      cartId = cartResult.rows[0].id;
-    } else {
-      cartId = req.session.cartId;
-      
-      if (!cartId) {
-        return res.status(404).json({
-          success: false,
-          message: 'Cart not found'
-        });
-      }
-    }
-    
+
+    const cartId = await getOrCreateCartId(req.session.userId, req.session);
+
     // Update cart item
-    const updateResult = await pool.query(
-      'UPDATE cart_items SET quantity = $1 WHERE id = $2 AND cart_id = $3 RETURNING id',
-      [quantity, id, cartId]
-    );
-    
-    if (updateResult.rows.length === 0) {
+    const { data, error } = await supabase
+      .from('cart_items')
+      .update({ quantity })
+      .eq('id', id)
+      .eq('cart_id', cartId)
+      .select();
+
+    if (error || data.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Cart item not found'
       });
     }
-    
+
     res.json({
       success: true,
       message: 'Cart item updated'
@@ -255,48 +241,24 @@ router.put('/update/:id', async (req, res) => {
 router.delete('/remove/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Get cart ID
-    let cartId;
-    
-    if (req.session.userId) {
-      const cartResult = await pool.query(
-        'SELECT id FROM carts WHERE user_id = $1',
-        [req.session.userId]
-      );
-      
-      if (cartResult.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: 'Cart not found'
-        });
-      }
-      
-      cartId = cartResult.rows[0].id;
-    } else {
-      cartId = req.session.cartId;
-      
-      if (!cartId) {
-        return res.status(404).json({
-          success: false,
-          message: 'Cart not found'
-        });
-      }
-    }
-    
+
+    const cartId = await getOrCreateCartId(req.session.userId, req.session);
+
     // Remove cart item
-    const deleteResult = await pool.query(
-      'DELETE FROM cart_items WHERE id = $1 AND cart_id = $2 RETURNING id',
-      [id, cartId]
-    );
-    
-    if (deleteResult.rows.length === 0) {
+    const { data, error } = await supabase
+      .from('cart_items')
+      .delete()
+      .eq('id', id)
+      .eq('cart_id', cartId)
+      .select();
+
+    if (error || data.length === 0) {
       return res.status(404).json({
         success: false,
         message: 'Cart item not found'
       });
     }
-    
+
     res.json({
       success: true,
       message: 'Item removed from cart'
@@ -313,40 +275,18 @@ router.delete('/remove/:id', async (req, res) => {
 // Clear cart
 router.delete('/clear', async (req, res) => {
   try {
-    // Get cart ID
-    let cartId;
-    
-    if (req.session.userId) {
-      const cartResult = await pool.query(
-        'SELECT id FROM carts WHERE user_id = $1',
-        [req.session.userId]
-      );
-      
-      if (cartResult.rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: 'Cart not found'
-        });
-      }
-      
-      cartId = cartResult.rows[0].id;
-    } else {
-      cartId = req.session.cartId;
-      
-      if (!cartId) {
-        return res.status(404).json({
-          success: false,
-          message: 'Cart not found'
-        });
-      }
-    }
-    
+    const cartId = await getOrCreateCartId(req.session.userId, req.session);
+
     // Clear cart items
-    await pool.query(
-      'DELETE FROM cart_items WHERE cart_id = $1',
-      [cartId]
-    );
-    
+    const { error } = await supabase
+      .from('cart_items')
+      .delete()
+      .eq('cart_id', cartId);
+
+    if (error) {
+      throw error;
+    }
+
     res.json({
       success: true,
       message: 'Cart cleared'

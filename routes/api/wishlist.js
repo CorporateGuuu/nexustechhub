@@ -1,57 +1,98 @@
 const express = require('express');
 const router = express.Router();
-const { Pool } = require('pg');
+const { supabase } = require('../../lib/db');
 const { isAuthenticated } = require('../../middleware/auth');
 const { apiLimiter } = require('../../middleware/security');
-
-// Create a PostgreSQL connection pool
-const pool = new Pool({
-  connectionString: 'postgresql://postgres:postgres@localhost:5432/phone_electronics_store',
-  ssl: false,
-});
 
 // Get user's wishlist
 router.get('/', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.userId;
-    
-    // Get or create user's wishlist
+
+    // Get or create user's wishlist using Supabase
     let wishlistId;
-    const wishlistQuery = 'SELECT id FROM wishlists WHERE user_id = $1';
-    const wishlistResult = await pool.query(wishlistQuery, [userId]);
-    
-    if (wishlistResult.rows.length === 0) {
-      // Create a new wishlist
-      const newWishlistQuery = 'INSERT INTO wishlists (user_id) VALUES ($1) RETURNING id';
-      const newWishlistResult = await pool.query(newWishlistQuery, [userId]);
-      wishlistId = newWishlistResult.rows[0].id;
-    } else {
-      wishlistId = wishlistResult.rows[0].id;
+    const { data: existingWishlist, error: findError } = await supabase
+      .from('wishlists')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      console.error('Error finding wishlist:', findError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error fetching wishlist'
+      });
     }
-    
-    // Get wishlist items
-    const itemsQuery = `
-      SELECT wi.id, wi.added_at,
-             p.id as product_id, p.name, p.slug, p.price, p.discount_percentage, p.image_url,
-             c.name as category_name
-      FROM wishlist_items wi
-      JOIN products p ON wi.product_id = p.id
-      LEFT JOIN categories c ON p.category_id = c.id
-      WHERE wi.wishlist_id = $1
-      ORDER BY wi.added_at DESC
-    `;
-    const itemsResult = await pool.query(itemsQuery, [wishlistId]);
-    
+
+    if (existingWishlist) {
+      wishlistId = existingWishlist.id;
+    } else {
+      // Create a new wishlist
+      const { data: newWishlist, error: createError } = await supabase
+        .from('wishlists')
+        .insert({ user_id: userId })
+        .select('id')
+        .single();
+
+      if (createError) {
+        console.error('Error creating wishlist:', createError);
+        return res.status(500).json({
+          success: false,
+          message: 'Error creating wishlist'
+        });
+      }
+
+      wishlistId = newWishlist.id;
+    }
+
+    // Get wishlist items using Supabase
+    const { data: wishlistItems, error: itemsError } = await supabase
+      .from('wishlist_items')
+      .select(`
+        id,
+        added_at,
+        products (
+          id,
+          name,
+          slug,
+          price,
+          discount_percentage,
+          image_url,
+          categories (
+            name
+          )
+        )
+      `)
+      .eq('wishlist_id', wishlistId)
+      .order('added_at', { ascending: false });
+
+    if (itemsError) {
+      console.error('Error fetching wishlist items:', itemsError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error fetching wishlist items'
+      });
+    }
+
     // Format items with discounted price
-    const items = itemsResult.rows.map(item => {
-      const discountedPrice = item.price * (1 - (item.discount_percentage / 100));
+    const items = wishlistItems.map(item => {
+      const product = item.products;
+      const discountedPrice = product.price * (1 - (product.discount_percentage / 100));
       return {
-        ...item,
-        price: parseFloat(item.price),
-        discounted_price: parseFloat(discountedPrice.toFixed(2))
+        id: item.id,
+        added_at: item.added_at,
+        product_id: product.id,
+        name: product.name,
+        slug: product.slug,
+        price: parseFloat(product.price),
+        discount_percentage: product.discount_percentage,
+        discounted_price: parseFloat(discountedPrice.toFixed(2)),
+        image_url: product.image_url,
+        category_name: product.categories?.name
       };
     });
-    
+
     res.json({
       success: true,
       wishlist_id: wishlistId,
@@ -71,61 +112,100 @@ router.post('/add', isAuthenticated, apiLimiter, async (req, res) => {
   try {
     const { productId } = req.body;
     const userId = req.session.userId;
-    
+
     if (!productId) {
       return res.status(400).json({
         success: false,
         message: 'Product ID is required'
       });
     }
-    
-    // Check if product exists
-    const productQuery = 'SELECT id FROM products WHERE id = $1';
-    const productResult = await pool.query(productQuery, [productId]);
-    
-    if (productResult.rows.length === 0) {
+
+    // Check if product exists using Supabase
+    const { data: product, error: productError } = await supabase
+      .from('products')
+      .select('id')
+      .eq('id', productId)
+      .single();
+
+    if (productError || !product) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
-    
-    // Get or create user's wishlist
+
+    // Get or create user's wishlist using Supabase
     let wishlistId;
-    const wishlistQuery = 'SELECT id FROM wishlists WHERE user_id = $1';
-    const wishlistResult = await pool.query(wishlistQuery, [userId]);
-    
-    if (wishlistResult.rows.length === 0) {
-      // Create a new wishlist
-      const newWishlistQuery = 'INSERT INTO wishlists (user_id) VALUES ($1) RETURNING id';
-      const newWishlistResult = await pool.query(newWishlistQuery, [userId]);
-      wishlistId = newWishlistResult.rows[0].id;
-    } else {
-      wishlistId = wishlistResult.rows[0].id;
+    const { data: existingWishlist, error: findError } = await supabase
+      .from('wishlists')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      console.error('Error finding wishlist:', findError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error fetching wishlist'
+      });
     }
-    
-    // Check if item already exists in wishlist
-    const existingItemQuery = `
-      SELECT id FROM wishlist_items
-      WHERE wishlist_id = $1 AND product_id = $2
-    `;
-    const existingItemResult = await pool.query(existingItemQuery, [wishlistId, productId]);
-    
-    if (existingItemResult.rows.length > 0) {
+
+    if (existingWishlist) {
+      wishlistId = existingWishlist.id;
+    } else {
+      const { data: newWishlist, error: createError } = await supabase
+        .from('wishlists')
+        .insert({ user_id: userId })
+        .select('id')
+        .single();
+
+      if (createError) {
+        console.error('Error creating wishlist:', createError);
+        return res.status(500).json({
+          success: false,
+          message: 'Error creating wishlist'
+        });
+      }
+
+      wishlistId = newWishlist.id;
+    }
+
+    // Check if item already exists in wishlist using Supabase
+    const { data: existingItem, error: existingError } = await supabase
+      .from('wishlist_items')
+      .select('id')
+      .eq('wishlist_id', wishlistId)
+      .eq('product_id', productId)
+      .single();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      console.error('Error checking wishlist item:', existingError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error checking wishlist'
+      });
+    }
+
+    if (existingItem) {
       return res.json({
         success: true,
         message: 'Item already in wishlist'
       });
     }
-    
-    // Add item to wishlist
-    const addItemQuery = `
-      INSERT INTO wishlist_items (wishlist_id, product_id)
-      VALUES ($1, $2)
-      RETURNING id
-    `;
-    await pool.query(addItemQuery, [wishlistId, productId]);
-    
+
+    // Add item to wishlist using Supabase
+    const { error: insertError } = await supabase
+      .from('wishlist_items')
+      .insert({ wishlist_id: wishlistId, product_id: productId });
+
+    if (insertError) {
+      console.error('Error adding item to wishlist:', insertError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error adding item to wishlist'
+      });
+    }
+
     res.json({
       success: true,
       message: 'Item added to wishlist'
@@ -144,35 +224,47 @@ router.delete('/remove/:itemId', isAuthenticated, async (req, res) => {
   try {
     const { itemId } = req.params;
     const userId = req.session.userId;
-    
-    // Get user's wishlist
-    const wishlistQuery = 'SELECT id FROM wishlists WHERE user_id = $1';
-    const wishlistResult = await pool.query(wishlistQuery, [userId]);
-    
-    if (wishlistResult.rows.length === 0) {
+
+    // Get user's wishlist using Supabase
+    const { data: existingWishlist, error: findError } = await supabase
+      .from('wishlists')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      console.error('Error finding wishlist:', findError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error removing item from wishlist'
+      });
+    }
+
+    if (!existingWishlist) {
       return res.status(404).json({
         success: false,
         message: 'Wishlist not found'
       });
     }
-    
-    const wishlistId = wishlistResult.rows[0].id;
-    
-    // Remove item from wishlist
-    const removeItemQuery = `
-      DELETE FROM wishlist_items
-      WHERE id = $1 AND wishlist_id = $2
-      RETURNING id
-    `;
-    const removeResult = await pool.query(removeItemQuery, [itemId, wishlistId]);
-    
-    if (removeResult.rows.length === 0) {
+
+    const wishlistId = existingWishlist.id;
+
+    // Remove item from wishlist using Supabase
+    const { data: removedItem, error: removeError } = await supabase
+      .from('wishlist_items')
+      .delete()
+      .eq('id', itemId)
+      .eq('wishlist_id', wishlistId)
+      .select()
+      .single();
+
+    if (removeError || !removedItem) {
       return res.status(404).json({
         success: false,
         message: 'Item not found in wishlist'
       });
     }
-    
+
     res.json({
       success: true,
       message: 'Item removed from wishlist'
@@ -191,31 +283,51 @@ router.get('/check/:productId', isAuthenticated, async (req, res) => {
   try {
     const { productId } = req.params;
     const userId = req.session.userId;
-    
-    // Get user's wishlist
-    const wishlistQuery = 'SELECT id FROM wishlists WHERE user_id = $1';
-    const wishlistResult = await pool.query(wishlistQuery, [userId]);
-    
-    if (wishlistResult.rows.length === 0) {
+
+    // Get user's wishlist using Supabase
+    const { data: existingWishlist, error: findError } = await supabase
+      .from('wishlists')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      console.error('Error finding wishlist:', findError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error checking wishlist'
+      });
+    }
+
+    if (!existingWishlist) {
       return res.json({
         success: true,
         inWishlist: false
       });
     }
-    
-    const wishlistId = wishlistResult.rows[0].id;
-    
-    // Check if product is in wishlist
-    const checkQuery = `
-      SELECT id FROM wishlist_items
-      WHERE wishlist_id = $1 AND product_id = $2
-    `;
-    const checkResult = await pool.query(checkQuery, [wishlistId, productId]);
-    
+
+    const wishlistId = existingWishlist.id;
+
+    // Check if product is in wishlist using Supabase
+    const { data: wishlistItem, error: checkError } = await supabase
+      .from('wishlist_items')
+      .select('id')
+      .eq('wishlist_id', wishlistId)
+      .eq('product_id', productId)
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('Error checking wishlist item:', checkError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error checking wishlist'
+      });
+    }
+
     res.json({
       success: true,
-      inWishlist: checkResult.rows.length > 0,
-      wishlistItemId: checkResult.rows.length > 0 ? checkResult.rows[0].id : null
+      inWishlist: !!wishlistItem,
+      wishlistItemId: wishlistItem ? wishlistItem.id : null
     });
   } catch (error) {
     console.error('Error checking wishlist:', error);
@@ -230,23 +342,45 @@ router.get('/check/:productId', isAuthenticated, async (req, res) => {
 router.delete('/clear', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.userId;
-    
-    // Get user's wishlist
-    const wishlistQuery = 'SELECT id FROM wishlists WHERE user_id = $1';
-    const wishlistResult = await pool.query(wishlistQuery, [userId]);
-    
-    if (wishlistResult.rows.length === 0) {
+
+    // Get user's wishlist using Supabase
+    const { data: existingWishlist, error: findError } = await supabase
+      .from('wishlists')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      console.error('Error finding wishlist:', findError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error clearing wishlist'
+      });
+    }
+
+    if (!existingWishlist) {
       return res.status(404).json({
         success: false,
         message: 'Wishlist not found'
       });
     }
-    
-    const wishlistId = wishlistResult.rows[0].id;
-    
-    // Clear wishlist
-    await pool.query('DELETE FROM wishlist_items WHERE wishlist_id = $1', [wishlistId]);
-    
+
+    const wishlistId = existingWishlist.id;
+
+    // Clear wishlist using Supabase
+    const { error: clearError } = await supabase
+      .from('wishlist_items')
+      .delete()
+      .eq('wishlist_id', wishlistId);
+
+    if (clearError) {
+      console.error('Error clearing wishlist:', clearError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error clearing wishlist'
+      });
+    }
+
     res.json({
       success: true,
       message: 'Wishlist cleared'

@@ -1,6 +1,6 @@
 import { getSession } from 'next-auth/react';
 import stripe from '../../../lib/stripe';
-import { query } from '../../../lib/db';
+import { supabase } from '../../../lib/db';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -21,39 +21,77 @@ export default async function handler(req, res) {
       });
     }
 
-    // Get cart data
-    let cartResult;
+    // Get cart data using Supabase
+    let cartData;
     if (userId) {
-      cartResult = await query(
-        'SELECT id FROM carts WHERE user_id = $1',
-        [userId]
-      );
+      const { data: cart, error: cartError } = await supabase
+        .from('carts')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+
+      if (cartError && cartError.code !== 'PGRST116') {
+        console.error('Error finding user cart:', cartError);
+        return res.status(500).json({
+          success: false,
+          message: 'Error retrieving cart'
+        });
+      }
+
+      cartData = cart;
     } else {
-      cartResult = await query(
-        'SELECT id FROM carts WHERE session_id = $1',
-        [sessionId]
-      );
+      const { data: cart, error: cartError } = await supabase
+        .from('carts')
+        .select('id')
+        .eq('session_id', sessionId)
+        .single();
+
+      if (cartError && cartError.code !== 'PGRST116') {
+        console.error('Error finding session cart:', cartError);
+        return res.status(500).json({
+          success: false,
+          message: 'Error retrieving cart'
+        });
+      }
+
+      cartData = cart;
     }
 
-    if (cartResult.rows.length === 0) {
+    if (!cartData) {
       return res.status(400).json({
         success: false,
         message: 'Cart not found'
       });
     }
 
-    const cartId = cartResult.rows[0].id;
+    const cartId = cartData.id;
 
-    // Get cart items with product details
-    const cartItemsResult = await query(`
-      SELECT ci.id, ci.quantity, p.id as product_id, p.name, p.price,
-             p.discount_percentage, p.image_url, p.slug
-      FROM cart_items ci
-      JOIN products p ON ci.product_id = p.id
-      WHERE ci.cart_id = $1
-    `, [cartId]);
+    // Get cart items with product details using Supabase
+    const { data: cartItems, error: itemsError } = await supabase
+      .from('cart_items')
+      .select(`
+        id,
+        quantity,
+        products (
+          id,
+          name,
+          price,
+          discount_percentage,
+          image_url,
+          slug
+        )
+      `)
+      .eq('cart_id', cartId);
 
-    if (cartItemsResult.rows.length === 0) {
+    if (itemsError) {
+      console.error('Error fetching cart items:', itemsError);
+      return res.status(500).json({
+        success: false,
+        message: 'Error retrieving cart items'
+      });
+    }
+
+    if (!cartItems || cartItems.length === 0) {
       return res.status(400).json({
         success: false,
         message: 'Cart is empty'
@@ -61,9 +99,10 @@ export default async function handler(req, res) {
     }
 
     // Format cart items for Stripe
-    const lineItems = cartItemsResult.rows.map(item => {
-      const price = parseFloat(item.price);
-      const discountPercentage = parseFloat(item.discount_percentage || 0);
+    const lineItems = cartItems.map(item => {
+      const product = item.products;
+      const price = parseFloat(product.price);
+      const discountPercentage = parseFloat(product.discount_percentage || 0);
       const discountedPrice = discountPercentage > 0
         ? price * (1 - discountPercentage / 100)
         : price;
@@ -72,8 +111,8 @@ export default async function handler(req, res) {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: item.name,
-            images: item.image_url ? [item.image_url] : [],
+            name: product.name,
+            images: product.image_url ? [product.image_url] : [],
           },
           unit_amount: Math.round(discountedPrice * 100), // Stripe uses cents
         },
