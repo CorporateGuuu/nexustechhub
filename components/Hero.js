@@ -130,11 +130,12 @@ export default function Hero() {
       onMouseLeave={handleMouseLeave}
       onKeyDown={handleKeyDown}
       tabIndex={0}
+      style={{ minHeight: '500px', position: 'relative' }}
     >
       {/* Progress Bar */}
       <div className={styles.progressBar}>
         <div
-          className={styles.progressFill}
+          className={`${styles.progressFill}`}
           style={{ width: `${progress}%` }}
           aria-hidden="true"
         />
@@ -146,6 +147,7 @@ export default function Hero() {
         onClick={handlePrevSlide}
         aria-label="Previous slide"
         type="button"
+        style={{ zIndex: 30 }}
       >
         ‹
       </button>
@@ -154,6 +156,7 @@ export default function Hero() {
         onClick={handleNextSlide}
         aria-label="Next slide"
         type="button"
+        style={{ zIndex: 30 }}
       >
         ›
       </button>
