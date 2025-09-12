@@ -4,6 +4,18 @@
   publish = ".next"
   functions = "netlify/functions"
   base = "."
+  secrets_scan_omit_paths = [
+    "DEPLOYMENT_DIAGNOSIS.md",
+    "Scripts/netlify-env-vars.txt",
+    "Scripts/setup-netlify-env-vars.md",
+    "STRIPE_LIVE_SETUP_GUIDE.md",
+    "FINAL_PRODUCTION_DEPLOYMENT_REPORT.md",
+    "LIVE_DEPLOYMENT_EXECUTION_GUIDE.md",
+    "PRODUCTION_SETUP.md",
+    "ENVIRONMENT_SETUP.md",
+    "PHASE_9_SERVICE_SETUP_GUIDE.md",
+    "Scripts/test-webhook-endpoint.js"
+  ]
 
 [build.environment]
   NODE_VERSION = "20.11.0"
