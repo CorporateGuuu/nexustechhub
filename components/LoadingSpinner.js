@@ -50,4 +50,23 @@ export default function LoadingSpinner({
   );
 }
 
+// Product Card Skeleton Component
+export function ProductCardSkeleton() {
+  return (
+    <div className={styles.productCardSkeleton}>
+      <div className={styles.skeletonImage}></div>
+      <div className={styles.skeletonContent}>
+        <div className={styles.skeletonLine} style={{ height: '1.25rem', width: '80%' }}></div>
+        <div className={styles.skeletonLine} style={{ height: '1rem', width: '60%', marginTop: '0.5rem' }}></div>
+        <div className={styles.skeletonLine} style={{ height: '1.5rem', width: '40%', marginTop: '0.75rem' }}></div>
+        <div className={styles.skeletonLine} style={{ height: '1rem', width: '50%', marginTop: '0.5rem' }}></div>
+        <div className={styles.skeletonActions}>
+          <div className={styles.skeletonLine} style={{ height: '2.5rem', width: '45%' }}></div>
+          <div className={styles.skeletonLine} style={{ height: '2.5rem', width: '45%' }}></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
