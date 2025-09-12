@@ -7,18 +7,21 @@ const https = require('https');
 const crypto = require('crypto');
 
 const WEBHOOK_URL = 'https://nexustechhub.netlify.app/api/stripe/webhook';
-const WEBHOOK_SECRET = 'whsec_8F3wsD2sWFA2LsOnJrCX1fgZhsVDu1nN';
+const WEBHOOK_SECRET = process.env.***;
 
 function createStripeSignature(payload, secret) {
+  if (!secret) {
+    throw new Error('STRIPE_WEBHOOK_SECRET is not set');
+  }
   const timestamp = Math.floor(Date.now() / 1000);
   const payloadString = JSON.stringify(payload);
   const signedPayload = `${timestamp}.${payloadString}`;
-  
+
   const signature = crypto
     .createHmac('sha256', secret.replace('whsec_', ''))
     .update(signedPayload, 'utf8')
     .digest('hex');
-  
+
   return `t=${timestamp},v1=${signature}`;
 }
 
@@ -73,7 +76,11 @@ async function testWebhookEndpoint() {
   console.log('🔗 Testing Nexus TechHub Webhook Endpoint');
   console.log('=========================================');
   console.log(`Webhook URL: ${WEBHOOK_URL}`);
-  console.log(`Webhook Secret: ${WEBHOOK_SECRET.substring(0, 12)}...`);
+  if (WEBHOOK_SECRET) {
+    console.log('Webhook Secret: SET');
+  } else {
+    console.log('Webhook Secret: NOT SET');
+  }
   
   try {
     // Test 1: Basic endpoint accessibility
