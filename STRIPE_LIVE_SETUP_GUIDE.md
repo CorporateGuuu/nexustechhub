@@ -108,7 +108,7 @@ ZAPIER_WEBHOOK_URL=[YOUR_ZAPIER_WEBHOOK]
 Run this command to test your live keys:
 
 ```bash
-STRIPE_SECRET_KEY=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 node Scripts/test-stripe-live.js
+STRIPE_SECRET_KEY=*** node Scripts/test-stripe-live.js
 ```
 
 **Expected Results**:

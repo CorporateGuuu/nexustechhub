@@ -2,4 +2,5 @@
 - [x] Replace STRIPE_SECRET_KEY and NEXTAUTH_SECRET placeholders in DEPLOYMENT_DIAGNOSIS.md
 - [x] Replace STRIPE_SECRET_KEY placeholder in STRIPE_LIVE_SETUP_GUIDE.md
 - [x] Check and fix Scripts/test-webhook-endpoint.js if needed
-- [ ] Test the changes by triggering a new Netlify deploy
+- [x] Test the changes by triggering a new Netlify deploy (committed and pushed)
+- [x] Replace real STRIPE_SECRET_KEY values in Scripts/netlify-env-vars.txt, Scripts/setup-netlify-env-vars.md, and STRIPE_LIVE_SETUP_GUIDE.md
