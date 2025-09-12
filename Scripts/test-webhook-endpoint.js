@@ -7,7 +7,7 @@ const https = require('https');
 const crypto = require('crypto');
 
 const WEBHOOK_URL = 'https://nexustechhub.netlify.app/api/stripe/webhook';
-const WEBHOOK_SECRET = process.env.***;
+const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
 function createStripeSignature(payload, secret) {
   if (!secret) {
