@@ -43,10 +43,8 @@ const app = express();
 const port = 3000;
 
 // Create a PostgreSQL connection pool
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/mdtstech_store',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
+const dbConfig = require('./lib/db-config');
+const pool = new Pool(dbConfig);
 
 // Middleware
 app.use(compression()); // Compress all responses

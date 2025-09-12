@@ -1,7 +1,3 @@
-import React from 'react';
-import Layout from '../../components/Layout/Layout';
-import ProductList from '../../components/ProductList/ProductList';
-
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/Layout/Layout';
 import ProductList from '../../components/ProductList/ProductList';

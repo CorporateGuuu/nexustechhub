@@ -1,4 +1,4 @@
-const { getPurchaseOrders, validateApiKey, getMockPurchaseOrders, validateParams } = require('../../../utils/purchaseOrderUtils');
+const { getPurchaseOrders, validateApiKey, getMockPurchaseOrders, validateParams } = require('../../../utils/purchaseOrderUtils.js');
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
