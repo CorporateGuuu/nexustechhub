@@ -50,6 +50,12 @@
   to = "/_next/image:splat"
   status = 200
 
+# Specific webhook endpoint - must come before general API redirect
+[[redirects]]
+  from = "/api/stripe/webhook"
+  to = "/.netlify/functions/stripe-webhook"
+  status = 200
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/___netlify-handler"
