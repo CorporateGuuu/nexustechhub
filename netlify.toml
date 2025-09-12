@@ -4,7 +4,8 @@
   publish = ".next"
   functions = "netlify/functions"
   base = "."
-  secrets_scan_enabled = false
+  secrets_scan_enabled = true
+  secrets_scan_omit_paths = "netlify-env-vars.txt, Scripts/netlify-env-vars.txt, .env*, vapid-keys.env"
 
 [build.environment]
   NODE_VERSION = "20.11.0"
