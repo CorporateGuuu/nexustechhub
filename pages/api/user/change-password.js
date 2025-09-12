@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { ca: require('fs').readFileSync(require('path').join(__dirname, '../../../prod-ca-2021.crt')).toString() } : false
 });
 
 export default async function handler(req, res) {
