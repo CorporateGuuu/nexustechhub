@@ -106,7 +106,7 @@ GOOGLE_ANALYTICS_ID="[your_ga_id]"
 # Push Notifications
 NEXT_PUBLIC_VAPID_PUBLIC_KEY="[generated_vapid_public]"
 VAPID_PRIVATE_KEY="[generated_vapid_private]"
-VAPID_SUBJECT="mailto:admin@nexustechhub.ae"
+VAPID_SUBJECT="mailto:${BUSINESS_EMAIL}"
 ```
 
 ---

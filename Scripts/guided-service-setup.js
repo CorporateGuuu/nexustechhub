@@ -285,7 +285,7 @@ async function loadVAPIDKeys() {
     if (publicMatch && privateMatch) {
       serviceConfig.vapid.publicKey = publicMatch[1];
       serviceConfig.vapid.privateKey = privateMatch[1];
-      serviceConfig.vapid.subject = 'mailto:admin@nexustechhub.ae';
+      serviceConfig.vapid.subject = 'mailto:${BUSINESS_EMAIL}';
       
       logSuccess('VAPID keys loaded from vapid-keys.env');
     } else {
@@ -295,7 +295,7 @@ async function loadVAPIDKeys() {
     logWarning('VAPID keys not found - run: node scripts/generate-vapid-keys.js');
     serviceConfig.vapid.publicKey = 'REPLACE_WITH_VAPID_PUBLIC_KEY';
     serviceConfig.vapid.privateKey = 'REPLACE_WITH_VAPID_PRIVATE_KEY';
-    serviceConfig.vapid.subject = 'mailto:admin@nexustechhub.ae';
+    serviceConfig.vapid.subject = 'mailto:${BUSINESS_EMAIL}';
   }
 }
 
