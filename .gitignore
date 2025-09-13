@@ -20,6 +20,7 @@ dist/
 vapid-keys.env
 netlify-env-vars.txt
 *.env
+# Critical Business Variables
 
 # Large files and videos
 Website Content/Videos/
