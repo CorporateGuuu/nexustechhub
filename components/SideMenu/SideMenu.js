@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './SideMenu.module.css';
 
-const SideMenu = () => {
+const SideMenu = ({ onItemClick }) => {
   const router = useRouter();
 
   // Define simplified menu items
@@ -51,6 +51,12 @@ const SideMenu = () => {
     },
   ];
 
+  const handleItemClick = () => {
+    if (onItemClick) {
+      onItemClick();
+    }
+  };
+
   return (
     <div className={styles.sideMenu}>
       <nav className={styles.nav}>
@@ -60,6 +66,7 @@ const SideMenu = () => {
               <Link
                 href={item.url}
                 className={router.asPath.includes(item.url) ? styles.active : ''}
+                onClick={handleItemClick}
               >
                 {item.title}
               </Link>
@@ -67,7 +74,7 @@ const SideMenu = () => {
                 <ul className={styles.submenu}>
                   {item.submenu.map((subItem, index) => (
                     <li key={index} className={styles.subItem}>
-                      <Link href={subItem.url}>{subItem.title}</Link>
+                      <Link href={subItem.url} onClick={handleItemClick}>{subItem.title}</Link>
                     </li>
                   ))}
                 </ul>
@@ -75,12 +82,12 @@ const SideMenu = () => {
             </li>
           ))}
           <li className={styles.navItem}>
-            <Link href="/lcd-buyback" className={router.pathname === '/lcd-buyback' ? styles.active : ''}>
+            <Link href="/lcd-buyback" className={router.pathname === '/lcd-buyback' ? styles.active : ''} onClick={handleItemClick}>
               LCD Buyback
             </Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/gapp" className={router.pathname === '/gapp' ? styles.active : ''}>
+            <Link href="/gapp" className={router.pathname === '/gapp' ? styles.active : ''} onClick={handleItemClick}>
               Apple Parts Program
             </Link>
           </li>
