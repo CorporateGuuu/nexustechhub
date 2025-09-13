@@ -5,8 +5,8 @@
   functions = "netlify/functions"
   base = "."
   secrets_scan_enabled = true
-  secrets_scan_omit_paths = ".env*,node_modules,vapid-keys.env,netlify-env-vars.txt,coverage/,Scripts/,*.md,*.html,.next/,netlify/"
-  secrets_scan_omit_keys = "NEXTAUTH_SECRET,STRIPE_SECRET_KEY,SUPABASE_SERVICE_ROLE_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT,NEXT_PUBLIC_VAPID_PUBLIC_KEY,BUSINESS_EMAIL,NEXT_PUBLIC_BUSINESS_EMAIL"
+  secrets_scan_omit_paths = ".env*,node_modules,vapid-keys.env,netlify-env-vars.txt,coverage/,Scripts/,*.md,*.html,.next/,netlify/,\# Critical Business Variables"
+  secrets_scan_omit_keys = "NEXTAUTH_SECRET,STRIPE_SECRET_KEY,SUPABASE_SERVICE_ROLE_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT,NEXT_PUBLIC_VAPID_PUBLIC_KEY,BUSINESS_EMAIL,NEXT_PUBLIC_BUSINESS_EMAIL,SENDGRID_API_KEY"
 
 [build.environment]
   NODE_VERSION = "20.11.0"
