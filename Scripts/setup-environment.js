@@ -84,7 +84,7 @@ function generateEnvironmentVariables() {
     // Push Notifications (HIGH PRIORITY)
     NEXT_PUBLIC_VAPID_PUBLIC_KEY: vapidPublicKey,
     VAPID_PRIVATE_KEY: vapidPrivateKey,
-    VAPID_SUBJECT: 'mailto:admin@nexustechhub.ae',
+    VAPID_SUBJECT: 'mailto:${BUSINESS_EMAIL}',
     
     // Image Optimization (MEDIUM PRIORITY)
     CLOUDINARY_CLOUD_NAME: 'REPLACE_WITH_CLOUDINARY_CLOUD_NAME',

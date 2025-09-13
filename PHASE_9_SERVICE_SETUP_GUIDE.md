@@ -193,7 +193,7 @@ web-push generate-vapid-keys
 ```bash
 NEXT_PUBLIC_VAPID_PUBLIC_KEY="your_vapid_public_key_here"
 VAPID_PRIVATE_KEY="your_vapid_private_key_here"
-VAPID_SUBJECT="mailto:admin@nexustechhub.ae"
+VAPID_SUBJECT="mailto:${BUSINESS_EMAIL}"
 ```
 
 ---

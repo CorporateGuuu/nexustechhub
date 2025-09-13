@@ -48,7 +48,7 @@ function generateVAPIDKeys() {
     const envVars = `# VAPID Keys for Push Notifications - Generated ${new Date().toISOString()}
 NEXT_PUBLIC_VAPID_PUBLIC_KEY="${vapidKeys.publicKey}"
 VAPID_PRIVATE_KEY="${vapidKeys.privateKey}"
-VAPID_SUBJECT="mailto:admin@nexustechhub.ae"`;
+VAPID_SUBJECT="mailto:\${BUSINESS_EMAIL}"`;
 
     // Save to file
     fs.writeFileSync('vapid-keys.env', envVars);
