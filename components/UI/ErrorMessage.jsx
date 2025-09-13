@@ -91,7 +91,7 @@ const ErrorMessage = ({
               <div className="mt-1 space-y-1 text-xs">
                 <p>📞 Phone: <a href="tel:+971585531029" className="font-medium hover:underline">+971 58 553 1029</a></p>
                 <p>💬 WhatsApp: <a href="https://wa.me/971585531029" className="font-medium hover:underline" target="_blank" rel="noopener noreferrer">Chat with us</a></p>
-                <p>📧 Email: <a href="mailto:admin@nexustechhub.ae" className="font-medium hover:underline">admin@nexustechhub.ae</a></p>
+                <p>📧 Email: <a href={`mailto:${process.env.NEXT_PUBLIC_BUSINESS_EMAIL || 'admin@nexustechhub.ae'}`} className="font-medium hover:underline">{process.env.NEXT_PUBLIC_BUSINESS_EMAIL || 'admin@nexustechhub.ae'}</a></p>
               </div>
             </div>
           )}
