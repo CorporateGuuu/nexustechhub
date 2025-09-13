@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SEOHead from '../../components/SEOHead';
-import UnifiedHeader from '../../components/UnifiedHeader/UnifiedHeader';
 import Footer from '../../components/Footer';
 import WhatsAppButton from '../../components/WhatsAppButton';
 import SkeletonProductDetail from '../../components/skeleton/SkeletonProductDetail';
@@ -119,7 +118,6 @@ export default function ProductDetail() {
   if (loading) {
     return (
       <>
-        <UnifiedHeader />
         <div className={styles.loading}>
           <SkeletonProductDetail />
         </div>
@@ -131,7 +129,6 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <>
-        <UnifiedHeader />
         <div className={styles.notFound}>
           <h1>Product Not Found</h1>
           <p>The product you're looking for doesn't exist.</p>
@@ -154,8 +151,6 @@ export default function ProductDetail() {
         keywords={`${product.name}, ${product.categories?.name}, iPhone parts, mobile repair, UAE`}
         image={images[0]}
       />
-
-      <UnifiedHeader />
 
       <main className={styles.main}>
         <div className={styles.container}>

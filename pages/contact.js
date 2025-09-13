@@ -1,6 +1,4 @@
 import SEOHead from '../components/SEOHead';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ContactForm from '../components/ContactForm';
 import styles from '../styles/Contact.module.css';
@@ -16,7 +14,6 @@ export default function Contact() {
         canonicalUrl="https://nexustechhub.netlify.app/contact"
       />
 
-      <Header />
       <div className={styles.contactContainer}>
         <div className={styles.contactHeader}>
           <h1>Contact Nexus TechHub</h1>
@@ -130,7 +127,6 @@ export default function Contact() {
         </div>
       </div>
 
-      <Footer />
       <WhatsAppButton />
     </>
   );

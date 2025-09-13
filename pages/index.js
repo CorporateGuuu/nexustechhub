@@ -1,9 +1,7 @@
 import SEOHead from '../components/SEOHead';
-import UnifiedHeader from '../components/UnifiedHeader/UnifiedHeader';
 import Hero from '../components/Hero';
 import FeaturedProducts from '../components/FeaturedProducts/FeaturedProducts';
 import WhatsAppButton from '../components/WhatsAppButton';
-import Footer from '../components/Footer';
 import QuickInquiry from '../components/QuickInquiry';
 import Testimonials from '../components/Testimonials';
 import Link from 'next/link';
@@ -11,109 +9,7 @@ import MediaGallery from '../components/MediaGallery/MediaGallery';
 import { getProducts } from '../lib/db';
 import styles from '../styles/Home.module.css';
 
-export default function Home() {
-  // Sample product data - replace with actual data from API
-  const featuredProducts = [
-    {
-      id: 1,
-      name: 'iPhone 15 Pro Screen',
-      category: 'iPhone Parts',
-      price: 299.99,
-      imageUrl: '/images/products/iphone-15-screen.jpg',
-      badge: 'New'
-    },
-    {
-      id: 2,
-      name: 'Samsung S24 Battery',
-      category: 'Samsung Parts',
-      price: 49.99,
-      imageUrl: '/images/products/samsung-s24-battery.jpg',
-      badge: 'Best Seller'
-    },
-    {
-      id: 3,
-      name: 'iPad Pro 12.9" Screen',
-      category: 'iPad Parts',
-      price: 399.99,
-      imageUrl: '/images/products/ipad-pro-screen.jpg'
-    },
-    {
-      id: 4,
-      name: 'Professional Repair Kit',
-      category: 'Tools',
-      price: 149.99,
-      imageUrl: '/images/products/repair-kit.jpg',
-      badge: 'Popular'
-    }
-  ];
-
-  const newProducts = [
-    {
-      id: 5,
-      name: 'iPhone 15 Pro Max Screen',
-      category: 'iPhone Parts',
-      price: 349.99,
-      imageUrl: '/images/products/iphone-15-pro-max-screen.jpg',
-      badge: 'New Arrival'
-    },
-    {
-      id: 6,
-      name: 'Samsung Z Fold 5 Hinge',
-      category: 'Samsung Parts',
-      price: 89.99,
-      imageUrl: '/images/products/samsung-z-fold-hinge.jpg',
-      badge: 'New'
-    },
-    {
-      id: 7,
-      name: 'MacBook Pro 16" Screen',
-      category: 'MacBook Parts',
-      price: 599.99,
-      imageUrl: '/images/products/macbook-pro-screen.jpg'
-    },
-    {
-      id: 8,
-      name: 'Soldering Station Pro',
-      category: 'Tools',
-      price: 199.99,
-      imageUrl: '/images/products/soldering-station.jpg',
-      badge: 'New'
-    }
-  ];
-
-  const bestSellers = [
-    {
-      id: 9,
-      name: 'iPhone 14 Screen',
-      category: 'iPhone Parts',
-      price: 249.99,
-      imageUrl: '/images/products/iphone-14-screen.jpg',
-      badge: 'Best Seller'
-    },
-    {
-      id: 10,
-      name: 'Samsung S23 Battery',
-      category: 'Samsung Parts',
-      price: 39.99,
-      imageUrl: '/images/products/samsung-s23-battery.jpg',
-      badge: 'Best Seller'
-    },
-    {
-      id: 11,
-      name: 'iPad Air 5 Screen',
-      category: 'iPad Parts',
-      price: 299.99,
-      imageUrl: '/images/products/ipad-air-screen.jpg'
-    },
-    {
-      id: 12,
-      name: 'Screwdriver Set 64pcs',
-      category: 'Tools',
-      price: 79.99,
-      imageUrl: '/images/products/screwdriver-set.jpg',
-      badge: 'Best Seller'
-    }
-  ];
+export default function Home({ featuredProducts = [], newProducts = [], bestSellers = [] }) {
 
   return (
     <>
@@ -124,24 +20,31 @@ export default function Home() {
         canonicalUrl="https://nexustechhub.netlify.app"
       />
 
-      <UnifiedHeader />
       <Hero />
 
       {/* Featured Products Section */}
-      <FeaturedProducts products={featuredProducts} />
+      <FeaturedProducts
+        products={featuredProducts}
+        title="Featured Products"
+        subtitle="Discover our most popular repair parts and tools, trusted by professionals worldwide."
+      />
 
       {/* New Products Section */}
       <section className={styles.newProductsSection}>
-        <h2>New Arrivals</h2>
-        <p>Check out our latest products and tools</p>
-        <FeaturedProducts products={newProducts} />
+        <FeaturedProducts
+          products={newProducts}
+          title="New Arrivals"
+          subtitle="Check out our latest products and tools"
+        />
       </section>
 
       {/* Best Sellers Section */}
       <section className={styles.bestSellersSection}>
-        <h2>Best Sellers</h2>
-        <p>Most popular products chosen by our customers</p>
-        <FeaturedProducts products={bestSellers} />
+        <FeaturedProducts
+          products={bestSellers}
+          title="Best Sellers"
+          subtitle="Most popular products chosen by our customers"
+        />
       </section>
 
       {/* Genuine Parts Program Banner */}
@@ -171,7 +74,8 @@ export default function Home() {
       {/* Quick Inquiry Section */}
       <QuickInquiry />
 
-      <Footer />
+      {/* Remove Footer here to avoid duplicate since Footer is rendered in _app.js */}
+      {/* <Footer /> */}
       <WhatsAppButton />
     </>
   );
