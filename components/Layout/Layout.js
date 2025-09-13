@@ -2,7 +2,6 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import { ToastContainer } from 'react-toastify';
 import Head from 'next/head';
-import UnifiedHeader from '../UnifiedHeader/UnifiedHeader';
 import UnifiedFooter from '../UnifiedFooter/UnifiedFooter';
 import DeviceGradingPopup from '../DeviceGradingPopup';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
@@ -59,10 +58,6 @@ export default function Layout({
           <meta property="twitter:image" content="/images/og-image.jpg" />
         </Head>
       )}
-
-      <ErrorBoundary>
-        <UnifiedHeader />
-      </ErrorBoundary>
 
       <main className={styles.main}>
         <ErrorBoundary>

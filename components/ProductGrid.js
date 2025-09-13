@@ -162,7 +162,7 @@ export default function ProductGrid({ products, categoryTitle, isLoading = false
                 </div>
 
                 <div className={styles.actions}>
-                  <Link href={`/products/${product.id}`} className={styles.viewButton}>
+                  <Link href={`/products/${product.slug}`} className={styles.viewButton}>
                     View Details
                   </Link>
                   <button

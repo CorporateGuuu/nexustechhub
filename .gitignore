@@ -16,6 +16,10 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production.generated
+vapid-keys.env
+netlify-env-vars.txt
+*.env
 
 # Large files and videos
 Website Content/Videos/
@@ -50,3 +54,6 @@ __pycache__/
 .coverage
 htmlcov/
 *.egg-info/
+
+# Local Netlify folder
+.netlify

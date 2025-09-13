@@ -1,12 +1,13 @@
 import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { GoogleAnalytics } from '../components/Analytics';
 import ChatBot from '../components/ChatBot';
 import ErrorBoundary from '../components/ErrorBoundary';
 import WebVitals from '../components/WebVitals';
 import { CartProvider } from '../contexts/CartContext';
-import Header from '../components/Header/Header';
+import UnifiedHeader from '../components/UnifiedHeader/UnifiedHeader';
 import Footer from '../components/Footer/Footer';
 
 import * as Sentry from '@sentry/nextjs';
@@ -24,6 +25,8 @@ Sentry.init({
 import '../styles/globals.css';
 
 function AppContent({ Component, pageProps }) {
+  const router = useRouter();
+
   return (
     <ErrorBoundary componentName="Application">
       <div className="app-wrapper">
@@ -42,7 +45,7 @@ function AppContent({ Component, pageProps }) {
         {/* Core Web Vitals Monitoring */}
         <WebVitals />
 
-        <Header />
+        <UnifiedHeader />
 
         <main>
           <Component {...pageProps} />

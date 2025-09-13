@@ -12,7 +12,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
-const FeaturedProducts = ({ products }) => {
+const FeaturedProducts = ({ products, title = "Featured Products", subtitle = "Discover our most popular repair parts and tools, trusted by professionals worldwide." }) => {
   const swiperRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -72,10 +72,8 @@ const FeaturedProducts = ({ products }) => {
   if (!products || products.length === 0) {
     return (
       <section className={styles.featuredProducts}>
-        <h2 className={styles.title}>Featured Products</h2>
-        <p className={styles.subtitle}>
-          Discover our most popular repair parts and tools, trusted by professionals worldwide.
-        </p>
+        <h2 className={styles.title}>{title}</h2>
+        <p className={styles.subtitle}>{subtitle}</p>
         <div className={styles.noProducts}>
           <p>No featured products available at the moment.</p>
           <Link href="/products" className={styles.viewAll}>
@@ -108,18 +106,16 @@ const FeaturedProducts = ({ products }) => {
   };
 
   return (
-    <section className={styles.featuredProducts}>
-      <div className={styles.header}>
-        <div>
-          <h2 className={styles.title}>Featured Products</h2>
-          <p className={styles.subtitle}>
-            Discover our most popular repair parts and tools, trusted by professionals worldwide.
-          </p>
+      <section className={styles.featuredProducts}>
+        <div className={styles.header}>
+          <div>
+            <h2 className={styles.title}>{title}</h2>
+            <p className={styles.subtitle}>{subtitle}</p>
+          </div>
+          <Link href="/products" className={styles.viewAll}>
+            View All Products
+          </Link>
         </div>
-        <Link href="/products" className={styles.viewAll}>
-          View All Products
-        </Link>
-      </div>
 
       <div className={styles.carouselContainer}>
         <Swiper
@@ -212,7 +208,7 @@ const FeaturedProducts = ({ products }) => {
                     <span className={styles.salePrice}>${product.price.toFixed(2)}</span>
                   </div>
                   <Link
-                    href={`/products/${product.id}`}
+                    href={`/products/${product.slug}`}
                     className={styles.viewDetails}
                     aria-label={`View details for ${product.name} - ${product.category}`}
                   >

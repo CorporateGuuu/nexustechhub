@@ -3,7 +3,7 @@ import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './UnifiedHeader.module.css';
-import ShippingCutoff from '../ShippingCutoff/ShippingCutoff';
+import SideMenu from '../SideMenu/SideMenu';
 import SearchBar from '../SearchBar/SearchBar';
 
 const UnifiedHeader = () => {
@@ -32,7 +32,6 @@ const UnifiedHeader = () => {
           items: [
             { id: 1011, title: 'iPhone 15 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-15' },
             { id: 1012, title: 'iPhone 14 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-14' },
-            { id: 1013, title: 'iPhone 13 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-13' },
           ]
         },
         {
@@ -42,7 +41,6 @@ const UnifiedHeader = () => {
             { id: 1021, title: 'Screens & LCDs', url: '/products?category=iphone-parts&subcategory=iphone-parts/screens' },
             { id: 1022, title: 'Batteries', url: '/products?category=iphone-parts&subcategory=iphone-parts/batteries' },
             { id: 1023, title: 'Charging Ports', url: '/products?category=iphone-parts&subcategory=iphone-parts/charging-ports' },
-            { id: 1024, title: 'Cameras', url: '/products?category=iphone-parts&part=camera' },
           ]
         }
       ]
@@ -58,7 +56,6 @@ const UnifiedHeader = () => {
           items: [
             { id: 2011, title: 'Galaxy S Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-s' },
             { id: 2012, title: 'Galaxy Note Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-note' },
-            { id: 2013, title: 'Galaxy A Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-a' },
           ]
         },
         {
@@ -68,7 +65,6 @@ const UnifiedHeader = () => {
             { id: 2021, title: 'Screens & LCDs', url: '/products?category=samsung-parts&subcategory=samsung-parts/screens' },
             { id: 2022, title: 'Batteries', url: '/products?category=samsung-parts&subcategory=samsung-parts/batteries' },
             { id: 2023, title: 'Charging Ports', url: '/products?category=samsung-parts&part=charging-port' },
-            { id: 2024, title: 'Cameras', url: '/products?category=samsung-parts&part=camera' },
           ]
         }
       ]
@@ -84,7 +80,6 @@ const UnifiedHeader = () => {
           items: [
             { id: 3011, title: 'iPad Pro', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-pro' },
             { id: 3012, title: 'iPad Air', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-air' },
-            { id: 3013, title: 'iPad Mini', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-mini' },
           ]
         },
         {
@@ -109,16 +104,14 @@ const UnifiedHeader = () => {
           items: [
             { id: 4011, title: 'Tool Kits', url: '/products?category=repair-tools&subcategory=repair-tools/tool-kits' },
             { id: 4012, title: 'Screwdrivers', url: '/products?category=repair-tools&subcategory=repair-tools/screwdrivers' },
-            { id: 4013, title: 'Heat Guns', url: '/products?category=repair-tools&subcategory=repair-tools/heat-guns' },
           ]
         },
         {
           id: 402,
           title: 'Brands',
           items: [
-            { id: 4021, title: 'iFixit', url: '/products?category=repair-tools&brand=ifixit' },
-            { id: 4022, title: 'Nexus TechHub', url: '/products?category=repair-tools&brand=nexustechhub' },
-            { id: 4023, title: 'JAKEMY', url: '/products?category=repair-tools&brand=jakemy' },
+            { id: 4011, title: 'iFixit', url: '/products?category=repair-tools&brand=ifixit' },
+            { id: 4012, title: 'Nexus TechHub', url: '/products?category=repair-tools&brand=nexustechhub' },
           ]
         }
       ]
@@ -206,10 +199,8 @@ const UnifiedHeader = () => {
         </div>
       </div>
 
-      {/* Shipping Cutoff Timer */}
-      <div className={styles.shippingCutoffContainer}>
-        <ShippingCutoff />
-      </div>
+      {/* Side Menu */}
+      <SideMenu />
 
       {/* New header design */}
       <div className={styles.mainHeader}>
