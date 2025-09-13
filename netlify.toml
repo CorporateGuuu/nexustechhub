@@ -5,7 +5,8 @@
   functions = "netlify/functions"
   base = "."
   secrets_scan_enabled = true
-  secrets_scan_omit_paths = "netlify-env-vars.txt, Scripts/netlify-env-vars.txt, Scripts/setup-netlify-env-vars.md, .env*, vapid-keys.env, Scripts/test-dns-propagation.js, Scripts/test-enhanced-ui-components.js, Scripts/test-sendgrid-simple.js, Scripts/test-sendgrid.js, Scripts/verify-live-deployment.js, components/AdminLayout.js, components/UI/ErrorMessage.jsx, lib/business-operations.js, lib/push-notification-server.js, lib/push-notification-service.js, lib/sendgrid.js, lib/third-party-services.js, DEPLOYMENT_DIAGNOSIS.md, LIVE_DEPLOYMENT_EXECUTION_GUIDE.md, PHASE_9_SERVICE_SETUP_GUIDE.md, STRIPE_LIVE_SETUP_GUIDE.md, Scripts/generate-vapid-keys.js, Scripts/guided-service-setup.js, Scripts/setup-environment.js"
+  secrets_scan_omit_paths = ".env*,node_modules,vapid-keys.env,netlify-env-vars.txt"
+  secrets_scan_omit_keys = "NEXTAUTH_SECRET,STRIPE_SECRET_KEY,SUPABASE_SERVICE_ROLE_KEY,VAPID_PRIVATE_KEY"
 
 [build.environment]
   NODE_VERSION = "20.11.0"

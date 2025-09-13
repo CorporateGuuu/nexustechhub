@@ -20,52 +20,6 @@ export default function Cart() {
     try {
       setLoading(true);
 
-      // Mock cart data for development
-      const mockCartData = {
-        success: true,
-        cart: {
-          id: 1,
-          user_id: session?.user?.id || null,
-          items: [
-            {
-              id: 1,
-              name: 'iPhone 13 Pro LCD Screen',
-              price: 89.99,
-              quantity: 2,
-              image_url: '/images/gapp/iphone-screen.jpg',
-              slug: 'iphone-13-pro-lcd-screen',
-              discount_percentage: 0,
-              total: 179.98
-            },
-            {
-              id: 2,
-              name: 'Samsung Galaxy S21 Battery',
-              price: 39.99,
-              quantity: 1,
-              image_url: '/images/gapp/samsung-battery.jpg',
-              slug: 'samsung-galaxy-s21-battery',
-              discount_percentage: 10,
-              discounted_price: 35.99,
-              total: 35.99
-            },
-            {
-              id: 3,
-              name: 'Professional Repair Tool Kit',
-              price: 129.99,
-              quantity: 1,
-              image_url: '/images/gapp/repair-tools.png',
-              slug: 'professional-repair-tool-kit',
-              discount_percentage: 0,
-              total: 129.99
-            }
-          ],
-          item_count: 4,
-          subtotal: 345.96
-        }
-      };
-
-      // In production, uncomment this code to fetch from API
-      /*
       const response = await fetch('/api/cart');
 
       if (!response.ok) {
@@ -79,14 +33,7 @@ export default function Cart() {
       } else {
         throw new Error(data.message || 'Failed to fetch cart');
       }
-      */
 
-      // Use mock data for now
-      setCart(mockCartData.cart);
-
-      setTimeout(() => {
-        setLoading(false);
-      }, 500); // Simulate network delay
     } catch (err) {
       console.error('Error fetching cart:', err);
       setError(err.message);
@@ -130,29 +77,6 @@ export default function Cart() {
     try {
       setUpdating(true);
 
-      // For development, use a mock implementation
-      if (process.env.NODE_ENV === 'development') {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Update local state to remove the item
-        setCart(prevCart => {
-          const updatedItems = prevCart.items.filter(item => item.id !== itemId);
-          const updatedItemCount = updatedItems.reduce((count, item) => count + item.quantity, 0);
-          const updatedSubtotal = updatedItems.reduce((total, item) => total + item.total, 0);
-
-          return {
-            ...prevCart,
-            items: updatedItems,
-            item_count: updatedItemCount,
-            subtotal: updatedSubtotal
-          };
-        });
-
-        setUpdating(false);
-        return;
-      }
-
       // For production, use the real API
       const response = await fetch('/api/cart', {
         method: 'DELETE',
@@ -173,6 +97,9 @@ export default function Cart() {
       } else {
         throw new Error(data.message || 'Failed to remove item from cart');
       }
+
+      setUpdating(false);
+      return;
     } catch (err) {
       console.error('Error removing item from cart:', err);
       setError(err.message);
@@ -190,23 +117,6 @@ export default function Cart() {
     try {
       setUpdating(true);
 
-      // For development, use a mock implementation
-      if (process.env.NODE_ENV === 'development') {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Update local state to clear cart
-        setCart(prevCart => ({
-          ...prevCart,
-          items: [],
-          item_count: 0,
-          subtotal: 0
-        }));
-
-        setUpdating(false);
-        return;
-      }
-
       // For production, use the real API
       const response = await fetch('/api/cart/clear', {
         method: 'DELETE',
@@ -223,6 +133,9 @@ export default function Cart() {
       } else {
         throw new Error(data.message || 'Failed to clear cart');
       }
+
+      setUpdating(false);
+      return;
     } catch (err) {
       console.error('Error clearing cart:', err);
       setError(err.message);

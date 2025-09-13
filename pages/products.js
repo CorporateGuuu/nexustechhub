@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import SEOHead from '../components/SEOHead';
-import UnifiedHeader from '../components/UnifiedHeader/UnifiedHeader';
-import Footer from '../components/Footer';
 import WhatsAppButton from '../components/WhatsAppButton';
 import { supabase } from '../lib/db';
 import styles from '../styles/Products.module.css';
@@ -144,8 +142,6 @@ export default function Products() {
         description="Browse our comprehensive collection of iPhone parts, Samsung components, and professional repair tools. High-quality replacement parts with warranty guarantee."
         keywords="iPhone parts UAE, Samsung repair parts, mobile repair tools, replacement screens, batteries, Dubai repair parts"
       />
-
-      <UnifiedHeader />
 
       <main className={styles.main}>
         <div className={styles.container}>
@@ -331,7 +327,6 @@ export default function Products() {
         </div>
       </main>
 
-      <Footer />
       <WhatsAppButton />
     </>
   );

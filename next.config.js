@@ -6,6 +6,12 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'nexustechhub.ae', 'nexustechhub.netlify.app', 'images.unsplash.com'],
     formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   eslint: {
     ignoreDuringBuilds: true,
