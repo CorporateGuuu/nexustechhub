@@ -5,7 +5,7 @@
   functions = "netlify/functions"
   base = "."
   secrets_scan_enabled = true
-  secrets_scan_omit_paths = ".env*,node_modules,vapid-keys.env,netlify-env-vars.txt,coverage/,Scripts/,*.md,*.html,.next/,netlify/,"# Critical Business Variables""
+  secrets_scan_omit_paths = ".env*,node_modules,vapid-keys.env,netlify-env-vars.txt,coverage/,Scripts/,*.md,*.html,.next/,netlify/,"
   secrets_scan_omit_keys = "NEXTAUTH_SECRET,STRIPE_SECRET_KEY,SUPABASE_SERVICE_ROLE_KEY,VAPID_PRIVATE_KEY,VAPID_SUBJECT,NEXT_PUBLIC_VAPID_PUBLIC_KEY,BUSINESS_EMAIL,NEXT_PUBLIC_BUSINESS_EMAIL,SENDGRID_API_KEY"
 
 [build.environment]
@@ -93,34 +93,34 @@
 
     # Enhanced Content Security Policy for Stripe and Analytics
     Content-Security-Policy = """
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net;
-      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com;
-      img-src 'self' data: https: blob:;
-      connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://vitals.vercel-analytics.com https://nexustechhub.netlify.app;
-      frame-src https://js.stripe.com https://hooks.stripe.com;
-      object-src 'none';
-      base-uri 'self';
-      form-action 'self' https://checkout.stripe.com;
-      upgrade-insecure-requests;
-    """
+default-src 'self';
+script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net;
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' data: https: blob:;
+connect-src 'self' https://api.stripe.com https://www.google-analytics.com https://vitals.vercel-analytics.com https://nexustechhub.netlify.app;
+frame-src https://js.stripe.com https://hooks.stripe.com;
+object-src 'none';
+base-uri 'self';
+form-action 'self' https://checkout.stripe.com;
+upgrade-insecure-requests;
+"""
 
     # Enhanced Permissions Policy for UAE Market
     Permissions-Policy = """
-      camera=(),
-      microphone=(),
-      geolocation=(self),
-      payment=(self "https://js.stripe.com"),
-      accelerometer=(),
-      autoplay=(),
-      encrypted-media=(),
-      fullscreen=(self),
-      gyroscope=(),
-      magnetometer=(),
-      picture-in-picture=(),
-      usb=()
-    """
+camera=(),
+microphone=(),
+geolocation=(self),
+payment=(self "https://js.stripe.com"),
+accelerometer=(),
+autoplay=(),
+encrypted-media=(),
+fullscreen=(self),
+gyroscope=(),
+magnetometer=(),
+picture-in-picture=(),
+usb=()
+"""
 
     # Additional Security Headers
     X-Permitted-Cross-Domain-Policies = "none"
