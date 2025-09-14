@@ -99,7 +99,8 @@
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  max-height: 500px;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 /* Responsive adjustments */
