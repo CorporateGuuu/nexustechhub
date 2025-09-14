@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Sentry from '@sentry/nextjs';
 import styles from './ErrorBoundary.module.css';
 
 class ErrorBoundary extends React.Component {
@@ -29,9 +30,12 @@ class ErrorBoundary extends React.Component {
       errorInfo: errorInfo
     });
 
-    // In production, you might want to log this to an error reporting service
+    // In production, log error to Sentry
     if (process.env.NODE_ENV === 'production') {
-      // Example: logErrorToService(error, errorInfo);
+      Sentry.withScope((scope) => {
+        scope.setExtras(errorInfo);
+        Sentry.captureException(error);
+      });
     }
   }
 

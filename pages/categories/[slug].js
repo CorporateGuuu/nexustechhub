@@ -8,7 +8,7 @@ import styles from '../../styles/CategoryPage.module.css';
 
 export default function CategoryPage() {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug, model, type } = router.query;
   const category = slug; // For backward compatibility
 
   const [products, setProducts] = useState([]);
@@ -165,6 +165,14 @@ export default function CategoryPage() {
 
         // Build query string with category filter
         let queryString = `page=${page}&limit=${limit}&category=${category}`;
+
+        // Add model and type filters if present
+        if (model) {
+          queryString += `&model=${encodeURIComponent(model)}`;
+        }
+        if (type) {
+          queryString += `&type=${encodeURIComponent(type)}`;
+        }
 
         const response = await fetch(`/api/products?${queryString}`);
 

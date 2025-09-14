@@ -11,42 +11,42 @@ const SideMenu = ({ onItemClick }) => {
     {
       id: 1,
       title: 'iPhone Parts',
-      url: '/products?category=iphone-parts',
+      url: '/categories/iphone-parts',
       submenu: [
-        { title: 'iPhone 15 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-15' },
-        { title: 'iPhone 14 Series', url: '/products?category=iphone-parts&subcategory=iphone-parts/iphone-14' },
-        { title: 'Screens & LCDs', url: '/products?category=iphone-parts&subcategory=iphone-parts/screens' },
-        { title: 'Batteries', url: '/products?category=iphone-parts&subcategory=iphone-parts/batteries' },
+        { title: 'iPhone 15 Series', url: '/categories/iphone-parts?model=iphone-15' },
+        { title: 'iPhone 14 Series', url: '/categories/iphone-parts?model=iphone-14' },
+        { title: 'Screens & LCDs', url: '/categories/iphone-parts?type=screens' },
+        { title: 'Batteries', url: '/categories/iphone-parts?type=batteries' },
       ]
     },
     {
       id: 2,
       title: 'Samsung Parts',
-      url: '/products?category=samsung-parts',
+      url: '/categories/samsung-parts',
       submenu: [
-        { title: 'Galaxy S Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-s' },
-        { title: 'Galaxy Note Series', url: '/products?category=samsung-parts&subcategory=samsung-parts/galaxy-note' },
-        { title: 'Screens & LCDs', url: '/products?category=samsung-parts&subcategory=samsung-parts/screens' },
-        { title: 'Batteries', url: '/products?category=samsung-parts&subcategory=samsung-parts/batteries' },
+        { title: 'Galaxy S Series', url: '/categories/samsung-parts?model=galaxy-s' },
+        { title: 'Galaxy Note Series', url: '/categories/samsung-parts?model=galaxy-note' },
+        { title: 'Screens & LCDs', url: '/categories/samsung-parts?type=screens' },
+        { title: 'Batteries', url: '/categories/samsung-parts?type=batteries' },
       ]
     },
     {
       id: 3,
       title: 'iPad Parts',
-      url: '/products?category=ipad-parts',
+      url: '/categories/ipad-parts',
       submenu: [
-        { title: 'iPad Pro', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-pro' },
-        { title: 'iPad Air', url: '/products?category=ipad-parts&subcategory=ipad-parts/ipad-air' },
-        { title: 'Screens & LCDs', url: '/products?category=ipad-parts&subcategory=ipad-parts/screens' },
+        { title: 'iPad Pro', url: '/categories/ipad-parts?model=ipad-pro' },
+        { title: 'iPad Air', url: '/categories/ipad-parts?model=ipad-air' },
+        { title: 'Screens & LCDs', url: '/categories/ipad-parts?type=screens' },
       ]
     },
     {
       id: 4,
       title: 'Repair Tools',
-      url: '/products?category=repair-tools',
+      url: '/categories/repair-tools',
       submenu: [
-        { title: 'Tool Kits', url: '/products?category=repair-tools&subcategory=repair-tools/tool-kits' },
-        { title: 'Screwdrivers', url: '/products?category=repair-tools&subcategory=repair-tools/screwdrivers' },
+        { title: 'Tool Kits', url: '/categories/repair-tools?type=tool-kits' },
+        { title: 'Screwdrivers', url: '/categories/repair-tools?type=screwdrivers' },
       ]
     },
   ];

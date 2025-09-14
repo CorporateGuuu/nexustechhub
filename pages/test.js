@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SentryTestButton from '../components/SentryTestButton';
 
 export default function TestPage() {
+  const [host, setHost] = React.useState('');
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+    if (typeof window !== 'undefined') {
+      setHost(window.location.origin);
+    }
+  }, []);
+
   const envStatus = {
     nodeEnv: process.env.NODE_ENV,
-    sentryConfigured: !!process.env.SENTRY_DSN,
+    sentryConfigured: !!process.env.NEXT_PUBLIC_SENTRY_DSN || !!process.env.SENTRY_DSN,
     nextAuthUrl: process.env.NEXTAUTH_URL,
     appEnv: process.env.NEXT_PUBLIC_APP_ENV
   };
@@ -14,6 +24,7 @@ export default function TestPage() {
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <h1>🎉 Nexus TechHub Development Test Page</h1>
         <p>If you can see this, the Next.js server is working!</p>
+      <div>Host: {isClient ? host : ''}</div>
       </div>
 
       {/* System Status */}
