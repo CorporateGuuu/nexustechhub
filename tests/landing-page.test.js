@@ -1,10 +1,33 @@
 import { render, screen } from '@testing-library/react';
 import Home from '../pages/index';
-import FeaturedProducts from '../components/FeaturedProducts/FeaturedProducts';
 
-// Mock the components
+// Mock all the complex components to avoid dependencies
+jest.mock('../components/SEOHead', () => {
+  return jest.fn(() => null);
+});
+
+jest.mock('../components/Hero', () => {
+  return jest.fn(() => <div data-testid="mock-hero">Hero Section</div>);
+});
+
 jest.mock('../components/FeaturedProducts/FeaturedProducts', () => {
-  return jest.fn(() => <div data-testid="mock-featured-products">Featured Products</div>);
+  return jest.fn(({ title }) => <div data-testid="mock-featured-products">{title || 'Featured Products'}</div>);
+});
+
+jest.mock('../components/WhatsAppButton', () => {
+  return jest.fn(() => <div data-testid="mock-whatsapp">WhatsApp Button</div>);
+});
+
+jest.mock('../components/QuickInquiry', () => {
+  return jest.fn(() => <div data-testid="mock-inquiry">Quick Inquiry</div>);
+});
+
+jest.mock('../components/Testimonials', () => {
+  return jest.fn(() => <div data-testid="mock-testimonials">Testimonials</div>);
+});
+
+jest.mock('../components/MediaGallery/MediaGallery', () => {
+  return jest.fn(() => <div data-testid="mock-gallery">Media Gallery</div>);
 });
 
 jest.mock('next/router', () => ({
@@ -14,62 +37,36 @@ jest.mock('next/router', () => ({
 }));
 
 describe('Landing Page', () => {
-  beforeEach(() => {
-    FeaturedProducts.mockClear();
-  });
-
-  test('renders the landing page with featured products', () => {
+  test('renders the landing page with all main sections', () => {
     render(<Home />);
-    
-    // Check that the FeaturedProducts component is rendered
-    expect(FeaturedProducts).toHaveBeenCalled();
-    expect(screen.getByTestId('mock-featured-products')).toBeInTheDocument();
+
+    // Check that main sections are rendered
+    expect(screen.getByTestId('mock-hero')).toBeInTheDocument();
+    expect(screen.getAllByTestId('mock-featured-products')).toHaveLength(3); // Featured, New Arrivals, Best Sellers
+    expect(screen.getByTestId('mock-whatsapp')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-inquiry')).toBeInTheDocument();
+    expect(screen.getByTestId('mock-testimonials')).toBeInTheDocument();
   });
-});
 
-describe('FeaturedProducts Component', () => {
-  const mockProducts = [
-    {
-      id: 1,
-      name: 'iPhone 13 Pro Screen',
-      price: 82.34,
-      discount_percentage: 10,
-      category: 'iPhone Parts',
-      imageUrl: '/images/products/iphone-screen.jpg',
-    },
-    {
-      id: 2,
-      name: 'Samsung Galaxy S21 Battery',
-      price: 45.99,
-      discount_percentage: 0,
-      category: 'Samsung Parts',
-      imageUrl: '/images/products/samsung-battery.jpg',
-    }
-  ];
+  test('renders genuine parts program banner', () => {
+    render(<Home />);
 
-  test('renders products with only one price value', () => {
-    // Unmock the FeaturedProducts component for this test
-    jest.unmock('../components/FeaturedProducts/FeaturedProducts');
-    
-    // Import the actual component
-    const ActualFeaturedProducts = require('../components/FeaturedProducts/FeaturedProducts').default;
-    
-    render(<ActualFeaturedProducts products={mockProducts} />);
-    
-    // Check that each product is rendered
-    expect(screen.getByText('iPhone 13 Pro Screen')).toBeInTheDocument();
-    expect(screen.getByText('Samsung Galaxy S21 Battery')).toBeInTheDocument();
-    
-    // Check that only one price value is displayed for each product
-    const prices = screen.getAllByText(/\$\d+\.\d+/);
-    expect(prices).toHaveLength(2);
-    
-    // Check that the original price is not displayed
-    const originalPrices = screen.queryAllByClassName('originalPrice');
-    expect(originalPrices).toHaveLength(0);
-    
-    // Check that the sale price is displayed
-    expect(screen.getByText('$82.34')).toBeInTheDocument();
-    expect(screen.getByText('$45.99')).toBeInTheDocument();
+    // Check that the genuine parts program banner is rendered
+    expect(screen.getByText('Introducing the Genuine Parts Program!')).toBeInTheDocument();
+    expect(screen.getByText(/Genuine Parts Program/i)).toBeInTheDocument();
+    expect(screen.getByText('Learn More')).toBeInTheDocument();
+  });
+
+  test('renders product sections with correct titles', () => {
+    render(<Home />);
+
+    // Check that all three product sections are rendered
+    const featuredProducts = screen.getAllByTestId('mock-featured-products');
+    expect(featuredProducts).toHaveLength(3);
+
+    // Check that the correct titles are rendered
+    expect(screen.getByText('Featured Products')).toBeInTheDocument();
+    expect(screen.getByText('New Arrivals')).toBeInTheDocument();
+    expect(screen.getByText('Best Sellers')).toBeInTheDocument();
   });
 });

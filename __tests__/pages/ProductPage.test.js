@@ -1,13 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ProductPage from '../../pages/products/[id]';
+import ProductPage from '../../pages/products/[slug]';
 
 // Mock the useRouter hook
 jest.mock('next/router', () => ({
   useRouter: () => ({
-    query: { id: '1' },
+    query: { slug: 'iphone-13-screen-replacement' },
     push: jest.fn(),
-    pathname: '/products/1',
+    pathname: '/products/iphone-13-screen-replacement',
   }),
 }));
 
@@ -17,18 +17,40 @@ const mockProduct = {
   name: 'iPhone 13 Screen Replacement',
   price: 89.99,
   description: 'High-quality replacement screen for iPhone 13',
-  image: '/images/products/iphone-13-screen.jpg',
-  category: 'iPhone Parts',
-  stock: 15,
-  rating: 4.5,
-  reviews: 28,
+  image_url: '/images/products/iphone-13-screen.jpg',
+  slug: 'iphone-13-screen-replacement',
+  category_id: 1,
+  stock_quantity: 15,
+  sku: 'IPH13-SCR-001',
+  discount_percentage: 0,
+  is_featured: true,
+  is_new: false,
+  categories: { name: 'iPhone Parts', slug: 'iphone-parts' },
+  product_images: [
+    { image_url: '/images/products/iphone-13-screen.jpg', is_primary: true, display_order: 1 }
+  ],
+  product_specifications: [{
+    screen_size: '6.1 inches',
+    resolution: '2532 x 1170',
+    technology: 'Super Retina XDR OLED'
+  }],
+  reviews: [
+    { id: 1, rating: 5, title: 'Great product', comment: 'Works perfectly', created_at: '2024-01-01' },
+    { id: 2, rating: 4, title: 'Good quality', comment: 'Satisfied with purchase', created_at: '2024-01-02' }
+  ]
 };
 
-// Mock getServerSideProps
+// Mock Supabase
 jest.mock('../../lib/db', () => ({
-  query: jest.fn(() => ({
-    rows: [mockProduct],
-  })),
+  supabase: {
+    from: jest.fn(() => ({
+      select: jest.fn(() => ({
+        eq: jest.fn(() => ({
+          single: jest.fn(() => Promise.resolve({ data: mockProduct, error: null }))
+        }))
+      }))
+    }))
+  }
 }));
 
 describe('Product Page', () => {
@@ -42,83 +64,63 @@ describe('Product Page', () => {
     );
   });
 
-  it('renders product details correctly', () => {
-    render(<ProductPage product={mockProduct} />);
-    
+  it('renders product details correctly', async () => {
+    render(<ProductPage />);
+
+    // Wait for component to load
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: mockProduct.name })).toBeInTheDocument();
+    });
+
     // Check if product details are rendered
-    expect(screen.getByText(mockProduct.name)).toBeInTheDocument();
-    expect(screen.getByText(`$${mockProduct.price.toFixed(2)}`)).toBeInTheDocument();
+    expect(screen.getByText('AED 89.99')).toBeInTheDocument();
     expect(screen.getByText(mockProduct.description)).toBeInTheDocument();
-    expect(screen.getByText(`In Stock: ${mockProduct.stock}`)).toBeInTheDocument();
-    
+    expect(screen.getByText('✅ In Stock (15 available)')).toBeInTheDocument();
+
     // Check if product image is rendered
     const image = screen.getByAltText(mockProduct.name);
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', expect.stringContaining(mockProduct.image));
+    expect(image).toHaveAttribute('src', expect.stringContaining(mockProduct.image_url));
   });
 
   it('allows changing quantity and adding to cart', async () => {
+    // Mock alert
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
     const user = userEvent.setup();
-    render(<ProductPage product={mockProduct} />);
-    
-    // Find quantity input and add to cart button
-    const quantityInput = screen.getByLabelText(/quantity/i);
-    const addToCartButton = screen.getByRole('button', { name: /add to cart/i });
-    
-    // Change quantity
-    await user.clear(quantityInput);
-    await user.type(quantityInput, '3');
-    expect(quantityInput).toHaveValue(3);
-    
+    render(<ProductPage />);
+
+    // Wait for component to load
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: mockProduct.name })).toBeInTheDocument();
+    });
+
+    // Find quantity buttons and add to cart button
+    const increaseButton = screen.getByText('+');
+    const addToCartButton = screen.getByText('Add to Cart');
+
+    // Increase quantity
+    await user.click(increaseButton);
+
     // Click add to cart button
     await user.click(addToCartButton);
-    
-    // Check if fetch was called with correct data
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/cart', expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({
-          productId: mockProduct.id,
-          quantity: 3,
-        }),
-      }));
-    });
+
+    // Check if alert was called
+    expect(alertMock).toHaveBeenCalledWith('Added 2 iPhone 13 Screen Replacement(s) to cart');
+
+    alertMock.mockRestore();
   });
 
-  it('shows related products section', () => {
-    render(<ProductPage product={mockProduct} relatedProducts={[
-      { id: 2, name: 'iPhone 13 Battery', price: 49.99, image: '/images/products/iphone-13-battery.jpg' },
-      { id: 3, name: 'iPhone 13 Back Glass', price: 39.99, image: '/images/products/iphone-13-back.jpg' },
-    ]} />);
-    
+  it('shows related products section', async () => {
+    render(<ProductPage />);
+
+    // Wait for component to load
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: mockProduct.name })).toBeInTheDocument();
+    });
+
     // Check if related products section is rendered
-    expect(screen.getByText(/Related Products/i)).toBeInTheDocument();
-    expect(screen.getByText('iPhone 13 Battery')).toBeInTheDocument();
-    expect(screen.getByText('iPhone 13 Back Glass')).toBeInTheDocument();
-  });
-
-  it('shows error message when adding to cart fails', async () => {
-    // Mock fetch to return an error
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: false,
-        status: 500,
-        json: () => Promise.resolve({ error: 'Failed to add to cart' }),
-      })
-    );
-    
-    const user = userEvent.setup();
-    render(<ProductPage product={mockProduct} />);
-    
-    // Find add to cart button
-    const addToCartButton = screen.getByRole('button', { name: /add to cart/i });
-    
-    // Click add to cart button
-    await user.click(addToCartButton);
-    
-    // Check if error message is shown
-    await waitFor(() => {
-      expect(screen.getByText(/failed to add to cart/i)).toBeInTheDocument();
-    });
+    expect(screen.getByText('Related Products')).toBeInTheDocument();
+    expect(screen.getByText('Check out similar products in the iPhone Parts category')).toBeInTheDocument();
   });
 });

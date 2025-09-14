@@ -27,8 +27,8 @@ describe('Privacy Policy Page', () => {
     // Check that the Layout component receives the correct props
     expect(Layout).toHaveBeenCalledWith(
       expect.objectContaining({
-        title: 'Privacy Policy - Nexus TechHub',
-        description: 'Learn about how Nexus TechHub collects, uses, and protects your personal information.'
+        title: 'Privacy Policy - Midas Technical Solutions',
+        description: 'Learn about how Midas Technical Solutions collects, uses, and protects your personal information.'
       }),
       expect.anything()
     );
@@ -48,11 +48,10 @@ describe('Privacy Policy Page', () => {
     // Check that all sections are rendered
     expect(screen.getByText('Information We Collect')).toBeInTheDocument();
     expect(screen.getByText('How We Use Your Information')).toBeInTheDocument();
-    expect(screen.getByText('Information Sharing and Disclosure')).toBeInTheDocument();
-    expect(screen.getByText('Your Choices and Rights')).toBeInTheDocument();
+    expect(screen.getByText('Disclosure of Your Information')).toBeInTheDocument();
+    expect(screen.getByText('Your Privacy Rights')).toBeInTheDocument();
     expect(screen.getByText('Data Security')).toBeInTheDocument();
     expect(screen.getByText('Children\'s Privacy')).toBeInTheDocument();
-    expect(screen.getByText('International Data Transfers')).toBeInTheDocument();
     expect(screen.getByText('Changes to This Privacy Policy')).toBeInTheDocument();
     expect(screen.getByText('Contact Us')).toBeInTheDocument();
   });
@@ -61,8 +60,8 @@ describe('Privacy Policy Page', () => {
     render(<PrivacyPolicy />);
 
     // Check that the contact information is rendered
-    expect(screen.getByText(/If you have any questions/)).toBeInTheDocument();
-    expect(screen.getByText(/support@nexustechhub.ae/)).toBeInTheDocument();
+    expect(screen.getByText(/If you have questions or comments/)).toBeInTheDocument();
+    expect(screen.getAllByText(/privacy@mdtstech.store/)).toHaveLength(2); // Email appears in DPO section and contact section
     expect(screen.getByText(/Vienna, VA 22182/)).toBeInTheDocument();
   });
 });

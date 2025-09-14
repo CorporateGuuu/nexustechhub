@@ -1,20 +1,9 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import Cart from '../pages/cart';
 
 describe('Cart Page', () => {
-  const mockPush = jest.fn();
-
   beforeEach(() => {
-    // Setup router mock
-    useRouter.mockImplementation(() => ({
-      push: mockPush,
-    }));
-
-    // Setup session mock
-    useSession.mockImplementation(() => ({
-      data: null,
-      status: 'unauthenticated'
-    }));
+    // Router mocks are set up globally in jest.setup.js
   });
 
   afterEach(() => {
@@ -48,68 +37,100 @@ describe('Cart Page', () => {
 
   test('renders cart items when cart has items', async () => {
     // Mock the fetch implementation to return cart with items
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          cart: {
-            items: [
-              {
-                id: 1,
-                name: 'iPhone 13 Pro LCD Screen',
-                price: 89.99,
-                quantity: 2,
-                image_url: '/images/gapp/iphone-screen.jpg',
-                slug: 'iphone-13-pro-lcd-screen',
-                discount_percentage: 0,
-                total: 179.98
-              }
-            ],
-            item_count: 2,
-            subtotal: 179.98
-          }
-        }),
-      })
-    );
+    global.fetch = jest.fn()
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            cart: {
+              items: [
+                {
+                  id: 1,
+                  name: 'iPhone 13 Pro LCD Screen',
+                  price: 89.99,
+                  quantity: 2,
+                  image_url: '/images/gapp/iphone-screen.jpg',
+                  slug: 'iphone-13-pro-lcd-screen',
+                  discount_percentage: 0,
+                  total: 179.98
+                }
+              ],
+              item_count: 2,
+              subtotal: 179.98
+            }
+          }),
+        })
+      );
 
-    render(<Cart />);
+    await act(async () => {
+      render(<Cart />);
+    });
 
     await waitFor(() => {
       expect(screen.getByText('iPhone 13 Pro LCD Screen')).toBeInTheDocument();
-      expect(screen.getByText('$179.98')).toBeInTheDocument();
+      // Check for quantity specifically in the quantity span
       expect(screen.getByText('2')).toBeInTheDocument();
+      // Check for the total in the summary section
+      expect(screen.getAllByText('$179.98')[1]).toBeInTheDocument();
     });
   });
 
   test('updates quantity when + button is clicked', async () => {
-    // Mock the fetch implementation
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          cart: {
-            items: [
-              {
-                id: 1,
-                name: 'iPhone 13 Pro LCD Screen',
-                price: 89.99,
-                quantity: 3, // Updated quantity
-                image_url: '/images/gapp/iphone-screen.jpg',
-                slug: 'iphone-13-pro-lcd-screen',
-                discount_percentage: 0,
-                total: 269.97 // Updated total
-              }
-            ],
-            item_count: 3,
-            subtotal: 269.97
-          }
-        }),
-      })
-    );
+    // Mock the fetch implementation - first call returns initial cart, second returns updated cart
+    global.fetch = jest.fn()
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            cart: {
+              items: [
+                {
+                  id: 1,
+                  name: 'iPhone 13 Pro LCD Screen',
+                  price: 89.99,
+                  quantity: 2, // Initial quantity
+                  image_url: '/images/gapp/iphone-screen.jpg',
+                  slug: 'iphone-13-pro-lcd-screen',
+                  discount_percentage: 0,
+                  total: 179.98
+                }
+              ],
+              item_count: 2,
+              subtotal: 179.98
+            }
+          }),
+        })
+      )
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            cart: {
+              items: [
+                {
+                  id: 1,
+                  name: 'iPhone 13 Pro LCD Screen',
+                  price: 89.99,
+                  quantity: 3, // Updated quantity
+                  image_url: '/images/gapp/iphone-screen.jpg',
+                  slug: 'iphone-13-pro-lcd-screen',
+                  discount_percentage: 0,
+                  total: 269.97 // Updated total
+                }
+              ],
+              item_count: 3,
+              subtotal: 269.97
+            }
+          }),
+        })
+      );
 
-    render(<Cart />);
+    await act(async () => {
+      render(<Cart />);
+    });
 
     // Wait for the cart to load
     await waitFor(() => {
@@ -132,27 +153,55 @@ describe('Cart Page', () => {
     // Verify the updated quantity and total
     await waitFor(() => {
       expect(screen.getByText('3')).toBeInTheDocument();
-      expect(screen.getByText('$269.97')).toBeInTheDocument();
+      // Check for the total in the summary section (should be the second occurrence)
+      expect(screen.getAllByText('$269.97')[1]).toBeInTheDocument();
     });
   });
 
   test('removes item when Remove button is clicked', async () => {
-    // Mock the fetch implementation
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          cart: {
-            items: [], // Empty cart after removal
-            item_count: 0,
-            subtotal: 0
-          }
-        }),
-      })
-    );
+    // Mock the fetch implementation - first call returns cart with items, second returns empty cart
+    global.fetch = jest.fn()
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            cart: {
+              items: [
+                {
+                  id: 1,
+                  name: 'iPhone 13 Pro LCD Screen',
+                  price: 89.99,
+                  quantity: 2,
+                  image_url: '/images/gapp/iphone-screen.jpg',
+                  slug: 'iphone-13-pro-lcd-screen',
+                  discount_percentage: 0,
+                  total: 179.98
+                }
+              ],
+              item_count: 2,
+              subtotal: 179.98
+            }
+          }),
+        })
+      )
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            cart: {
+              items: [], // Empty cart after removal
+              item_count: 0,
+              subtotal: 0
+            }
+          }),
+        })
+      );
 
-    render(<Cart />);
+    await act(async () => {
+      render(<Cart />);
+    });
 
     // Wait for the cart to load
     await waitFor(() => {
@@ -179,7 +228,58 @@ describe('Cart Page', () => {
   });
 
   test('proceeds to checkout when Proceed to Checkout button is clicked', async () => {
-    render(<Cart />);
+    // Mock the router for this specific test
+    const mockPush = jest.fn();
+    const originalUseRouter = jest.requireActual('next/router').useRouter;
+    jest.doMock('next/router', () => ({
+      useRouter: () => ({
+        push: mockPush,
+        replace: jest.fn(),
+        prefetch: jest.fn(),
+        back: jest.fn(),
+        pathname: '/',
+        query: {},
+        asPath: '/',
+        events: {
+          on: jest.fn(),
+          off: jest.fn(),
+          emit: jest.fn(),
+        },
+      }),
+    }));
+
+    // Mock the fetch implementation to return cart with items
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({
+          success: true,
+          cart: {
+            items: [
+              {
+                id: 1,
+                name: 'iPhone 13 Pro LCD Screen',
+                price: 89.99,
+                quantity: 2,
+                image_url: '/images/gapp/iphone-screen.jpg',
+                slug: 'iphone-13-pro-lcd-screen',
+                discount_percentage: 0,
+                total: 179.98
+              }
+            ],
+            item_count: 2,
+            subtotal: 179.98
+          }
+        }),
+      })
+    );
+
+    // Import Cart after setting up mocks
+    const Cart = (await import('../pages/cart')).default;
+
+    await act(async () => {
+      render(<Cart />);
+    });
 
     // Wait for the cart to load
     await waitFor(() => {
@@ -195,7 +295,36 @@ describe('Cart Page', () => {
   });
 
   test('displays correct CSS styling for cart elements', async () => {
-    render(<Cart />);
+    // Mock the fetch implementation to return cart with items
+    global.fetch = jest.fn()
+      .mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            cart: {
+              items: [
+                {
+                  id: 1,
+                  name: 'iPhone 13 Pro LCD Screen',
+                  price: 89.99,
+                  quantity: 2,
+                  image_url: '/images/gapp/iphone-screen.jpg',
+                  slug: 'iphone-13-pro-lcd-screen',
+                  discount_percentage: 0,
+                  total: 179.98
+                }
+              ],
+              item_count: 2,
+              subtotal: 179.98
+            }
+          }),
+        })
+      );
+
+    await act(async () => {
+      render(<Cart />);
+    });
 
     // Wait for the cart to load
     await waitFor(() => {
