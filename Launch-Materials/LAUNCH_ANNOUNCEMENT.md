@@ -171,7 +171,7 @@ Based in Ras Al Khaimah, UAE, Nexus TechHub is dedicated to providing the UAE's 
 **Contact Information:**
 Website: https://nexustechhub.netlify.app
 WhatsApp: +971 58 553 1029
-Email: admin@nexustechhub.ae
+Email: ${ADMIN_EMAIL}
 Location: Ras Al Khaimah, UAE
 
 ---

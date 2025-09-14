@@ -220,7 +220,7 @@
 
 ### **Business Support:**
 - **Customer Issues**: WhatsApp +971 58 553 1029
-- **Technical Support**: admin@nexustechhub.ae
+- **Technical Support**: ${ADMIN_EMAIL}
 - **Emergency Contact**: Available 24/7 for critical issues
 
 ---

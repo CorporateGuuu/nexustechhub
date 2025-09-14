@@ -58,6 +58,6 @@
 ## 📞 Support
 
 If you need help setting up any of these services:
-- Email: admin@nexustechhub.ae
+- Email: ${ADMIN_EMAIL}
 - Phone: +971 58 553 1029
 - WhatsApp: https://wa.me/971585531029
