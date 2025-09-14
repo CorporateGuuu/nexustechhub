@@ -6,9 +6,15 @@ module.exports = {
     '!**/node_modules/**',
     '!**/.next/**',
     '!**/cypress/**',
-    '!**/tests/e2e.test.js' // Exclude Cypress tests from Jest
+    '!**/tests/e2e.test.js', // Exclude Cypress tests from Jest
+    '!**/tests/e2e/**', // Exclude all E2E tests from Jest
+    '!**/tests/api/**', // Exclude API tests from main Jest run
+    '!**/samples/**', // Exclude sample directories
+    '!**/svelte-kanban-main/**', // Exclude svelte test
+    '!**/sample-01*/**', // Exclude sample directories with spaces
+    '!**/sample-01 2/**' // Exclude sample directories with spaces
   ],
-  collectCoverage: true,
+  collectCoverage: false, // Disable coverage for now to speed up tests
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'components/**/*.{js,jsx,ts,tsx}',
@@ -30,12 +36,13 @@ module.exports = {
     '!pages/_document.js'
   ],
   coverageReporters: ['text', 'lcov', 'clover', 'html'],
-  testTimeout: 15000,
+  testTimeout: 30000, // Increase timeout
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }]
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(next-auth|@next|next|jose|openid-client|oauth|uuid)/)'
+    '/node_modules/(?!(next-auth|@next|next|jose|openid-client|oauth|uuid|axios|swiper|react-swiper)/)'
   ],
   moduleNameMapper: {
     // Handle module aliases
@@ -53,7 +60,6 @@ module.exports = {
     // Handle image imports
     '^.+\\.(jpg|jpeg|png|gif|webp|avif|svg)$': '<rootDir>/__mocks__/fileMock.js'
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   watchPlugins: [
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname'

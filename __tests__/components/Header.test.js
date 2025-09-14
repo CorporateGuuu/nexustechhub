@@ -13,11 +13,11 @@ jest.mock('next/router', () => ({
 describe('Header Component', () => {
   it('renders the logo and navigation links', () => {
     render(<Header />);
-    
+
     // Check if logo is rendered
-    expect(screen.getByAltText(/MDTS/i)).toBeInTheDocument();
-    
-    // Check if navigation links are rendered
+    expect(screen.getByAltText(/Nexus TechHub Logo/i)).toBeInTheDocument();
+
+    // Check if navigation links are rendered (mobile menu contains these)
     expect(screen.getByText(/Home/i)).toBeInTheDocument();
     expect(screen.getByText(/Products/i)).toBeInTheDocument();
     expect(screen.getByText(/Categories/i)).toBeInTheDocument();
@@ -47,26 +47,24 @@ describe('Header Component', () => {
     await user.click(lcdBuybackLink);
   });
 
-  it('renders search bar', () => {
+  it('renders mobile menu button', () => {
     render(<Header />);
-    
-    // Check if search bar is rendered
-    const searchInput = screen.getByPlaceholderText(/Search/i);
-    expect(searchInput).toBeInTheDocument();
+
+    // Check if mobile menu button is rendered (specifically the open menu button)
+    const menuButton = screen.getByLabelText('Menu');
+    expect(menuButton).toBeInTheDocument();
   });
 
-  it('renders cart and account icons', () => {
+  it('renders mobile navigation menu', () => {
     render(<Header />);
-    
-    // Check if cart and account icons are rendered
-    const cartLink = screen.getByLabelText(/cart/i);
-    const accountLink = screen.getByLabelText(/account/i);
-    
-    expect(cartLink).toBeInTheDocument();
-    expect(accountLink).toBeInTheDocument();
-    
-    // Check if links have correct href attributes
+
+    // Check if mobile menu is rendered with navigation links
+    expect(screen.getByText('Cart')).toBeInTheDocument();
+    expect(screen.getByText('Sign In')).toBeInTheDocument();
+    expect(screen.getByText('Register')).toBeInTheDocument();
+
+    // Check if cart link has correct href
+    const cartLink = screen.getByText('Cart').closest('a');
     expect(cartLink).toHaveAttribute('href', '/cart');
-    expect(accountLink).toHaveAttribute('href', '/account');
   });
 });

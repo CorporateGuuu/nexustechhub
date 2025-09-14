@@ -30,6 +30,7 @@ export default function Cart() {
 
       if (data.success) {
         setCart(data.cart);
+        setLoading(false);
       } else {
         throw new Error(data.message || 'Failed to fetch cart');
       }
