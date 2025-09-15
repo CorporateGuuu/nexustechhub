@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import styles from '../styles/CartPage.module.css';
-import Layout from '../components/Layout/Layout';
+import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
 
 export default function Cart() {
   const { data: session } = useSession();

@@ -1,7 +1,7 @@
 import SEOHead from '../components/SEOHead';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import WhatsAppButton from '../components/WhatsAppButton';
+import Header from '../nexus-techhub-fresh/components/Header/Header';
+import Footer from '../nexus-techhub-fresh/components/Footer/Footer';
+import WhatsAppButton from '../nexus-techhub-fresh/components/WhatsApp/WhatsAppButton';
 import ContactForm from '../components/ContactForm';
 import styles from '../styles/Contact.module.css';
 

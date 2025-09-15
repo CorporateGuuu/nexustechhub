@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
-import Layout from '../components/Layout/Layout';
+import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
 import Link from 'next/link';
 
 // Sample blog posts data
