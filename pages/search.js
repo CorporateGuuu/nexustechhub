@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import WhatsAppButton from '../components/WhatsAppButton';
+import Header from '../nexus-techhub-fresh/components/Header/Header';
+import Footer from '../nexus-techhub-fresh/components/Footer/Footer';
+import WhatsAppButton from '../nexus-techhub-fresh/components/WhatsApp/WhatsAppButton';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
 import styles from '../styles/Search.module.css';
