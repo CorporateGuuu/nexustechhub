@@ -4,16 +4,11 @@
 
 [build.environment]
   NODE_VERSION = "18"
-
-# Secrets scanning configuration
-# Exclude documentation and configuration files from secrets scanning
-[build.environment]
-  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/sendgrid.js"
-
-# Environment variables for production
-[build.environment]
   NODE_ENV = "production"
   NEXTAUTH_URL = "https://nexustechhub.netlify.app"
+  # Secrets scanning configuration
+  # Exclude documentation and configuration files from secrets scanning
+  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/sendgrid.js"
 
 # Build settings
 [build.processing]
