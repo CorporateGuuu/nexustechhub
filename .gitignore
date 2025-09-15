@@ -22,6 +22,9 @@ netlify-env-vars.txt
 *.env
 # Critical Business Variables
 
+# Keep .env.example for reference
+!.env.example
+
 # Large files and videos
 Website Content/Videos/
 *.mov
