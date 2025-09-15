@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react';
 import { CartProvider } from '../contexts/CartContext';
 import ErrorBoundary from '../components/ErrorBoundary';
 import WebVitals from '../components/WebVitals';
@@ -30,11 +31,13 @@ function AppContent({ Component, pageProps }) {
 function MyApp({ Component, pageProps }) {
   return (
     <ErrorBoundary>
-      <CartProvider>
-        <AppContent Component={Component} pageProps={pageProps} />
-        <WebVitals />
-        <ChatBot />
-      </CartProvider>
+      <SessionProvider>
+        <CartProvider>
+          <AppContent Component={Component} pageProps={pageProps} />
+          <WebVitals />
+          <ChatBot />
+        </CartProvider>
+      </SessionProvider>
     </ErrorBoundary>
   );
 }

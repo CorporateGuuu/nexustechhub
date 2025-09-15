@@ -1,18 +1,17 @@
-# Frontend Rebuild Plan
+# Netlify Deploy Fix Tasks
 
 ## Completed
-- [x] Created Footer component in nexus-techhub-fresh/components/Footer/Footer.js
-- [x] Updated Layout component to include Header and Footer
-- [x] Verified pages use Layout component for single header/footer
+- [x] Analyze error logs and identify issues
+- [x] Update WebVitals.js to use web-vitals v5 API (removed onFID)
+- [x] Add SessionProvider to _app.js for next-auth
+- [x] Test build locally (WebVitals warnings resolved, env issue persists)
+- [x] Update TODO.md with progress
 
-## In Progress
-- [x] Redesign mobile menu in Header.js for better UX
-  - [x] Simplify toggle button
-  - [x] Improve slide-in menu styling and navigation
-  - [x] Add better grouping and icons
-  - [x] Ensure responsiveness
+## Pending
+- [ ] Fix .env.production recursion error (manual check required - check for circular references)
+- [ ] Deploy and verify fixes
 
-## Testing
-- [ ] Test header, footer, and mobile menu functionality
-- [ ] Verify responsive design
-- [ ] Check for any duplicate elements
+## Notes
+- .env.production may have circular references causing infinite recursion
+- Check for variables like NEXTAUTH_URL=$NEXTAUTH_URL
+- Ensure no malformed regex or special characters

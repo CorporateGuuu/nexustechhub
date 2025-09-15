@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { onCLS, onFCP, onLCP, onTTFB } from 'web-vitals';
 
 // WebVitals component/hook
 const WebVitals = () => {
   useEffect(() => {
     // Report web vitals
-    getCLS(console.log);
-    getFID(console.log);
-    getFCP(console.log);
-    getLCP(console.log);
-    getTTFB(console.log);
+    onCLS(console.log);
+    // onFID removed as not exported in this version
+    onFCP(console.log);
+    onLCP(console.log);
+    onTTFB(console.log);
   }, []);
 
   return null; // This component doesn't render anything
