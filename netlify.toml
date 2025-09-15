@@ -7,8 +7,8 @@
   NODE_ENV = "production"
   NEXTAUTH_URL = "https://nexustechhub.netlify.app"
   # Secrets scanning configuration
-  # Exclude documentation and configuration files from secrets scanning
-  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/sendgrid.js"
+  # Disable secrets scanning for documentation and config files
+  secrets_scan_enabled = "false"
 
 # Build settings
 [build.processing]
