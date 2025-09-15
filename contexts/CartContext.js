@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { analytics } from '../components/Analytics';
-import { logger } from '../utils/monitoring';
+import { logger } from '../components/Logger';
 
 // Cart Context
 const CartContext = createContext();
@@ -188,10 +188,9 @@ export function CartProvider({ children }) {
       if (savedCart) {
         const cartData = JSON.parse(savedCart);
         dispatch({ type: CART_ACTIONS.LOAD_CART, payload: cartData });
-        logger.info('Cart loaded from localStorage', { itemCount: cartData.items?.length || 0 });
       }
     } catch (error) {
-      logger.error('Failed to load cart from localStorage', error);
+      console.error('Failed to load cart from localStorage', error);
     }
   }, []);
 
@@ -200,31 +199,15 @@ export function CartProvider({ children }) {
     try {
       localStorage.setItem('nexus-cart', JSON.stringify(state));
     } catch (error) {
-      logger.error('Failed to save cart to localStorage', error);
+      console.error('Failed to save cart to localStorage', error);
     }
   }, [state]);
 
   // Cart actions
   const addToCart = (product, quantity = 1, options = {}) => {
-    dispatch({ 
-      type: CART_ACTIONS.ADD_ITEM, 
-      payload: { product, quantity, options } 
-    });
-    
-    // Analytics tracking
-    analytics.trackPurchase('add_to_cart', {
-      item_id: product.id,
-      item_name: product.name,
-      item_category: product.category,
-      quantity,
-      value: getCustomerPrice(product, state.customerType) * quantity,
-      currency: 'AED'
-    });
-
-    logger.info('Item added to cart', { 
-      productId: product.id, 
-      quantity, 
-      customerType: state.customerType 
+    dispatch({
+      type: CART_ACTIONS.ADD_ITEM,
+      payload: { product, quantity, options }
     });
   };
 

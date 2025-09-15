@@ -6,7 +6,6 @@ import styles from './Header.module.css';
 const Header = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeMegaMenu, setActiveMegaMenu] = useState(null);
 
   // Navigation menu items
   const menuItems = [
@@ -123,35 +122,12 @@ const Header = () => {
                 onMouseEnter={() => handleMegaMenuHover(item.id)}
                 onMouseLeave={() => handleMegaMenuHover(null)}
               >
-                <Link 
+                <Link
                   href={item.url}
                   className={router.asPath.includes(item.url) ? styles.active : ''}
                 >
                   {item.title}
-                  <svg className={styles.chevron} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
                 </Link>
-
-                {/* Mega Menu */}
-                {item.submenu && (
-                  <div className={`${styles.megaMenu} ${activeMegaMenu === item.id ? styles.active : ''}`}>
-                    <div className={styles.megaMenuContent}>
-                      {item.submenu.map((section, index) => (
-                        <div key={index} className={styles.megaMenuColumn}>
-                          <h3 className={styles.megaMenuTitle}>{section.title}</h3>
-                          <ul className={styles.megaMenuList}>
-                            {section.items.map((subItem, subIndex) => (
-                              <li key={subIndex}>
-                                <Link href={subItem.url}>{subItem.title}</Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </li>
             ))}
             
@@ -206,30 +182,74 @@ const Header = () => {
 
       {/* Mobile Menu */}
       <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.open : ''}`}>
+        <div className={styles.mobileMenuOverlay} onClick={toggleMobileMenu}></div>
         <div className={styles.mobileMenuContent}>
+          <div className={styles.mobileMenuHeader}>
+            <div className={styles.mobileLogo}>
+              <Link href="/" onClick={toggleMobileMenu}>
+                <img
+                  src="/images/nexus-logo.svg"
+                  alt="Nexus TechHub"
+                  className={styles.mobileLogoImage}
+                />
+                <span className={styles.mobileLogoText}>Nexus TechHub</span>
+              </Link>
+            </div>
+            <button
+              className={styles.mobileMenuClose}
+              onClick={toggleMobileMenu}
+              aria-label="Close mobile menu"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
           <nav className={styles.mobileNav}>
             {menuItems.map((item) => (
               <div key={item.id} className={styles.mobileNavSection}>
-                <h3 className={styles.mobileNavTitle}>{item.title}</h3>
-                <ul className={styles.mobileNavList}>
-                  <li><Link href={item.url}>All {item.title}</Link></li>
-                  {item.submenu && item.submenu.map((section, index) => (
-                    section.items.slice(0, 3).map((subItem, subIndex) => (
-                      <li key={`${index}-${subIndex}`}>
-                        <Link href={subItem.url}>{subItem.title}</Link>
-                      </li>
-                    ))
-                  ))}
-                </ul>
+                <Link href={item.url} className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
+                  {item.title}
+                </Link>
+                {item.submenu && (
+                  <div className={styles.mobileNavSubmenu}>
+                    {item.submenu.map((section, index) => (
+                      <div key={index} className={styles.mobileNavSubsection}>
+                        <h4 className={styles.mobileNavSubtitle}>{section.title}</h4>
+                        <ul className={styles.mobileNavSublist}>
+                          {section.items.slice(0, 4).map((subItem, subIndex) => (
+                            <li key={subIndex}>
+                              <Link href={subItem.url} onClick={toggleMobileMenu}>
+                                {subItem.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
-            
+
             <div className={styles.mobileNavSection}>
-              <ul className={styles.mobileNavList}>
-                <li><Link href="/lcd-buyback">LCD Buyback</Link></li>
-                <li><Link href="/cart">Cart</Link></li>
-                <li><Link href="/account">Account</Link></li>
-              </ul>
+              <Link href="/lcd-buyback" className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
+                LCD Buyback
+              </Link>
+            </div>
+
+            <div className={styles.mobileNavSection}>
+              <Link href="/cart" className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
+                Cart
+              </Link>
+            </div>
+
+            <div className={styles.mobileNavSection}>
+              <Link href="/account" className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
+                Account
+              </Link>
             </div>
           </nav>
         </div>
