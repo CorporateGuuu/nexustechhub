@@ -1,5 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
+import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 import styles from './Layout.module.css';
 
 export default function Layout({ children, title, description }) {
@@ -36,9 +38,13 @@ export default function Layout({ children, title, description }) {
         <meta name="location" content="Compass Building, Al Shohada Road, AL Hamra Industrial Zone-FZ, Ras Al Khaimah, United Arab Emirates" />
       </Head>
 
+      <Header />
+
       <main className={styles.main}>
         {children}
       </main>
+
+      <Footer />
     </div>
   );
 }
