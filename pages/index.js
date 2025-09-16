@@ -14,7 +14,12 @@ export default function Home() {
       originalPrice: 449.99,
       image: '/images/products/iphone-15-pro-max-screen.jpg',
       category: 'iPhone Parts',
-      badge: 'Best Seller'
+      badge: 'Best Seller',
+      gallery: [
+        '/images/products/iphone-15-pro-max-screen.jpg',
+        '/images/products/iphone-15-pro-screen.jpg',
+        '/images/products/iphone-15-plus-screen.jpg'
+      ]
     },
     {
       id: 'sg-s24-ultra-screen',
@@ -23,7 +28,12 @@ export default function Home() {
       originalPrice: 399.99,
       image: '/images/products/samsung-s24-ultra-screen.jpg',
       category: 'Samsung Parts',
-      badge: 'New Arrival'
+      badge: 'New Arrival',
+      gallery: [
+        '/images/products/samsung-s24-ultra-screen.jpg',
+        '/images/products/samsung-s24-plus-screen.jpg',
+        '/images/products/samsung-s24-screen.jpg'
+      ]
     },
     {
       id: 'ipad-pro-12-9-screen',
@@ -32,7 +42,12 @@ export default function Home() {
       originalPrice: 549.99,
       image: '/images/products/ipad-pro-12-9-screen.jpg',
       category: 'iPad Parts',
-      badge: 'Premium'
+      badge: 'Premium',
+      gallery: [
+        '/images/products/ipad-pro-12-9-screen.jpg',
+        '/images/products/ipad-pro-11-screen.jpg',
+        '/images/products/ipad-air-5-screen.jpg'
+      ]
     },
     {
       id: 'toolkit-pro',
@@ -41,7 +56,43 @@ export default function Home() {
       originalPrice: 249.99,
       image: '/images/products/professional-toolkit.jpg',
       category: 'Repair Tools',
-      badge: 'Complete Set'
+      badge: 'Complete Set',
+      gallery: [
+        '/images/products/professional-toolkit.jpg',
+        '/images/products/precision-screwdrivers.jpg',
+        '/images/products/digital-multimeter.jpg'
+      ]
+    }
+  ];
+
+  const productShowcase = [
+    {
+      title: 'iPhone Repair Parts',
+      description: 'Genuine Apple components for all iPhone models',
+      image: '/images/showcase/iphone-repair.jpg',
+      features: ['OLED Screens', 'Batteries', 'Charging Ports', 'Cameras'],
+      link: '/products/iphone-parts'
+    },
+    {
+      title: 'Samsung Galaxy Parts',
+      description: 'High-quality parts for all Galaxy devices',
+      image: '/images/showcase/samsung-repair.jpg',
+      features: ['AMOLED Screens', 'Batteries', 'USB-C Ports', 'S Pen'],
+      link: '/products/samsung-parts'
+    },
+    {
+      title: 'iPad Components',
+      description: 'Professional parts for tablets and iPads',
+      image: '/images/showcase/ipad-repair.jpg',
+      features: ['LCD Screens', 'Batteries', 'Home Buttons', 'Cameras'],
+      link: '/products/ipad-parts'
+    },
+    {
+      title: 'Repair Tools',
+      description: 'Professional-grade repair equipment',
+      image: '/images/showcase/tools-workshop.jpg',
+      features: ['Precision Tools', 'Heat Guns', 'Suction Cups', 'Microscopes'],
+      link: '/products/repair-tools'
     }
   ];
 
@@ -226,6 +277,52 @@ export default function Home() {
                   <span className={styles.categoryCount}>{category.count}</span>
                 </div>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Product Showcase Section */}
+      <section className={styles.showcaseSection}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <h2>Professional Repair Solutions</h2>
+            <p>Explore our comprehensive range of repair parts and tools</p>
+          </div>
+
+          <div className={styles.showcaseGrid}>
+            {productShowcase.map((item, index) => (
+              <div key={index} className={styles.showcaseCard}>
+                <div className={styles.showcaseImage}>
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    onError={(e) => e.target.src = '/images/showcase/placeholder.jpg'}
+                    loading="lazy"
+                  />
+                  <div className={styles.showcaseOverlay}>
+                    <Link href={item.link} className={styles.showcaseBtn}>
+                      Explore {item.title}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+
+                <div className={styles.showcaseContent}>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+
+                  <div className={styles.showcaseFeatures}>
+                    {item.features.map((feature, featureIndex) => (
+                      <span key={featureIndex} className={styles.featureTag}>
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>

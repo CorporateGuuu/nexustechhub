@@ -50,27 +50,37 @@
   font-size: 1.5rem;
 }
 
-/* Navigation */
-.nav {
-  display: none;
+/* Navigation and Search Container */
+.navSearchContainer {
+  display: flex;
   flex: 1;
+  align-items: center;
   justify-content: center;
+  gap: 2rem;
   margin: 0 2rem;
+}
+
+.navigationWrapper {
+  display: flex;
+  align-items: center;
 }
 
 .navList {
   display: flex;
-  list-style: none;
   gap: 2rem;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .navItem {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.navItem > a {
+.navItem > a,
+.navLink {
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -82,7 +92,9 @@
 }
 
 .navItem > a:hover,
-.navItem > a.active {
+.navItem > a.active,
+.navLink:hover,
+.navLink.active {
   color: var(--primary-green);
 }
 

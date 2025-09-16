@@ -1,22 +1,15 @@
-import SEOHead from '../components/SEOHead';
-import Header from '../nexus-techhub-fresh/components/Header/Header';
-import Footer from '../nexus-techhub-fresh/components/Footer/Footer';
-import WhatsAppButton from '../nexus-techhub-fresh/components/WhatsApp/WhatsAppButton';
+import React from 'react';
+import Link from 'next/link';
+import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
 import ContactForm from '../components/ContactForm';
 import styles from '../styles/Contact.module.css';
 
 export default function Contact() {
-
   return (
-    <>
-      <SEOHead
-        title="Contact Nexus Tech Hub - Professional Mobile Repair Parts Support UAE"
-        description="Get in touch with Nexus Tech Hub for professional mobile repair parts, technical support, and bulk order inquiries. Located in Ras Al Khaimah, UAE."
-        keywords="contact Nexus TechHub, mobile repair parts support, UAE, Ras Al Khaimah, technical support, iPhone parts, Samsung parts"
-        canonicalUrl="https://nexustechhub.netlify.app/contact"
-      />
-
-      <Header />
+    <Layout
+      title="Contact Nexus Tech Hub - Professional Mobile Repair Parts Support UAE"
+      description="Get in touch with Nexus Tech Hub for professional mobile repair parts, technical support, and bulk order inquiries. Located in Ras Al Khaimah, UAE."
+    >
       <div className={styles.contactContainer}>
         <div className={styles.contactHeader}>
           <h1>Contact Nexus Tech Hub</h1>
@@ -112,7 +105,96 @@ export default function Contact() {
           </div>
 
           <div className={styles.contactFormSection}>
-            <ContactForm />
+            <div className={styles.formHeader}>
+              <h2>Send us a Message</h2>
+              <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+            </div>
+
+            <form className={styles.contactForm} onSubmit={(e) => e.preventDefault()}>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="fullName" className={styles.formLabel}>
+                    Full Name <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    className={styles.formInput}
+                    placeholder="Your full name"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="email" className={styles.formLabel}>
+                    Email Address <span className={styles.required}>*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className={styles.formInput}
+                    placeholder="your.email@example.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="phone" className={styles.formLabel}>
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    className={styles.formInput}
+                    placeholder="+971 XX XXX XXXX"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="subject" className={styles.formLabel}>
+                    Subject <span className={styles.required}>*</span>
+                  </label>
+                  <select id="subject" name="subject" className={styles.formSelect} required>
+                    <option value="">Select a subject</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="support">Technical Support</option>
+                    <option value="parts">Parts Inquiry</option>
+                    <option value="bulk">Bulk Order</option>
+                    <option value="warranty">Warranty Claim</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="message" className={styles.formLabel}>
+                  Message <span className={styles.required}>*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  className={styles.formTextarea}
+                  placeholder="Please describe your inquiry in detail..."
+                  rows="6"
+                  required
+                ></textarea>
+              </div>
+
+              <div className={styles.formActions}>
+                <button type="submit" className={styles.submitButton}>
+                  <span>Send Message</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                  </svg>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
@@ -129,9 +211,6 @@ export default function Contact() {
           ></iframe>
         </div>
       </div>
-
-      <Footer />
-      <WhatsAppButton />
-    </>
+    </Layout>
   );
 }

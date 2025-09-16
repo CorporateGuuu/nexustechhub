@@ -10,7 +10,7 @@ export default function Account() {
       description="Manage your account, orders, and preferences"
     >
       <div className={styles.accountPage}>
-        <div className="container">
+        <div className={styles.container}>
           {/* Page Header */}
           <div className={styles.pageHeader}>
             <h1>My Account</h1>
@@ -54,10 +54,10 @@ export default function Account() {
                   <p>Access your order history, wishlist, addresses, and account preferences by signing in.</p>
 
                   <div className={styles.authActions}>
-                    <Link href="/auth/signin" className="btn btn-primary">
+                    <Link href="/auth/signin" className={styles.authButton}>
                       Sign In
                     </Link>
-                    <Link href="/auth/register" className="btn btn-secondary">
+                    <Link href="/auth/register" className={styles.authButton}>
                       Create Account
                     </Link>
                   </div>
@@ -65,12 +65,36 @@ export default function Account() {
 
                 <div className={styles.guestFeatures}>
                   <h3>Available Features</h3>
-                  <ul>
-                    <li>Browse and search products</li>
-                    <li>Add items to cart</li>
-                    <li>Contact customer support</li>
-                    <li>View product information</li>
-                  </ul>
+                  <div className={styles.featuresGrid}>
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>🛍️</div>
+                      <div className={styles.featureContent}>
+                        <h4>Browse Products</h4>
+                        <p>Explore our complete catalog of repair parts</p>
+                      </div>
+                    </div>
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>🛒</div>
+                      <div className={styles.featureContent}>
+                        <h4>Add to Cart</h4>
+                        <p>Save items for purchase when you're ready</p>
+                      </div>
+                    </div>
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>📞</div>
+                      <div className={styles.featureContent}>
+                        <h4>Contact Support</h4>
+                        <p>Get help from our expert technicians</p>
+                      </div>
+                    </div>
+                    <div className={styles.feature}>
+                      <div className={styles.featureIcon}>📋</div>
+                      <div className={styles.featureContent}>
+                        <h4>View Information</h4>
+                        <p>Access detailed product specifications</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

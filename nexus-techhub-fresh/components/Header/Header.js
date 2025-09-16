@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import SearchBar from '../../../components/SearchBar';
 import styles from './Header.module.css';
 
 const Header = () => {
-  const router = useRouter();
-
-  // Navigation menu items
+  // Static navigation menu items for now
   const menuItems = [
     {
       id: 1,
@@ -69,6 +66,14 @@ const Header = () => {
             { title: 'iPad Air', url: '/products/ipad-air' },
             { title: 'iPad Mini', url: '/products/ipad-mini' },
           ]
+        },
+        {
+          title: 'By Part Type',
+          items: [
+            { title: 'Screens & LCDs', url: '/products/ipad-screens' },
+            { title: 'Batteries', url: '/products/ipad-batteries' },
+            { title: 'Charging Ports', url: '/products/ipad-charging' },
+          ]
         }
       ]
     },
@@ -83,6 +88,31 @@ const Header = () => {
             { title: 'Tool Kits', url: '/products/tool-kits' },
             { title: 'Screwdrivers', url: '/products/screwdrivers' },
             { title: 'Heat Guns', url: '/products/heat-guns' },
+            { title: 'Suction Cups', url: '/products/suction-cups' },
+          ]
+        },
+        {
+          title: 'Specialized Tools',
+          items: [
+            { title: 'Logic Board Testers', url: '/products/logic-board-testers' },
+            { title: 'Digital Multimeters', url: '/products/multimeters' },
+            { title: 'Anti-Static Tools', url: '/products/anti-static' },
+          ]
+        }
+      ]
+    },
+    {
+      id: 5,
+      title: 'LCD Buyback',
+      url: '/lcd-buyback',
+      submenu: [
+        {
+          title: 'Sell Your LCDs',
+          items: [
+            { title: 'iPhone LCDs', url: '/lcd-buyback/iphone' },
+            { title: 'Samsung LCDs', url: '/lcd-buyback/samsung' },
+            { title: 'iPad LCDs', url: '/lcd-buyback/ipad' },
+            { title: 'How It Works', url: '/lcd-buyback/how-it-works' }
           ]
         }
       ]
@@ -105,39 +135,14 @@ const Header = () => {
         {/* Logo */}
         <div className={styles.logo}>
           <Link href="/">
-            <img 
-              src="/images/nexus-logo.svg" 
+            <img
+              src="/images/nexus-logo.svg"
               alt="Nexus Tech Hub"
               className={styles.logoImage}
             />
             <span className={styles.logoText}>Nexus Tech Hub</span>
           </Link>
         </div>
-
-        {/* Desktop Navigation */}
-        <nav className={styles.nav}>
-          <ul className={styles.navList}>
-            {menuItems.map((item) => (
-              <li 
-                key={item.id}
-                className={styles.navItem}
-                onMouseEnter={() => handleMegaMenuHover(item.id)}
-                onMouseLeave={() => handleMegaMenuHover(null)}
-              >
-                <Link
-                  href={item.url}
-                  className={router.asPath.includes(item.url) ? styles.active : ''}
-                >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-            
-            <li className={styles.navItem}>
-              <Link href="/lcd-buyback">LCD Buyback</Link>
-            </li>
-          </ul>
-        </nav>
 
         {/* Search Bar */}
         <div className={styles.searchContainer}>
@@ -205,7 +210,7 @@ const Header = () => {
             </button>
           </div>
 
-          <nav className={styles.mobileNav}>
+          <div className={styles.mobileNav}>
             {menuItems.map((item) => (
               <div key={item.id} className={styles.mobileNavSection}>
                 <Link href={item.url} className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
@@ -216,27 +221,21 @@ const Header = () => {
                     {item.submenu.map((section, index) => (
                       <div key={index} className={styles.mobileNavSubsection}>
                         <h4 className={styles.mobileNavSubtitle}>{section.title}</h4>
-                        <ul className={styles.mobileNavSublist}>
+                        <div className={styles.mobileNavSublist}>
                           {section.items.slice(0, 4).map((subItem, subIndex) => (
-                            <li key={subIndex}>
+                            <div key={subIndex}>
                               <Link href={subItem.url} onClick={toggleMobileMenu}>
                                 {subItem.title}
                               </Link>
-                            </li>
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
             ))}
-
-            <div className={styles.mobileNavSection}>
-              <Link href="/lcd-buyback" className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
-                LCD Buyback
-              </Link>
-            </div>
 
             <div className={styles.mobileNavSection}>
               <Link href="/cart" className={styles.mobileNavMainLink} onClick={toggleMobileMenu}>
@@ -249,7 +248,7 @@ const Header = () => {
                 Account
               </Link>
             </div>
-          </nav>
+          </div>
         </div>
       </div>
     </header>
