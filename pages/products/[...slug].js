@@ -14,6 +14,10 @@ export default function ProductCategory() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortBy, setSortBy] = useState('newest');
+  const [priceRange, setPriceRange] = useState('all');
+  const [availability, setAvailability] = useState('all');
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   // Get category info based on slug
   const getCategoryInfo = (categorySlug) => {
@@ -76,6 +80,55 @@ export default function ProductCategory() {
     }
   };
 
+  // Apply filters and sorting
+  useEffect(() => {
+    if (products.length > 0) {
+      let filtered = [...products];
+
+      // Apply price range filter
+      if (priceRange !== 'all') {
+        const [min, max] = priceRange === '200+' ? [200, Infinity] :
+                          priceRange.split('-').map(Number);
+        filtered = filtered.filter(product => {
+          const price = product.discount_percentage > 0 ?
+            product.price * (1 - product.discount_percentage / 100) : product.price;
+          return price >= min && (max === Infinity || price <= max);
+        });
+      }
+
+      // Apply availability filter
+      if (availability !== 'all') {
+        if (availability === 'in-stock') {
+          filtered = filtered.filter(product => product.stock > 10);
+        } else if (availability === 'low-stock') {
+          filtered = filtered.filter(product => product.stock > 0 && product.stock <= 10);
+        }
+      }
+
+      // Apply sorting
+      switch (sortBy) {
+        case 'price-low':
+          filtered.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-high':
+          filtered.sort((a, b) => b.price - a.price);
+          break;
+        case 'name':
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'popular':
+          filtered.sort((a, b) => b.stock - a.stock);
+          break;
+        case 'newest':
+        default:
+          // Keep original order for newest
+          break;
+      }
+
+      setFilteredProducts(filtered);
+    }
+  }, [products, sortBy, priceRange, availability]);
+
   // Enhanced mock products for fallback - simulating comprehensive Supabase database
   const getMockProducts = (categorySlug) => {
     const categoryInfo = getCategoryInfo(categorySlug);
@@ -89,7 +142,7 @@ export default function ProductCategory() {
         price: 399.99,
         discount_percentage: 5,
         stock: 25,
-        image: '/images/products/iphone-15-pro-max-screen.jpg',
+        image: '/images/products/iphone-15-pro-max-screen.svg',
         sku: 'NTH-IP15PM-SCREEN-001',
         brand: 'Apple',
         description: 'Genuine Apple OLED display with ProMotion technology',
@@ -1218,6 +1271,222 @@ export default function ProductCategory() {
         brand: 'Generic',
         description: 'Professional battery testing and health analysis tool',
         tags: ['battery tester', 'health', 'analysis', 'professional']
+      },
+
+      // Additional products for extra row - iPhone Parts
+      {
+        id: 'ip-xs-max-screen',
+        name: 'iPhone XS Max OLED Screen Assembly',
+        category: 'iPhone Parts',
+        price: 179.99,
+        discount_percentage: 0,
+        stock: 35,
+        image: '/images/products/iphone-xs-max-screen.jpg',
+        sku: 'NTH-IPXSM-SCREEN-001',
+        brand: 'Apple',
+        description: '6.5" Super Retina XDR OLED display for iPhone XS Max',
+        tags: ['screen', 'oled', 'xs max', '6.5']
+      },
+      {
+        id: 'ip-xs-screen',
+        name: 'iPhone XS OLED Screen Assembly',
+        category: 'iPhone Parts',
+        price: 159.99,
+        discount_percentage: 0,
+        stock: 42,
+        image: '/images/products/iphone-xs-screen.jpg',
+        sku: 'NTH-IPXS-SCREEN-001',
+        brand: 'Apple',
+        description: '5.8" Super Retina XDR OLED display for iPhone XS',
+        tags: ['screen', 'oled', 'xs', '5.8']
+      },
+      {
+        id: 'ip-xr-screen',
+        name: 'iPhone XR LCD Screen Assembly',
+        category: 'iPhone Parts',
+        price: 129.99,
+        discount_percentage: 0,
+        stock: 55,
+        image: '/images/products/iphone-xr-screen.jpg',
+        sku: 'NTH-IPXR-SCREEN-001',
+        brand: 'Apple',
+        description: '6.1" Liquid Retina LCD display for iPhone XR',
+        tags: ['screen', 'lcd', 'xr', '6.1']
+      },
+      {
+        id: 'ip-x-screen',
+        name: 'iPhone X OLED Screen Assembly',
+        category: 'iPhone Parts',
+        price: 149.99,
+        discount_percentage: 0,
+        stock: 38,
+        image: '/images/products/iphone-x-screen.jpg',
+        sku: 'NTH-IPX-SCREEN-001',
+        brand: 'Apple',
+        description: '5.8" Super Retina XDR OLED display for iPhone X',
+        tags: ['screen', 'oled', 'x', '5.8']
+      },
+
+      // Additional products for extra row - Samsung Parts
+      {
+        id: 'sg-s20-ultra-screen',
+        name: 'Samsung Galaxy S20 Ultra AMOLED Screen',
+        category: 'Samsung Parts',
+        price: 229.99,
+        discount_percentage: 0,
+        stock: 28,
+        image: '/images/products/samsung-s20-ultra-screen.jpg',
+        sku: 'NTH-SGS20U-SCREEN-001',
+        brand: 'Samsung',
+        description: '6.9" Dynamic AMOLED 2X display with S Pen support',
+        tags: ['screen', 'amoled', 'ultra', 's20', 's pen']
+      },
+      {
+        id: 'sg-s20-plus-screen',
+        name: 'Samsung Galaxy S20 Plus AMOLED Screen',
+        category: 'Samsung Parts',
+        price: 189.99,
+        discount_percentage: 0,
+        stock: 35,
+        image: '/images/products/samsung-s20-plus-screen.jpg',
+        sku: 'NTH-SGS20PLUS-SCREEN-001',
+        brand: 'Samsung',
+        description: '6.7" Dynamic AMOLED 2X display',
+        tags: ['screen', 'amoled', 'plus', 's20']
+      },
+      {
+        id: 'sg-s20-screen',
+        name: 'Samsung Galaxy S20 AMOLED Screen Assembly',
+        category: 'Samsung Parts',
+        price: 169.99,
+        discount_percentage: 0,
+        stock: 42,
+        image: '/images/products/samsung-s20-screen.jpg',
+        sku: 'NTH-SGS20-SCREEN-001',
+        brand: 'Samsung',
+        description: '6.2" Dynamic AMOLED 2X display',
+        tags: ['screen', 'amoled', 's20']
+      },
+      {
+        id: 'sg-note10-plus-screen',
+        name: 'Samsung Galaxy Note 10 Plus AMOLED Screen',
+        category: 'Samsung Parts',
+        price: 199.99,
+        discount_percentage: 0,
+        stock: 30,
+        image: '/images/products/samsung-note10-plus-screen.jpg',
+        sku: 'NTH-NOTE10PLUS-SCREEN-001',
+        brand: 'Samsung',
+        description: '6.8" Dynamic AMOLED display with S Pen',
+        tags: ['screen', 'amoled', 'note 10', 's pen']
+      },
+
+      // Additional products for extra row - iPad Parts
+      {
+        id: 'ipad-9th-gen-screen',
+        name: 'iPad 9th Gen LCD Screen Assembly',
+        category: 'iPad Parts',
+        price: 179.99,
+        discount_percentage: 0,
+        stock: 48,
+        image: '/images/products/ipad-9th-gen-screen.jpg',
+        sku: 'NTH-IPAD9-SCREEN-001',
+        brand: 'Apple',
+        description: '10.2" Retina display for iPad 9th generation',
+        tags: ['screen', 'retina', '9th gen', '10.2']
+      },
+      {
+        id: 'ipad-8th-gen-screen',
+        name: 'iPad 8th Gen LCD Screen Assembly',
+        category: 'iPad Parts',
+        price: 169.99,
+        discount_percentage: 0,
+        stock: 52,
+        image: '/images/products/ipad-8th-gen-screen.jpg',
+        sku: 'NTH-IPAD8-SCREEN-001',
+        brand: 'Apple',
+        description: '10.2" Retina display for iPad 8th generation',
+        tags: ['screen', 'retina', '8th gen', '10.2']
+      },
+      {
+        id: 'ipad-7th-gen-screen',
+        name: 'iPad 7th Gen LCD Screen Assembly',
+        category: 'iPad Parts',
+        price: 159.99,
+        discount_percentage: 0,
+        stock: 45,
+        image: '/images/products/ipad-7th-gen-screen.jpg',
+        sku: 'NTH-IPAD7-SCREEN-001',
+        brand: 'Apple',
+        description: '10.2" Retina display for iPad 7th generation',
+        tags: ['screen', 'retina', '7th gen', '10.2']
+      },
+      {
+        id: 'ipad-6th-gen-screen',
+        name: 'iPad 6th Gen LCD Screen Assembly',
+        category: 'iPad Parts',
+        price: 149.99,
+        discount_percentage: 0,
+        stock: 40,
+        image: '/images/products/ipad-6th-gen-screen.jpg',
+        sku: 'NTH-IPAD6-SCREEN-001',
+        brand: 'Apple',
+        description: '9.7" Retina display for iPad 6th generation',
+        tags: ['screen', 'retina', '6th gen', '9.7']
+      },
+
+      // Additional products for extra row - Repair Tools
+      {
+        id: 'usb-c-tester',
+        name: 'USB-C Port Tester and Diagnostic Tool',
+        category: 'Repair Tools',
+        price: 34.99,
+        discount_percentage: 0,
+        stock: 85,
+        image: '/images/products/usb-c-tester.jpg',
+        sku: 'NTH-USBC-TESTER-001',
+        brand: 'Generic',
+        description: 'Professional USB-C port testing and diagnostics',
+        tags: ['usb-c', 'tester', 'diagnostic', 'port']
+      },
+      {
+        id: 'lightning-tester',
+        name: 'Lightning Port Tester for iPhone',
+        category: 'Repair Tools',
+        price: 29.99,
+        discount_percentage: 0,
+        stock: 95,
+        image: '/images/products/lightning-tester.jpg',
+        sku: 'NTH-LIGHTNING-TESTER-001',
+        brand: 'Generic',
+        description: 'Lightning port testing device for iPhone diagnostics',
+        tags: ['lightning', 'tester', 'iphone', 'diagnostic']
+      },
+      {
+        id: 'chip-off-tools',
+        name: 'Chip-Off Extraction Tool Kit',
+        category: 'Repair Tools',
+        price: 149.99,
+        discount_percentage: 0,
+        stock: 25,
+        image: '/images/products/chip-off-tools.jpg',
+        sku: 'NTH-CHIP-OFF-KIT-001',
+        brand: 'Generic',
+        description: 'Professional chip-off extraction tools for data recovery',
+        tags: ['chip-off', 'extraction', 'data recovery', 'professional']
+      },
+      {
+        id: 'data-recovery-software',
+        name: 'Data Recovery Software License',
+        category: 'Repair Tools',
+        price: 199.99,
+        discount_percentage: 0,
+        stock: 50,
+        image: '/images/products/data-recovery-software.jpg',
+        sku: 'NTH-DATA-RECOVERY-SW-001',
+        brand: 'Generic',
+        description: 'Professional data recovery software for mobile devices',
+        tags: ['data recovery', 'software', 'license', 'professional']
       }
     ];
 
@@ -1259,309 +1528,321 @@ export default function ProductCategory() {
       description={categoryInfo.description}
     >
       <div className={styles.productsPage}>
-        {/* Hero Section */}
-        <div className={styles.heroSection}>
+        {/* Mobilesentrix-style Header */}
+        <div className={styles.pageHeader}>
           <div className="container">
-            <div className={styles.heroContent}>
+            <div className={styles.headerContent}>
               <div className={styles.breadcrumb}>
                 <Link href="/">Home</Link>
-                <span>/</span>
+                <span className={styles.breadcrumbSeparator}>/</span>
                 <Link href="/products">Products</Link>
-                <span>/</span>
-                <span>{categoryInfo.name}</span>
+                {categorySlug && (
+                  <>
+                    <span className={styles.breadcrumbSeparator}>/</span>
+                    <span className={styles.currentCategory}>{categoryInfo.name}</span>
+                  </>
+                )}
               </div>
 
-              <div className={styles.heroText}>
-                <h1 className={styles.heroTitle}>{categoryInfo.name}</h1>
-                <p className={styles.heroDescription}>{categoryInfo.description}</p>
-
-                {/* Quick Stats */}
-                <div className={styles.heroStats}>
-                  <div className={styles.stat}>
-                    <span className={styles.statNumber}>
-                      {products.length > 0 ? products.length : '50+'}
-                    </span>
-                    <span className={styles.statLabel}>Products</span>
-                  </div>
-                  <div className={styles.stat}>
-                    <span className={styles.statNumber}>24/7</span>
-                    <span className={styles.statLabel}>Support</span>
-                  </div>
-                  <div className={styles.stat}>
-                    <span className={styles.statNumber}>1 Year</span>
-                    <span className={styles.statLabel}>Warranty</span>
-                  </div>
-                </div>
+              <div className={styles.headerMain}>
+                <h1 className={styles.pageTitle}>
+                  {categorySlug ? categoryInfo.name : 'All Products'}
+                </h1>
+                <p className={styles.pageDescription}>
+                  {categorySlug ? categoryInfo.description : 'Browse our complete collection of repair parts and tools'}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
         <div className="container">
-          {/* Category Navigation */}
-          <div className={styles.categoryNav}>
-            <div className={styles.categoryNavWrapper}>
-              <Link href="/products" className={`${styles.categoryButton} ${!categorySlug ? styles.active : ''}`}>
-                <span className={styles.categoryIcon}>📦</span>
-                <span>All Products</span>
+          {/* Category Navigation - Mobilesentrix Style */}
+          <div className={styles.categoryNavigation}>
+            <div className={styles.categoryTabs}>
+              <Link href="/products" className={`${styles.categoryTab} ${!categorySlug ? styles.active : ''}`}>
+                All Products
               </Link>
-              <Link href="/products/iphone-parts" className={`${styles.categoryButton} ${categorySlug === 'iphone-parts' ? styles.active : ''}`}>
-                <span className={styles.categoryIcon}>📱</span>
-                <span>iPhone Parts</span>
+              <Link href="/products/iphone-parts" className={`${styles.categoryTab} ${categorySlug === 'iphone-parts' ? styles.active : ''}`}>
+                iPhone Parts
               </Link>
-              <Link href="/products/samsung-parts" className={`${styles.categoryButton} ${categorySlug === 'samsung-parts' ? styles.active : ''}`}>
-                <span className={styles.categoryIcon}>📱</span>
-                <span>Samsung Parts</span>
+              <Link href="/products/samsung-parts" className={`${styles.categoryTab} ${categorySlug === 'samsung-parts' ? styles.active : ''}`}>
+                Samsung Parts
               </Link>
-              <Link href="/products/ipad-parts" className={`${styles.categoryButton} ${categorySlug === 'ipad-parts' ? styles.active : ''}`}>
-                <span className={styles.categoryIcon}>📱</span>
-                <span>iPad Parts</span>
+              <Link href="/products/ipad-parts" className={`${styles.categoryTab} ${categorySlug === 'ipad-parts' ? styles.active : ''}`}>
+                iPad Parts
               </Link>
-              <Link href="/products/repair-tools" className={`${styles.categoryButton} ${categorySlug === 'repair-tools' ? styles.active : ''}`}>
-                <span className={styles.categoryIcon}>🔧</span>
-                <span>Repair Tools</span>
+              <Link href="/products/repair-tools" className={`${styles.categoryTab} ${categorySlug === 'repair-tools' ? styles.active : ''}`}>
+                Repair Tools
               </Link>
             </div>
           </div>
 
-          {/* Filters and Sorting */}
-          <div className={styles.filtersSection}>
-            <div className={styles.filtersWrapper}>
+          {/* Toolbar - Mobilesentrix Style */}
+          <div className={styles.toolbar}>
+            <div className={styles.toolbarLeft}>
               <div className={styles.resultsCount}>
-                <span>{products.length} products found</span>
+                {loading ? 'Loading...' : `${products.length} products found`}
+              </div>
+            </div>
+
+            <div className={styles.toolbarRight}>
+              <div className={styles.sortSection}>
+                <label className={styles.sortLabel}>Sort by:</label>
+                <select
+                  className={styles.sortSelect}
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="newest">Newest First</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="name">Name A-Z</option>
+                  <option value="popular">Most Popular</option>
+                </select>
               </div>
 
-              <div className={styles.filters}>
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Sort by:</label>
-                  <select className={styles.filterSelect}>
-                    <option value="newest">Newest First</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="name">Name A-Z</option>
-                    <option value="popular">Most Popular</option>
-                  </select>
-                </div>
-
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Price Range:</label>
-                  <select className={styles.filterSelect}>
-                    <option value="all">All Prices</option>
-                    <option value="0-50">$0 - $50</option>
-                    <option value="50-100">$50 - $100</option>
-                    <option value="100-200">$100 - $200</option>
-                    <option value="200+">$200+</option>
-                  </select>
-                </div>
-
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Availability:</label>
-                  <select className={styles.filterSelect}>
-                    <option value="all">All Products</option>
-                    <option value="in-stock">In Stock</option>
-                    <option value="low-stock">Low Stock</option>
-                  </select>
-                </div>
+              <div className={styles.viewOptions}>
+                <button className={`${styles.viewButton} ${styles.gridView} ${styles.active}`}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="3" width="7" height="7"/>
+                    <rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/>
+                    <rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                </button>
+                <button className={`${styles.viewButton} ${styles.listView}`}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Products Grid */}
-          {loading ? (
-            <div className={styles.loadingSection}>
-              <div className={styles.loadingSpinner}></div>
-              <h3>Loading {categoryInfo.name.toLowerCase()}...</h3>
-              <p>Please wait while we fetch the latest products</p>
-            </div>
-          ) : error ? (
-            <div className={styles.errorSection}>
-              <div className={styles.errorIcon}>⚠️</div>
-              <h3>Error Loading Products</h3>
-              <p>{error}</p>
-              <button onClick={() => fetchProducts(categorySlug)} className={styles.retryButton}>
-                Try Again
-              </button>
-            </div>
-          ) : (
-            <div className={styles.productsSection}>
-              <ProductGrid
-                products={products}
-                categoryTitle={categoryInfo.name}
-              />
-            </div>
-          )}
+          {/* Filters Sidebar - Mobilesentrix Style */}
+          <div className={styles.contentWrapper}>
+            <aside className={styles.sidebar}>
+              <div className={styles.filterPanel}>
+                <h3 className={styles.filterTitle}>Filters</h3>
 
-          {/* Category Information */}
-          {categorySlug && !loading && !error && (
-            <div className={styles.categoryInfoSection}>
-              <div className={styles.categoryInfo}>
-                <div className={styles.categoryHeader}>
-                  <h2>About {categoryInfo.name}</h2>
-                  <div className={styles.categoryBadge}>
-                    <span className={styles.badgeIcon}>
-                      {categorySlug === 'iphone-parts' ? '🍎' :
-                       categorySlug === 'samsung-parts' ? '📱' :
-                       categorySlug === 'ipad-parts' ? '📱' :
-                       categorySlug === 'repair-tools' ? '🔧' : '📦'}
-                    </span>
-                    <span>Premium Quality</span>
+                <div className={styles.filterGroup}>
+                  <h4 className={styles.filterGroupTitle}>Price Range</h4>
+                  <div className={styles.filterOptions}>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="priceRange"
+                        value="all"
+                        checked={priceRange === 'all'}
+                        onChange={(e) => setPriceRange(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      All Prices
+                    </label>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="priceRange"
+                        value="0-50"
+                        checked={priceRange === '0-50'}
+                        onChange={(e) => setPriceRange(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      $0 - $50
+                    </label>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="priceRange"
+                        value="50-100"
+                        checked={priceRange === '50-100'}
+                        onChange={(e) => setPriceRange(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      $50 - $100
+                    </label>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="priceRange"
+                        value="100-200"
+                        checked={priceRange === '100-200'}
+                        onChange={(e) => setPriceRange(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      $100 - $200
+                    </label>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="priceRange"
+                        value="200+"
+                        checked={priceRange === '200+'}
+                        onChange={(e) => setPriceRange(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      $200+
+                    </label>
                   </div>
                 </div>
 
-                {categorySlug === 'iphone-parts' && (
-                  <div className={styles.categoryContent}>
-                    <p className={styles.categoryDescription}>
-                      We carry genuine Apple parts and high-quality compatible replacements for all iPhone models
-                      from iPhone 6 to iPhone 15 series. Our parts are sourced from trusted manufacturers and
-                      come with comprehensive warranties.
-                    </p>
-                    <div className={styles.categoryFeatures}>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>📱</div>
-                        <div className={styles.featureContent}>
-                          <h4>Screen Assemblies</h4>
-                          <p>OLED and LCD screens with touch digitizer included</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>🔋</div>
-                        <div className={styles.featureContent}>
-                          <h4>Batteries</h4>
-                          <p>Original capacity batteries with 1-year warranty</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>⚡</div>
-                        <div className={styles.featureContent}>
-                          <h4>Charging Ports</h4>
-                          <p>Lightning and USB-C charging assemblies</p>
-                        </div>
-                      </div>
-                    </div>
+                <div className={styles.filterGroup}>
+                  <h4 className={styles.filterGroupTitle}>Availability</h4>
+                  <div className={styles.filterOptions}>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="availability"
+                        value="all"
+                        checked={availability === 'all'}
+                        onChange={(e) => setAvailability(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      All Products
+                    </label>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="availability"
+                        value="in-stock"
+                        checked={availability === 'in-stock'}
+                        onChange={(e) => setAvailability(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      In Stock
+                    </label>
+                    <label className={styles.filterOption}>
+                      <input
+                        type="radio"
+                        name="availability"
+                        value="low-stock"
+                        checked={availability === 'low-stock'}
+                        onChange={(e) => setAvailability(e.target.value)}
+                      />
+                      <span className={styles.checkmark}></span>
+                      Low Stock
+                    </label>
                   </div>
-                )}
+                </div>
 
-                {categorySlug === 'samsung-parts' && (
-                  <div className={styles.categoryContent}>
-                    <p className={styles.categoryDescription}>
-                      Complete range of parts for Samsung Galaxy S, Note, A, and Z series devices.
-                      All parts are tested for compatibility and come with manufacturer warranties.
-                    </p>
-                    <div className={styles.categoryFeatures}>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>📱</div>
-                        <div className={styles.featureContent}>
-                          <h4>AMOLED Screens</h4>
-                          <p>High-quality AMOLED displays for all Galaxy models</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>🔋</div>
-                        <div className={styles.featureContent}>
-                          <h4>Batteries</h4>
-                          <p>Original and compatible batteries with warranty</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>⚡</div>
-                        <div className={styles.featureContent}>
-                          <h4>USB-C Ports</h4>
-                          <p>Complete charging port assemblies</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {categorySlug === 'ipad-parts' && (
-                  <div className={styles.categoryContent}>
-                    <p className={styles.categoryDescription}>
-                      Professional replacement parts for all iPad models including iPad Pro, iPad Air, and iPad Mini.
-                      All parts are designed for easy installation and maximum compatibility.
-                    </p>
-                    <div className={styles.categoryFeatures}>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>📱</div>
-                        <div className={styles.featureContent}>
-                          <h4>LCD Assemblies</h4>
-                          <p>High-resolution LCD screens with digitizer</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>🔋</div>
-                        <div className={styles.featureContent}>
-                          <h4>Batteries</h4>
-                          <p>High-capacity batteries for extended use</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>🏠</div>
-                        <div className={styles.featureContent}>
-                          <h4>Home Buttons</h4>
-                          <p>Touch ID and Face ID components</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {categorySlug === 'repair-tools' && (
-                  <div className={styles.categoryContent}>
-                    <p className={styles.categoryDescription}>
-                      Complete toolkit for professional mobile device technicians and DIY enthusiasts.
-                      All tools are designed for precision work and long-lasting durability.
-                    </p>
-                    <div className={styles.categoryFeatures}>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>🔧</div>
-                        <div className={styles.featureContent}>
-                          <h4>Precision Tools</h4>
-                          <p>Screwdrivers, pry tools, and specialized equipment</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>📦</div>
-                        <div className={styles.featureContent}>
-                          <h4>Tool Kits</h4>
-                          <p>Complete sets for specific device repairs</p>
-                        </div>
-                      </div>
-                      <div className={styles.feature}>
-                        <div className={styles.featureIcon}>🔥</div>
-                        <div className={styles.featureContent}>
-                          <h4>Heat Equipment</h4>
-                          <p>Professional heat guns and adhesive removers</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <button
+                  className={styles.clearFilters}
+                  onClick={() => {
+                    setSortBy('newest');
+                    setPriceRange('all');
+                    setAvailability('all');
+                  }}
+                >
+                  Clear All Filters
+                </button>
               </div>
-            </div>
-          )}
+            </aside>
 
-          {/* Call to Action */}
-          <div className={styles.ctaSection}>
-            <div className={styles.ctaContent}>
-              <div className={styles.ctaText}>
-                <h2>Need Help Finding the Right Part?</h2>
-                <p>Our expert technicians are here to help you find the perfect replacement parts for your repair needs.</p>
-              </div>
-              <div className={styles.ctaButtons}>
-                <Link href="/contact" className={styles.ctaPrimary}>
-                  <span>Contact Support</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                  </svg>
-                </Link>
-                <Link href="/products" className={styles.ctaSecondary}>
-                  <span>Browse All Products</span>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M9 18l6-6-6-6"/>
-                  </svg>
-                </Link>
-              </div>
-            </div>
+            {/* Main Content */}
+            <main className={styles.mainContent}>
+              {loading ? (
+                <div className={styles.loadingState}>
+                  <div className={styles.loadingSpinner}></div>
+                  <h3>Loading products...</h3>
+                </div>
+              ) : error ? (
+                <div className={styles.errorState}>
+                  <div className={styles.errorIcon}>⚠️</div>
+                  <h3>Unable to load products</h3>
+                  <p>{error}</p>
+                  <button onClick={() => fetchProducts(categorySlug)} className={styles.retryButton}>
+                    Try Again
+                  </button>
+                </div>
+              ) : (
+                <div className={styles.productsGrid}>
+                  {filteredProducts.map((product) => (
+                    <div key={product.id} className={styles.productCard}>
+                      <div className={styles.productImage}>
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          onError={(e) => {
+                            e.target.src = '/images/products/placeholder.svg';
+                            e.target.style.opacity = '0.7';
+                          }}
+                          loading="lazy"
+                        />
+                        {product.discount_percentage > 0 && (
+                          <div className={styles.discountBadge}>
+                            -{product.discount_percentage}%
+                          </div>
+                        )}
+                      </div>
+
+                      <div className={styles.productInfo}>
+                        <h3 className={styles.productName}>
+                          <Link href={`/products/${product.id}`}>
+                            {product.name}
+                          </Link>
+                        </h3>
+
+                        <div className={styles.productMeta}>
+                          <span className={styles.productCategory}>{product.category}</span>
+                          <span className={styles.productSku}>SKU: {product.sku}</span>
+                        </div>
+
+                        <div className={styles.productPrice}>
+                          {product.discount_percentage > 0 ? (
+                            <>
+                              <span className={styles.originalPrice}>
+                                ${(product.price * (1 + product.discount_percentage / 100)).toFixed(2)}
+                              </span>
+                              <span className={styles.currentPrice}>
+                                ${product.price}
+                              </span>
+                            </>
+                          ) : (
+                            <span className={styles.currentPrice}>
+                              ${product.price}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className={styles.productStock}>
+                          {product.stock > 10 ? (
+                            <span className={styles.inStock}>✓ In Stock</span>
+                          ) : product.stock > 0 ? (
+                            <span className={styles.lowStock}>⚠ Only {product.stock} left</span>
+                          ) : (
+                            <span className={styles.outOfStock}>✗ Out of Stock</span>
+                          )}
+                        </div>
+
+                        <div className={styles.productActions}>
+                          <button className={styles.addToCartBtn}>
+                            Add to Cart
+                          </button>
+                          <Link href={`/products/${product.id}`} className={styles.viewDetailsBtn}>
+                            View Details
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Load More Button */}
+              {!loading && !error && products.length > 0 && (
+                <div className={styles.loadMoreSection}>
+                  <button className={styles.loadMoreBtn}>
+                    Load More Products
+                  </button>
+                </div>
+              )}
+            </main>
           </div>
         </div>
       </div>
