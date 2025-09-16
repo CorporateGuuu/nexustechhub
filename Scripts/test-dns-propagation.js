@@ -16,26 +16,26 @@ const DNS_RECORDS = [
   },
   {
     type: 'CNAME',
-    name: '53169810.nexustechhub.ae',
+    name: 'REPLACE_WITH_SENDGRID_SUBDOMAIN.nexustechhub.ae',
     expected: 'sendgrid.net',
     description: 'SendGrid subdomain'
   },
   {
     type: 'CNAME',
     name: 'em7517.nexustechhub.ae',
-    expected: 'u53169810.wl061.sendgrid.net',
+    expected: 'REPLACE_WITH_SENDGRID_EMAIL_SUBDOMAIN',
     description: 'Email subdomain'
   },
   {
     type: 'CNAME',
     name: 's1._domainkey.nexustechhub.ae',
-    expected: 's1.domainkey.u53169810.wl061.sendgrid.net',
+    expected: 'REPLACE_WITH_SENDGRID_DKIM_1',
     description: 'DKIM key 1'
   },
   {
     type: 'CNAME',
     name: 's2._domainkey.nexustechhub.ae',
-    expected: 's2.domainkey.u53169810.wl061.sendgrid.net',
+    expected: 'REPLACE_WITH_SENDGRID_DKIM_2',
     description: 'DKIM key 2'
   },
   {
