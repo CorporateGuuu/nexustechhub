@@ -64,9 +64,9 @@ STRIPE_SECRET_KEY=***
 
 # Business Configuration
 BUSINESS_NAME=Nexus Tech Hub
-BUSINESS_EMAIL=admin@nexustechhub.ae
-BUSINESS_PHONE=+971585531029
-BUSINESS_WHATSAPP=https://wa.me/971585531029
+BUSINESS_EMAIL=[YOUR_BUSINESS_EMAIL]
+BUSINESS_PHONE=[YOUR_BUSINESS_PHONE]
+BUSINESS_WHATSAPP=[YOUR_WHATSAPP_LINK]
 BUSINESS_ADDRESS=FAMC3062, Compass Building, Al Shohada Road, AL Hamra Industrial Zone-FZ, Ras Al Khaimah, UAE
 BUSINESS_TIMEZONE=Asia/Dubai
 BUSINESS_CURRENCY=AED
@@ -210,9 +210,9 @@ Your Nexus TechHub website is ready when:
 
 ## 📞 **Support Contacts**
 
-- **Business Phone**: +971 58 553 1029
-- **WhatsApp**: https://wa.me/971585531029
-- **Email**: admin@nexustechhub.ae
+- **Business Phone**: [YOUR_BUSINESS_PHONE]
+- **WhatsApp**: [YOUR_WHATSAPP_LINK]
+- **Email**: [YOUR_BUSINESS_EMAIL]
 - **Stripe Support**: https://support.stripe.com/
 
 ---
