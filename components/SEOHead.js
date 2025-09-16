@@ -9,7 +9,7 @@ const SEOHead = ({
   ogType = 'website',
   twitterCard = 'summary_large_image'
 }) => {
-  const siteName = 'Nexus TechHub';
+  const siteName = 'Nexus Tech Hub';
   const defaultImage = '/images/nexus-logo.svg';
 
   return (
@@ -39,7 +39,7 @@ const SEOHead = ({
       {/* Additional Meta Tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="robots" content="index, follow" />
-      <meta name="author" content="Nexus TechHub" />
+      <meta name="author" content="Nexus Tech Hub" />
       <meta name="language" content="English" />
 
       {/* Favicon */}

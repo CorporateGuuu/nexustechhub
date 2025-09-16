@@ -6,14 +6,14 @@ function AboutUs() {
   return (
     <>
       <Head>
-        <title>About Us - Midas Technical Solutions</title>
-        <meta name="description" content="Learn about Midas Technical Solutions, your trusted partner for professional repair parts and tools." />
+        <title>About Us - Nexus Tech Hub</title>
+        <meta name="description" content="Learn about Nexus Tech Hub, your trusted partner for professional repair parts and tools." />
       </Head>
 
-      <Layout title="About Us - Midas Technical Solutions" description="Learn about Midas Technical Solutions, your trusted partner for professional repair parts and tools.">
+      <Layout title="About Us - Nexus Tech Hub" description="Learn about Nexus Tech Hub, your trusted partner for professional repair parts and tools.">
 
         <div className="container" style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto' }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>About Midas Technical Solutions</h1>
+          <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>About Nexus Tech Hub</h1>
 
           <section style={{ marginBottom: '2rem' }}>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Our Story</h2>
@@ -31,7 +31,7 @@ function AboutUs() {
           <section style={{ marginBottom: '2rem' }}>
             <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Our Mission</h2>
             <p style={{ marginBottom: '1rem', lineHeight: '1.6' }}>
-              At Nexus TechHub, our mission is to empower repair professionals and enthusiasts with the highest quality
+              At Nexus Tech Hub, our mission is to empower repair professionals and enthusiasts with the highest quality
               parts and tools. We believe in extending the life of electronic devices through repair rather than replacement,
               contributing to a more sustainable future.
             </p>

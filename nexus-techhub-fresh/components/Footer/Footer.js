@@ -37,7 +37,7 @@ const Footer = () => {
       </div>
 
       <div className={styles.payment}>
-        <p>&copy; 2024 Nexus TechHub. All rights reserved.</p>
+        <p>&copy; 2024 Nexus Tech Hub. All rights reserved.</p>
       </div>
     </footer>
   );

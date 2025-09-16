@@ -14,59 +14,34 @@ export default function Cart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updating, setUpdating] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
+
+  // Generate or get session ID
+  const getSessionId = () => {
+    let session = localStorage.getItem('cart-session-id');
+    if (!session) {
+      session = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('cart-session-id', session);
+    }
+    return session;
+  };
 
   // Fetch cart data
   const fetchCart = async () => {
     try {
       setLoading(true);
 
-      // Mock cart data for development
-      const mockCartData = {
-        success: true,
-        cart: {
-          id: 1,
-          user_id: session?.user?.id || null,
-          items: [
-            {
-              id: 1,
-              name: 'iPhone 13 Pro LCD Screen',
-              price: 89.99,
-              quantity: 2,
-              image_url: '/images/gapp/iphone-screen.jpg',
-              slug: 'iphone-13-pro-lcd-screen',
-              discount_percentage: 0,
-              total: 179.98
-            },
-            {
-              id: 2,
-              name: 'Samsung Galaxy S21 Battery',
-              price: 39.99,
-              quantity: 1,
-              image_url: '/images/gapp/samsung-battery.jpg',
-              slug: 'samsung-galaxy-s21-battery',
-              discount_percentage: 10,
-              discounted_price: 35.99,
-              total: 35.99
-            },
-            {
-              id: 3,
-              name: 'Professional Repair Tool Kit',
-              price: 129.99,
-              quantity: 1,
-              image_url: '/images/gapp/repair-tools.png',
-              slug: 'professional-repair-tool-kit',
-              discount_percentage: 0,
-              total: 129.99
-            }
-          ],
-          item_count: 4,
-          subtotal: 345.96
-        }
-      };
+      const currentSessionId = getSessionId();
+      setSessionId(currentSessionId);
 
-      // In production, uncomment this code to fetch from API
-      /*
-      const response = await fetch('/api/cart');
+      // Fetch real cart data from API with session_id
+      const response = await fetch(`/api/cart?session_id=${currentSessionId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include' // Include cookies for session management
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch cart');
@@ -75,21 +50,32 @@ export default function Cart() {
       const data = await response.json();
 
       if (data.success) {
-        setCart(data.cart);
+        // Transform API data to match component expectations
+        const transformedCart = {
+          id: data.data.id,
+          user_id: data.data.user_id,
+          items: data.data.items.map(item => ({
+            id: item.cart_item_id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            image_url: item.image,
+            slug: item.sku, // Using SKU as slug for now
+            discount_percentage: 0, // TODO: Add discount support
+            total: item.total
+          })),
+          item_count: data.data.item_count,
+          subtotal: data.data.total
+        };
+        setCart(transformedCart);
       } else {
-        throw new Error(data.message || 'Failed to fetch cart');
+        throw new Error(data.error || 'Failed to fetch cart');
       }
-      */
-
-      // Use mock data for now
-      setCart(mockCartData.cart);
-
-      setTimeout(() => {
-        setLoading(false);
-      }, 500); // Simulate network delay
     } catch (err) {
       console.error('Error fetching cart:', err);
       setError(err.message);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -98,27 +84,28 @@ export default function Cart() {
   const updateQuantity = async (itemId, quantity) => {
     try {
       setUpdating(true);
-      const response = await fetch('/api/cart', {
+      const response = await fetch(`/api/cart/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemId, quantity }),
+        body: JSON.stringify({ quantity }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update cart');
+        throw new Error('Failed to update cart item');
       }
 
       const data = await response.json();
 
       if (data.success) {
-        setCart(data.cart);
+        // Refresh cart data after successful update
+        await fetchCart();
       } else {
-        throw new Error(data.message || 'Failed to update cart');
+        throw new Error(data.error || 'Failed to update cart item');
       }
     } catch (err) {
-      console.error('Error updating cart:', err);
+      console.error('Error updating cart item:', err);
       setError(err.message);
     } finally {
       setUpdating(false);
@@ -130,36 +117,11 @@ export default function Cart() {
     try {
       setUpdating(true);
 
-      // For development, use a mock implementation
-      if (process.env.NODE_ENV === 'development') {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Update local state to remove the item
-        setCart(prevCart => {
-          const updatedItems = prevCart.items.filter(item => item.id !== itemId);
-          const updatedItemCount = updatedItems.reduce((count, item) => count + item.quantity, 0);
-          const updatedSubtotal = updatedItems.reduce((total, item) => total + item.total, 0);
-
-          return {
-            ...prevCart,
-            items: updatedItems,
-            item_count: updatedItemCount,
-            subtotal: updatedSubtotal
-          };
-        });
-
-        setUpdating(false);
-        return;
-      }
-
-      // For production, use the real API
-      const response = await fetch('/api/cart', {
+      const response = await fetch(`/api/cart/${itemId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ itemId }),
       });
 
       if (!response.ok) {
@@ -169,9 +131,10 @@ export default function Cart() {
       const data = await response.json();
 
       if (data.success) {
-        setCart(data.cart);
+        // Refresh cart data after successful removal
+        await fetchCart();
       } else {
-        throw new Error(data.message || 'Failed to remove item from cart');
+        throw new Error(data.error || 'Failed to remove item from cart');
       }
     } catch (err) {
       console.error('Error removing item from cart:', err);
@@ -190,38 +153,26 @@ export default function Cart() {
     try {
       setUpdating(true);
 
-      // For development, use a mock implementation
-      if (process.env.NODE_ENV === 'development') {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
+      // Remove all items individually since there's no bulk clear endpoint
+      const removePromises = cart.items.map(item =>
+        fetch(`/api/cart/${item.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      );
 
-        // Update local state to clear cart
-        setCart(prevCart => ({
-          ...prevCart,
-          items: [],
-          item_count: 0,
-          subtotal: 0
-        }));
+      const responses = await Promise.all(removePromises);
 
-        setUpdating(false);
-        return;
-      }
+      // Check if all removals were successful
+      const allSuccessful = responses.every(response => response.ok);
 
-      // For production, use the real API
-      const response = await fetch('/api/cart/clear', {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to clear cart');
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        fetchCart();
+      if (allSuccessful) {
+        // Refresh cart data after successful clear
+        await fetchCart();
       } else {
-        throw new Error(data.message || 'Failed to clear cart');
+        throw new Error('Failed to clear some items from cart');
       }
     } catch (err) {
       console.error('Error clearing cart:', err);

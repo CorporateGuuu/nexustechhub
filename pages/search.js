@@ -8,143 +8,37 @@ import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
 import styles from '../styles/Search.module.css';
 
-// Mock search function - in production, this would query a database
-const searchProducts = (query) => {
-  const allProducts = [
-    // iPhone Parts
-    {
-      id: 'ip15-screen-oled',
-      name: 'iPhone 15 Pro OLED Screen Assembly',
-      category: 'iPhone Parts',
-      model: 'iPhone 15 Pro',
-      price: 299.99,
-      originalPrice: 349.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'High-quality OLED replacement screen for iPhone 15 Pro',
-      specifications: ['OLED Display', 'Touch Digitizer Included', '6-Month Warranty'],
-      compatibility: ['iPhone 15 Pro'],
-      sku: 'NTH-IP15P-SCREEN-001'
-    },
-    {
-      id: 'ip14-battery',
-      name: 'iPhone 14 Battery Replacement',
-      category: 'iPhone Parts',
-      model: 'iPhone 14',
-      price: 89.99,
-      originalPrice: null,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'Original capacity battery replacement for iPhone 14',
-      specifications: ['3279mAh Capacity', 'Li-ion Technology', '1-Year Warranty'],
-      compatibility: ['iPhone 14'],
-      sku: 'NTH-IP14-BAT-001'
-    },
-    // Samsung Parts
-    {
-      id: 'sg-s24-screen-oled',
-      name: 'Samsung Galaxy S24 OLED Screen Assembly',
-      category: 'Samsung Parts',
-      model: 'Galaxy S24',
-      price: 249.99,
-      originalPrice: 279.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'High-quality OLED replacement screen for Samsung Galaxy S24',
-      specifications: ['OLED Display', 'Touch Digitizer Included', '6-Month Warranty'],
-      compatibility: ['Samsung Galaxy S24'],
-      sku: 'NTH-SGS24-SCREEN-001'
-    },
-    {
-      id: 'sg-s23-battery',
-      name: 'Samsung Galaxy S23 Battery Replacement',
-      category: 'Samsung Parts',
-      model: 'Galaxy S23',
-      price: 79.99,
-      originalPrice: null,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'Original capacity battery replacement for Samsung Galaxy S23',
-      specifications: ['3900mAh Capacity', 'Li-ion Technology', '1-Year Warranty'],
-      compatibility: ['Samsung Galaxy S23'],
-      sku: 'NTH-SGS23-BAT-001'
-    },
-    // iPad Parts
-    {
-      id: 'ipad-pro12-lcd',
-      name: 'iPad Pro 12.9" LCD Assembly',
-      category: 'iPad Parts',
-      model: 'iPad Pro 12.9"',
-      price: 299.99,
-      originalPrice: 349.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'High-resolution LCD assembly for iPad Pro 12.9" with touch digitizer',
-      specifications: ['12.9" LCD Display', 'Touch Digitizer Included', '6-Month Warranty'],
-      compatibility: ['iPad Pro 12.9" (6th Gen)', 'iPad Pro 12.9" (5th Gen)'],
-      sku: 'NTH-IPPRO12-LCD-001'
-    },
-    {
-      id: 'ipad-air5-digitizer',
-      name: 'iPad Air 5th Gen Digitizer',
-      category: 'iPad Parts',
-      model: 'iPad Air 5th Gen',
-      price: 159.99,
-      originalPrice: null,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'Touch digitizer replacement for iPad Air 5th Generation',
-      specifications: ['10.9" Touch Digitizer', 'Oleophobic Coating', '6-Month Warranty'],
-      compatibility: ['iPad Air 5th Generation (2022)'],
-      sku: 'NTH-IPAIR5-DIGIT-001'
-    },
-    // Repair Tools
-    {
-      id: 'toolkit-pro-50pc',
-      name: 'Professional Repair Tool Kit - 50 Pieces',
-      category: 'Repair Tools',
-      model: 'Universal',
-      price: 149.99,
-      originalPrice: 179.99,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'Complete professional repair tool kit for mobile device technicians',
-      specifications: ['50+ Precision Tools', 'Anti-Static Mat Included', 'Carrying Case'],
-      compatibility: ['iPhone', 'Samsung', 'iPad', 'Universal'],
-      sku: 'NTH-TOOLS-PRO50-001'
-    },
-    {
-      id: 'screwdriver-precision',
-      name: 'Precision Screwdriver Set - iPhone/Samsung',
-      category: 'Repair Tools',
-      model: 'Universal',
-      price: 39.99,
-      originalPrice: null,
-      inStock: true,
-      image: '/images/products/placeholder.svg',
-      description: 'High-precision screwdriver set for iPhone and Samsung repairs',
-      specifications: ['15 Precision Bits', 'Magnetic Tips', 'Ergonomic Handle'],
-      compatibility: ['iPhone', 'Samsung', 'iPad', 'Universal'],
-      sku: 'NTH-TOOLS-SCREW-001'
+// Search products using real API
+const searchProducts = async (query) => {
+  try {
+    const response = await fetch(`/api/products?search=${encodeURIComponent(query)}&limit=50`);
+    const data = await response.json();
+
+    if (data.success) {
+      return data.data.map(product => ({
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        model: product.brand || 'Universal',
+        price: product.price,
+        originalPrice: product.discount_percentage > 0 ? product.price / (1 - product.discount_percentage / 100) : null,
+        inStock: product.stock > 0,
+        image: product.image,
+        description: product.description,
+        specifications: [], // TODO: Add specifications from API
+        compatibility: [product.brand || 'Universal'],
+        sku: product.sku,
+        discount_percentage: product.discount_percentage || 0,
+        stock: product.stock
+      }));
+    } else {
+      console.error('Search API error:', data.error);
+      return [];
     }
-  ];
-
-  if (!query || query.trim() === '') {
-    return allProducts;
+  } catch (error) {
+    console.error('Error searching products:', error);
+    return [];
   }
-
-  const searchTerm = query.toLowerCase().trim();
-
-  return allProducts.filter(product => {
-    return (
-      product.name.toLowerCase().includes(searchTerm) ||
-      product.category.toLowerCase().includes(searchTerm) ||
-      product.model.toLowerCase().includes(searchTerm) ||
-      product.description.toLowerCase().includes(searchTerm) ||
-      product.specifications.some(spec => spec.toLowerCase().includes(searchTerm)) ||
-      product.compatibility.some(comp => comp.toLowerCase().includes(searchTerm))
-    );
-  });
 };
 
 export default function Search() {
@@ -160,12 +54,15 @@ export default function Search() {
       setSearchQuery(query);
       setIsLoading(true);
 
-      // Simulate API delay
-      setTimeout(() => {
-        const results = searchProducts(query);
+      // Call the async search function
+      searchProducts(query).then(results => {
         setSearchResults(results);
         setIsLoading(false);
-      }, 300);
+      }).catch(error => {
+        console.error('Search error:', error);
+        setSearchResults([]);
+        setIsLoading(false);
+      });
     }
   }, [router.isReady, q]);
 
@@ -175,14 +72,14 @@ export default function Search() {
 
   const getPageTitle = () => {
     if (searchQuery) {
-      return `Search Results for "${searchQuery}" | Nexus TechHub`;
+      return `Search Results for "${searchQuery}" | Nexus Tech Hub`;
     }
-    return 'Search Products | Nexus TechHub';
+    return 'Search Products | Nexus Tech Hub';
   };
 
   const getPageDescription = () => {
     if (searchQuery) {
-      return `Find ${searchQuery} and other professional repair parts at Nexus TechHub. High-quality components with warranty coverage.`;
+      return `Find ${searchQuery} and other professional repair parts at Nexus Tech Hub. High-quality components with warranty coverage.`;
     }
     return 'Search our extensive catalog of professional repair parts, tools, and components for iPhone, Samsung, iPad, and more.';
   };

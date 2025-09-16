@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import SearchBar from '../../../components/SearchBar';
 import styles from './Header.module.css';
 
 const Header = () => {
   const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Navigation menu items
   const menuItems = [
@@ -90,11 +90,13 @@ const Header = () => {
   ];
 
   const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+    // For now, just log the action - can be enhanced later
+    console.log('Mobile menu toggle clicked');
   };
 
   const handleMegaMenuHover = (id) => {
-    setActiveMegaMenu(id);
+    // For now, just log the action - can be enhanced later
+    console.log('Mega menu hover:', id);
   };
 
   return (
@@ -105,10 +107,10 @@ const Header = () => {
           <Link href="/">
             <img 
               src="/images/nexus-logo.svg" 
-              alt="Nexus TechHub" 
+              alt="Nexus Tech Hub"
               className={styles.logoImage}
             />
-            <span className={styles.logoText}>Nexus TechHub</span>
+            <span className={styles.logoText}>Nexus Tech Hub</span>
           </Link>
         </div>
 
@@ -137,6 +139,11 @@ const Header = () => {
           </ul>
         </nav>
 
+        {/* Search Bar */}
+        <div className={styles.searchContainer}>
+          <SearchBar />
+        </div>
+
         {/* Header Actions */}
         <div className={styles.headerActions}>
           <Link href="/cart" className={styles.cartLink}>
@@ -157,31 +164,22 @@ const Header = () => {
           </Link>
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className={styles.mobileMenuToggle}
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              {mobileMenuOpen ? (
-                <>
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </>
-              ) : (
-                <>
-                  <line x1="3" y1="12" x2="21" y2="12"></line>
-                  <line x1="3" y1="6" x2="21" y2="6"></line>
-                  <line x1="3" y1="18" x2="21" y2="18"></line>
-                </>
-              )}
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.open : ''}`}>
+      <div className={styles.mobileMenu}>
         <div className={styles.mobileMenuOverlay} onClick={toggleMobileMenu}></div>
         <div className={styles.mobileMenuContent}>
           <div className={styles.mobileMenuHeader}>
@@ -189,10 +187,10 @@ const Header = () => {
               <Link href="/" onClick={toggleMobileMenu}>
                 <img
                   src="/images/nexus-logo.svg"
-                  alt="Nexus TechHub"
+                  alt="Nexus Tech Hub"
                   className={styles.mobileLogoImage}
                 />
-                <span className={styles.mobileLogoText}>Nexus TechHub</span>
+                <span className={styles.mobileLogoText}>Nexus Tech Hub</span>
               </Link>
             </div>
             <button
