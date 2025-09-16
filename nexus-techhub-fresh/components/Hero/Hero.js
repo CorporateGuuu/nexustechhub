@@ -5,37 +5,34 @@ import styles from './Hero.module.css';
 const Hero = () => {
   const slides = [
     {
-      title: "Premium iPhone Parts",
-      subtitle: "Genuine Apple components with warranty",
+      title: "iPhone Parts Wholesale",
+      subtitle: "Bulk pricing on screens, batteries, and components",
       image: "/images/products/iphone-15-pro-max-screen.jpg",
       cta: "Shop iPhone Parts",
       link: "/products/iphone-parts"
     },
     {
-      title: "Samsung Galaxy Repairs",
-      subtitle: "Complete range of Samsung parts & tools",
+      title: "Samsung Galaxy Parts",
+      subtitle: "OEM quality parts for all Galaxy models",
       image: "/images/products/samsung-s24-ultra-screen.jpg",
       cta: "Shop Samsung Parts",
       link: "/products/samsung-parts"
     },
     {
-      title: "Professional Tools",
-      subtitle: "iFixit certified repair equipment",
+      title: "iPad & Tablet Components",
+      subtitle: "Professional repair parts for tablets",
+      image: "/images/products/ipad-pro-12-9-screen.jpg",
+      cta: "Shop iPad Parts",
+      link: "/products/ipad-parts"
+    },
+    {
+      title: "Repair Tools & Equipment",
+      subtitle: "Complete workshop solutions",
       image: "/images/products/professional-toolkit.jpg",
       cta: "Shop Tools",
       link: "/products/repair-tools"
     }
   ];
-
-  const nextSlide = () => {
-    // For now, just log the action - can be enhanced later
-    console.log('Next slide clicked');
-  };
-
-  const prevSlide = () => {
-    // For now, just log the action - can be enhanced later
-    console.log('Previous slide clicked');
-  };
 
   return (
     <section className={styles.hero}>
@@ -44,18 +41,18 @@ const Hero = () => {
         <div className={styles.heroContent}>
           <div className={styles.heroText}>
             <div className={styles.badge}>
-              <span className={styles.badgeIcon}>⚡</span>
-              Premium Quality Parts & Tools
+              <span className={styles.badgeIcon}>🏢</span>
+              Trusted Wholesale Supplier
             </div>
 
             <h1 className={styles.title}>
               Nexus Tech Hub
-              <span className={styles.titleAccent}>UAE</span>
+              <span className={styles.titleAccent}>Wholesale</span>
             </h1>
 
             <p className={styles.subtitle}>
-              Your trusted partner for professional repair parts & tools in UAE.
-              We provide high-quality components for iPhone, Samsung, iPad, and MacBook repairs.
+              Leading wholesale supplier of cellphone repair parts and accessories.
+              Serving repair professionals worldwide with quality components for iPhone, Samsung, and iPad repairs.
             </p>
 
             <div className={styles.ctaContainer}>
@@ -75,16 +72,16 @@ const Hero = () => {
 
             <div className={styles.stats}>
               <div className={styles.stat}>
-                <div className={styles.statNumber}>5,000+</div>
-                <div className={styles.statLabel}>Products</div>
+                <div className={styles.statNumber}>10,000+</div>
+                <div className={styles.statLabel}>Wholesale Products</div>
               </div>
               <div className={styles.stat}>
-                <div className={styles.statNumber}>10,000+</div>
-                <div className={styles.statLabel}>Happy Customers</div>
+                <div className={styles.statNumber}>2,500+</div>
+                <div className={styles.statLabel}>Business Partners</div>
               </div>
               <div className={styles.stat}>
                 <div className={styles.statNumber}>24/7</div>
-                <div className={styles.statLabel}>Support</div>
+                <div className={styles.statLabel}>Technical Support</div>
               </div>
             </div>
           </div>
@@ -96,7 +93,7 @@ const Hero = () => {
                 <div
                   key={index}
                   className={`${styles.carouselSlide} ${index === 0 ? styles.active : ''}`}
-                  style={{ transform: `translateX(${(index - 0) * 100}%)` }}
+                  style={{ transform: `translateX(${index * 100}%)` }}
                 >
                   <div className={styles.slideContent}>
                     <div className={styles.slideImage}>
@@ -119,25 +116,12 @@ const Hero = () => {
               ))}
             </div>
 
-            {/* Carousel Controls */}
-            <button className={`${styles.carouselControl} ${styles.prev}`} onClick={prevSlide}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M15 18l-6-6 6-6"/>
-              </svg>
-            </button>
-            <button className={`${styles.carouselControl} ${styles.next}`} onClick={nextSlide}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-
             {/* Carousel Indicators */}
             <div className={styles.carouselIndicators}>
               {slides.map((_, index) => (
                 <button
                   key={index}
                   className={`${styles.indicator} ${index === 0 ? styles.active : ''}`}
-                  onClick={() => console.log('Indicator clicked:', index)}
                 />
               ))}
             </div>

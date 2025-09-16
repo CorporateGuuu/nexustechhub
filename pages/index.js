@@ -9,12 +9,12 @@ export default function Home() {
   const featuredProducts = [
     {
       id: 'ip15-pro-max-screen',
-      name: 'iPhone 15 Pro Max OLED Screen',
-      price: 399.99,
-      originalPrice: 449.99,
+      name: 'iPhone 15 Pro Max OLED Screen - Aftermarket Pro',
+      price: 89.99,
+      originalPrice: 129.99,
       image: '/images/products/iphone-15-pro-max-screen.jpg',
       category: 'iPhone Parts',
-      badge: 'Best Seller',
+      badge: 'Bulk Discount',
       gallery: [
         '/images/products/iphone-15-pro-max-screen.jpg',
         '/images/products/iphone-15-pro-screen.jpg',
@@ -23,12 +23,12 @@ export default function Home() {
     },
     {
       id: 'sg-s24-ultra-screen',
-      name: 'Samsung Galaxy S24 Ultra Screen',
-      price: 349.99,
-      originalPrice: 399.99,
+      name: 'Samsung Galaxy S24 Ultra Screen Assembly',
+      price: 79.99,
+      originalPrice: 109.99,
       image: '/images/products/samsung-s24-ultra-screen.jpg',
       category: 'Samsung Parts',
-      badge: 'New Arrival',
+      badge: 'OEM Quality',
       gallery: [
         '/images/products/samsung-s24-ultra-screen.jpg',
         '/images/products/samsung-s24-plus-screen.jpg',
@@ -37,12 +37,12 @@ export default function Home() {
     },
     {
       id: 'ipad-pro-12-9-screen',
-      name: 'iPad Pro 12.9" Liquid Retina XDR',
-      price: 499.99,
-      originalPrice: 549.99,
+      name: 'iPad Pro 12.9" Liquid Retina XDR Display',
+      price: 149.99,
+      originalPrice: 199.99,
       image: '/images/products/ipad-pro-12-9-screen.jpg',
       category: 'iPad Parts',
-      badge: 'Premium',
+      badge: 'Premium Grade',
       gallery: [
         '/images/products/ipad-pro-12-9-screen.jpg',
         '/images/products/ipad-pro-11-screen.jpg',
@@ -51,12 +51,12 @@ export default function Home() {
     },
     {
       id: 'toolkit-pro',
-      name: 'Professional Repair Toolkit',
-      price: 199.99,
-      originalPrice: 249.99,
+      name: 'Professional Repair Toolkit - Complete Set',
+      price: 149.99,
+      originalPrice: 199.99,
       image: '/images/products/professional-toolkit.jpg',
       category: 'Repair Tools',
-      badge: 'Complete Set',
+      badge: 'Essential Kit',
       gallery: [
         '/images/products/professional-toolkit.jpg',
         '/images/products/precision-screwdrivers.jpg',
@@ -67,31 +67,31 @@ export default function Home() {
 
   const productShowcase = [
     {
-      title: 'iPhone Repair Parts',
-      description: 'Genuine Apple components for all iPhone models',
+      title: 'iPhone Parts Wholesale',
+      description: 'Complete range of iPhone components from iPhone 5 to latest models',
       image: '/images/showcase/iphone-repair.jpg',
-      features: ['OLED Screens', 'Batteries', 'Charging Ports', 'Cameras'],
+      features: ['OLED Screens', 'Batteries', 'Charging Ports', 'Cameras', 'Logic Boards'],
       link: '/products/iphone-parts'
     },
     {
       title: 'Samsung Galaxy Parts',
-      description: 'High-quality parts for all Galaxy devices',
+      description: 'High-quality Samsung parts for all Galaxy series devices',
       image: '/images/showcase/samsung-repair.jpg',
-      features: ['AMOLED Screens', 'Batteries', 'USB-C Ports', 'S Pen'],
+      features: ['AMOLED Screens', 'Batteries', 'USB-C Ports', 'S Pen', 'Motherboards'],
       link: '/products/samsung-parts'
     },
     {
-      title: 'iPad Components',
-      description: 'Professional parts for tablets and iPads',
+      title: 'iPad & Tablet Components',
+      description: 'Professional parts for tablets and iPads of all generations',
       image: '/images/showcase/ipad-repair.jpg',
-      features: ['LCD Screens', 'Batteries', 'Home Buttons', 'Cameras'],
+      features: ['LCD Screens', 'Batteries', 'Home Buttons', 'Cameras', 'Digitizers'],
       link: '/products/ipad-parts'
     },
     {
-      title: 'Repair Tools',
-      description: 'Professional-grade repair equipment',
+      title: 'Repair Tools & Equipment',
+      description: 'Professional-grade repair tools and workshop equipment',
       image: '/images/showcase/tools-workshop.jpg',
-      features: ['Precision Tools', 'Heat Guns', 'Suction Cups', 'Microscopes'],
+      features: ['Precision Tools', 'Heat Guns', 'Suction Cups', 'Microscopes', 'Soldering Stations'],
       link: '/products/repair-tools'
     }
   ];
@@ -99,25 +99,25 @@ export default function Home() {
   const categories = [
     {
       name: 'iPhone Parts',
-      description: 'Genuine Apple components',
+      description: 'iPhone 5 to iPhone 16 series',
       image: '/images/categories/iphone-parts.jpg',
-      count: '20+ products',
+      count: '500+ products',
       link: '/products/iphone-parts',
       color: '#007AFF'
     },
     {
       name: 'Samsung Parts',
-      description: 'Galaxy series components',
+      description: 'Galaxy S, A, Note, Tab series',
       image: '/images/categories/samsung-parts.jpg',
-      count: '25+ products',
+      count: '600+ products',
       link: '/products/samsung-parts',
       color: '#00D4AA'
     },
     {
       name: 'iPad Parts',
-      description: 'Professional tablet repairs',
+      description: 'iPad, iPad Air, iPad Pro',
       image: '/images/categories/ipad-parts.jpg',
-      count: '15+ products',
+      count: '200+ products',
       link: '/products/ipad-parts',
       color: '#5856D6'
     },
@@ -125,7 +125,7 @@ export default function Home() {
       name: 'Repair Tools',
       description: 'Professional equipment',
       image: '/images/categories/repair-tools.jpg',
-      count: '20+ products',
+      count: '150+ products',
       link: '/products/repair-tools',
       color: '#FF9500'
     }
@@ -133,24 +133,24 @@ export default function Home() {
 
   const services = [
     {
-      icon: '🚚',
+      icon: 'BO',
+      title: 'Bulk Ordering',
+      description: 'Competitive wholesale pricing with volume discounts available.'
+    },
+    {
+      icon: 'QG',
+      title: 'Quality Guarantee',
+      description: 'All parts tested and guaranteed for compatibility and performance.'
+    },
+    {
+      icon: 'FS',
       title: 'Fast Shipping',
-      description: 'Free delivery on orders over AED 500. Express shipping available.'
+      description: 'Express shipping worldwide with tracking and insurance.'
     },
     {
-      icon: '🛡️',
-      title: '1 Year Warranty',
-      description: 'All parts come with manufacturer warranty and quality guarantee.'
-    },
-    {
-      icon: '⚡',
-      title: '24/7 Support',
-      description: 'Expert technical support available round the clock.'
-    },
-    {
-      icon: '🔧',
-      title: 'Expert Repairs',
-      description: 'Professional repair services by certified technicians.'
+      icon: 'BS',
+      title: 'B2B Support',
+      description: 'Dedicated account management for business customers.'
     }
   ];
 
@@ -164,16 +164,66 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
+      {/* Categories Section */}
+      <section className={styles.categoriesSection}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <h2>Shop by Category</h2>
+            <p>Complete range of repair parts for all major brands</p>
+          </div>
+
+          <div className={styles.categoriesGrid}>
+            {categories.map((category, index) => (
+              <Link key={index} href={category.link} className={styles.categoryCard}>
+                <div className={styles.categoryImage}>
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    onError={(e) => {
+                      e.target.src = '/images/categories/placeholder.svg';
+                      e.target.style.opacity = '0.7';
+                    }}
+                    loading="lazy"
+                  />
+                  <div className={styles.categoryOverlay}>
+                    <span className={styles.categoryOverlayBtn}>Shop Now</span>
+                  </div>
+                </div>
+
+                <div className={styles.categoryContent}>
+                  <div className={styles.categoryHeader}>
+                    <div className={styles.categoryIcon}>
+                      {category.name === 'iPhone Parts' ? 'iP' :
+                       category.name === 'Samsung Parts' ? 'SS' :
+                       category.name === 'iPad Parts' ? 'iP' :
+                       category.name === 'Repair Tools' ? 'RT' : 'PR'}
+                    </div>
+                    <div>
+                      <h3>{category.name}</h3>
+                    </div>
+                  </div>
+                  <p>{category.description}</p>
+                  <div className={styles.categoryFooter}>
+                    <span className={styles.categoryCount}>{category.count}</span>
+                    <span className={styles.categoryArrow}>→</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Featured Products Section */}
       <section className={styles.featuredSection}>
         <div className="container">
           <div className={styles.sectionHeader}>
             <h2>Featured Products</h2>
-            <p>Discover our most popular and high-quality repair parts</p>
+            <p>Top-selling wholesale parts with competitive pricing</p>
           </div>
 
           <div className={styles.featuredGrid}>
-            {featuredProducts.map((product) => (
+            {featuredProducts.slice(0, 3).map((product) => (
               <div key={product.id} className={styles.productCard}>
                 <div className={styles.productImage}>
                   <img
@@ -225,95 +275,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className={styles.categoriesSection}>
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2>Shop by Category</h2>
-            <p>Find the perfect parts for your device repair needs</p>
-          </div>
-
-          <div className={styles.categoriesGrid}>
-            {categories.map((category, index) => (
-              <Link key={index} href={category.link} className={styles.categoryCard}>
-                <div className={styles.categoryImage}>
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    onError={(e) => {
-                      e.target.src = '/images/categories/placeholder.svg';
-                      e.target.style.opacity = '0.7';
-                    }}
-                    loading="lazy"
-                  />
-                  <div className={styles.categoryOverlay}></div>
-                </div>
-
-                <div className={styles.categoryContent}>
-                  <h3>{category.name}</h3>
-                  <p>{category.description}</p>
-                  <span className={styles.categoryCount}>{category.count}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Product Showcase Section */}
-      <section className={styles.showcaseSection}>
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2>Professional Repair Solutions</h2>
-            <p>Explore our comprehensive range of repair parts and tools</p>
-          </div>
-
-          <div className={styles.showcaseGrid}>
-            {productShowcase.map((item, index) => (
-              <div key={index} className={styles.showcaseCard}>
-                <div className={styles.showcaseImage}>
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    onError={(e) => e.target.src = '/images/showcase/placeholder.jpg'}
-                    loading="lazy"
-                  />
-                  <div className={styles.showcaseOverlay}>
-                    <Link href={item.link} className={styles.showcaseBtn}>
-                      Explore {item.title}
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-
-                <div className={styles.showcaseContent}>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-
-                  <div className={styles.showcaseFeatures}>
-                    {item.features.map((feature, featureIndex) => (
-                      <span key={featureIndex} className={styles.featureTag}>
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
+      {/* Quick Services Section */}
       <section className={styles.servicesSection}>
         <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2>Why Choose Nexus Tech Hub?</h2>
-            <p>Experience excellence in mobile device repair parts and services</p>
-          </div>
-
           <div className={styles.servicesGrid}>
             {services.map((service, index) => (
               <div key={index} className={styles.serviceCard}>
@@ -328,68 +292,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className={styles.statsSection}>
-        <div className="container">
-          <div className={styles.statsGrid}>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>5,000+</div>
-              <div className={styles.statLabel}>Quality Products</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>10,000+</div>
-              <div className={styles.statLabel}>Happy Customers</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>50+</div>
-              <div className={styles.statLabel}>Countries Served</div>
-            </div>
-            <div className={styles.statItem}>
-              <div className={styles.statNumber}>24/7</div>
-              <div className={styles.statLabel}>Customer Support</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* Newsletter Section */}
-      <section className={styles.newsletterSection}>
-        <div className="container">
-          <div className={styles.newsletterContent}>
-            <div className={styles.newsletterText}>
-              <h2>Stay Updated</h2>
-              <p>Get the latest updates on new products, special offers, and repair tips.</p>
-            </div>
-
-            <form className={styles.newsletterForm}>
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                className={styles.newsletterInput}
-                required
-              />
-              <button type="submit" className={styles.newsletterBtn}>
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className={styles.ctaSection}>
         <div className="container">
           <div className={styles.ctaContent}>
-            <h2>Ready to Start Repairing?</h2>
-            <p>Browse our extensive collection of professional repair parts and tools.</p>
+            <h2>Start Your Wholesale Order Today</h2>
             <div className={styles.ctaButtons}>
               <Link href="/products" className={styles.ctaPrimary}>
                 Shop Now
               </Link>
               <Link href="/contact" className={styles.ctaSecondary}>
-                Contact Us
+                Contact Sales
               </Link>
             </div>
           </div>
