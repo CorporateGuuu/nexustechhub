@@ -79,7 +79,7 @@ async function setupMonitoring() {
     try {
       // Test Sentry DSN connectivity
       console.log('Testing Sentry DSN connectivity...');
-      const sentryTestUrl = 'https://o4509401297387520.ingest.us.sentry.io/api/4509401299353601/envelope/';
+      const sentryTestUrl = '[SENTRY_DSN_URL]';
       
       // Create a test error payload
       const testPayload = JSON.stringify({
@@ -271,12 +271,12 @@ async function setupMonitoring() {
     console.log('\n🧪 Test 5: Alert System Testing');
     console.log('==============================');
     
-    console.log('Testing alert delivery to admin@nexustechhub.ae...');
-    
+    console.log('Testing alert delivery to [BUSINESS_EMAIL]...');
+
     // Simulate alert test
     const alertChannels = [
-      { name: 'Email Alerts', target: 'admin@nexustechhub.ae', status: 'configured' },
-      { name: 'WhatsApp Alerts', target: '+971 58 553 1029', status: 'configured' },
+      { name: 'Email Alerts', target: '[BUSINESS_EMAIL]', status: 'configured' },
+      { name: 'WhatsApp Alerts', target: '[BUSINESS_PHONE]', status: 'configured' },
       { name: 'Sentry Notifications', target: 'Sentry Dashboard', status: 'active' },
       { name: 'Netlify Deploy Alerts', target: 'Netlify Dashboard', status: 'active' }
     ];
