@@ -7,7 +7,7 @@ const https = require('https');
 const { URL } = require('url');
 
 const SITE_URL = process.env.SITE_URL || 'https://nexustechhub.netlify.app';
-const SENTRY_DSN = 'https://28e32f9a8393310eafcb5ad0b1bb4bda@o4509401297387520.ingest.us.sentry.io/4509401299353601';
+const SENTRY_DSN = process.env.SENTRY_DSN || 'REPLACE_WITH_SENTRY_DSN';
 
 function makeRequest(url, method = 'GET', headers = {}, body = null) {
   return new Promise((resolve, reject) => {
