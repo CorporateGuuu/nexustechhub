@@ -7,8 +7,8 @@
   NODE_ENV = "production"
   NEXTAUTH_URL = "https://nexustechhub.netlify.app"
   # Secrets scanning configuration
-  # Exclude documentation and setup files from secrets scanning
-  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/,Scripts/"
+  # Exclude documentation, setup files, and env files from secrets scanning
+  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/,Scripts/,.env*"
 
 # Build settings
 [build.processing]
