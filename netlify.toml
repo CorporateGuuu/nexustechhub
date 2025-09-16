@@ -8,7 +8,7 @@
   NEXTAUTH_URL = "https://nexustechhub.netlify.app"
   # Secrets scanning configuration
   # Exclude build output directories from secrets scanning
-  secrets_scan_omit_paths = ".next/,netlify/,node_modules/"
+  secrets_scan_omit_paths = ".next/,netlify/,node_modules/,docs/,lib/"
 
 # Build settings
 [build.processing]
