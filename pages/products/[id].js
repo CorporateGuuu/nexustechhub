@@ -41,7 +41,7 @@ export default function ProductDetail() {
           'Brightness': '2000 nits peak',
           'Compatibility': 'iPhone 15 Pro Max'
         },
-        warranty: '1 Year',
+        warranty: '30 Days',
         tags: ['screen', 'oled', 'pro', '15', 'pro max']
       },
       {
@@ -63,7 +63,7 @@ export default function ProductDetail() {
           'Brightness': '2000 nits peak',
           'Compatibility': 'iPhone 15 Pro'
         },
-        warranty: '1 Year',
+        warranty: '30 Days',
         tags: ['screen', 'oled', 'pro', '15']
       },
       {
@@ -85,7 +85,7 @@ export default function ProductDetail() {
           'Brightness': '2000 nits peak',
           'Compatibility': 'iPhone 15 Plus'
         },
-        warranty: '1 Year',
+        warranty: '30 Days',
         tags: ['screen', 'lcd', 'plus', '15']
       },
       {
@@ -103,10 +103,10 @@ export default function ProductDetail() {
           'Capacity': 'Original Apple capacity',
           'Compatibility': 'iPhone 15, 15 Plus, 15 Pro, 15 Pro Max',
           'Charging': 'USB-C Fast Charging',
-          'Warranty': '1 Year',
+          'Warranty': '30 Days',
           'Type': 'Lithium-ion'
         },
-        warranty: '1 Year',
+        warranty: '30 Days',
         tags: ['battery', '15', 'replacement']
       },
       {
@@ -1172,7 +1172,7 @@ export default function ProductDetail() {
 
               <div className={styles.purchaseInfo}>
                 <span className={styles.warranty}>
-                  ✓ {product.warranty || '1 Year'} Warranty
+                  ✓ {product.warranty || '30 Days'} Warranty
                 </span>
                 <span className={styles.shipping}>
                   ✓ Free Shipping
@@ -1239,9 +1239,9 @@ export default function ProductDetail() {
             <div className={styles.tabPanel}>
               <h3>Warranty Information</h3>
               <div className={styles.warrantyInfo}>
-                <h4>{product.warranty || '1 Year'} Limited Warranty</h4>
+                <h4>{product.warranty || '30 Days'} Limited Warranty</h4>
                 <p>
-                  This product comes with a {(product.warranty || '1 Year').toLowerCase()} limited warranty
+                  This product comes with a {(product.warranty || '30 Days').toLowerCase()} limited warranty
                   covering manufacturing defects and functionality issues.
                 </p>
                 <ul>

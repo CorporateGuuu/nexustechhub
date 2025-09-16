@@ -275,22 +275,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Quick Services Section */}
-      <section className={styles.servicesSection}>
-        <div className="container">
-          <div className={styles.servicesGrid}>
-            {services.map((service, index) => (
-              <div key={index} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>
-                  <span>{service.icon}</span>
-                </div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* CTA Section */}
       <section className={styles.ctaSection}>
