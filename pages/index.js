@@ -154,29 +154,7 @@ export default function Home() {
     }
   ];
 
-  const testimonials = [
-    {
-      name: 'Ahmed Al-Rashid',
-      role: 'Phone Repair Shop Owner',
-      content: 'Nexus Tech Hub has been our go-to supplier for iPhone and Samsung parts. Their quality is unmatched and delivery is always on time.',
-      rating: 5,
-      avatar: '/images/testimonials/avatar1.jpg'
-    },
-    {
-      name: 'Sarah Johnson',
-      role: 'DIY Repair Enthusiast',
-      content: 'The repair tools from Nexus are professional grade and affordable. Perfect for both professionals and hobbyists.',
-      rating: 5,
-      avatar: '/images/testimonials/avatar2.jpg'
-    },
-    {
-      name: 'Mohammed Al-Farsi',
-      role: 'Electronics Store Manager',
-      content: 'Outstanding customer service and product quality. They have everything we need for our repair business.',
-      rating: 5,
-      avatar: '/images/testimonials/avatar3.jpg'
-    }
-  ];
+
 
   return (
     <Layout
@@ -374,43 +352,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className={styles.testimonialsSection}>
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2>What Our Customers Say</h2>
-            <p>Trusted by repair professionals worldwide</p>
-          </div>
 
-          <div className={styles.testimonialsGrid}>
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className={styles.testimonialCard}>
-                <div className={styles.testimonialRating}>
-                  {'★'.repeat(testimonial.rating)}
-                </div>
-
-                <blockquote className={styles.testimonialContent}>
-                  "{testimonial.content}"
-                </blockquote>
-
-                <div className={styles.testimonialAuthor}>
-                  <div className={styles.authorAvatar}>
-                    <img
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      onError={(e) => e.target.src = '/images/testimonials/default-avatar.jpg'}
-                    />
-                  </div>
-                  <div className={styles.authorInfo}>
-                    <div className={styles.authorName}>{testimonial.name}</div>
-                    <div className={styles.authorRole}>{testimonial.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Newsletter Section */}
       <section className={styles.newsletterSection}>
