@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -1257,157 +1259,308 @@ export default function ProductCategory() {
       description={categoryInfo.description}
     >
       <div className={styles.productsPage}>
+        {/* Hero Section */}
+        <div className={styles.heroSection}>
+          <div className="container">
+            <div className={styles.heroContent}>
+              <div className={styles.breadcrumb}>
+                <Link href="/">Home</Link>
+                <span>/</span>
+                <Link href="/products">Products</Link>
+                <span>/</span>
+                <span>{categoryInfo.name}</span>
+              </div>
+
+              <div className={styles.heroText}>
+                <h1 className={styles.heroTitle}>{categoryInfo.name}</h1>
+                <p className={styles.heroDescription}>{categoryInfo.description}</p>
+
+                {/* Quick Stats */}
+                <div className={styles.heroStats}>
+                  <div className={styles.stat}>
+                    <span className={styles.statNumber}>
+                      {products.length > 0 ? products.length : '50+'}
+                    </span>
+                    <span className={styles.statLabel}>Products</span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.statNumber}>24/7</span>
+                    <span className={styles.statLabel}>Support</span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.statNumber}>1 Year</span>
+                    <span className={styles.statLabel}>Warranty</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="container">
-          {/* Breadcrumb */}
-          <div className={styles.breadcrumb}>
-            <Link href="/">Home</Link>
-            <span>/</span>
-            <Link href="/products">Products</Link>
-            <span>/</span>
-            <span>{categoryInfo.name}</span>
-          </div>
-
-          {/* Page Header */}
-          <div className={styles.pageHeader}>
-            <h1>{categoryInfo.name}</h1>
-            <p>{categoryInfo.description}</p>
-          </div>
-
           {/* Category Navigation */}
           <div className={styles.categoryNav}>
-            <Link href="/products" className={`${styles.categoryButton} ${!categorySlug ? styles.active : ''}`}>
-              All Products
-            </Link>
-            <Link href="/products/iphone-parts" className={`${styles.categoryButton} ${categorySlug === 'iphone-parts' ? styles.active : ''}`}>
-              iPhone Parts
-            </Link>
-            <Link href="/products/samsung-parts" className={`${styles.categoryButton} ${categorySlug === 'samsung-parts' ? styles.active : ''}`}>
-              Samsung Parts
-            </Link>
-            <Link href="/products/ipad-parts" className={`${styles.categoryButton} ${categorySlug === 'ipad-parts' ? styles.active : ''}`}>
-              iPad Parts
-            </Link>
-            <Link href="/products/repair-tools" className={`${styles.categoryButton} ${categorySlug === 'repair-tools' ? styles.active : ''}`}>
-              Repair Tools
-            </Link>
+            <div className={styles.categoryNavWrapper}>
+              <Link href="/products" className={`${styles.categoryButton} ${!categorySlug ? styles.active : ''}`}>
+                <span className={styles.categoryIcon}>📦</span>
+                <span>All Products</span>
+              </Link>
+              <Link href="/products/iphone-parts" className={`${styles.categoryButton} ${categorySlug === 'iphone-parts' ? styles.active : ''}`}>
+                <span className={styles.categoryIcon}>📱</span>
+                <span>iPhone Parts</span>
+              </Link>
+              <Link href="/products/samsung-parts" className={`${styles.categoryButton} ${categorySlug === 'samsung-parts' ? styles.active : ''}`}>
+                <span className={styles.categoryIcon}>📱</span>
+                <span>Samsung Parts</span>
+              </Link>
+              <Link href="/products/ipad-parts" className={`${styles.categoryButton} ${categorySlug === 'ipad-parts' ? styles.active : ''}`}>
+                <span className={styles.categoryIcon}>📱</span>
+                <span>iPad Parts</span>
+              </Link>
+              <Link href="/products/repair-tools" className={`${styles.categoryButton} ${categorySlug === 'repair-tools' ? styles.active : ''}`}>
+                <span className={styles.categoryIcon}>🔧</span>
+                <span>Repair Tools</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Filters and Sorting */}
+          <div className={styles.filtersSection}>
+            <div className={styles.filtersWrapper}>
+              <div className={styles.resultsCount}>
+                <span>{products.length} products found</span>
+              </div>
+
+              <div className={styles.filters}>
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Sort by:</label>
+                  <select className={styles.filterSelect}>
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name A-Z</option>
+                    <option value="popular">Most Popular</option>
+                  </select>
+                </div>
+
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Price Range:</label>
+                  <select className={styles.filterSelect}>
+                    <option value="all">All Prices</option>
+                    <option value="0-50">$0 - $50</option>
+                    <option value="50-100">$50 - $100</option>
+                    <option value="100-200">$100 - $200</option>
+                    <option value="200+">$200+</option>
+                  </select>
+                </div>
+
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Availability:</label>
+                  <select className={styles.filterSelect}>
+                    <option value="all">All Products</option>
+                    <option value="in-stock">In Stock</option>
+                    <option value="low-stock">Low Stock</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Products Grid */}
           {loading ? (
-            <div className={styles.loading}>
-              <div className="loading-spinner"></div>
-              <p>Loading {categoryInfo.name.toLowerCase()}...</p>
+            <div className={styles.loadingSection}>
+              <div className={styles.loadingSpinner}></div>
+              <h3>Loading {categoryInfo.name.toLowerCase()}...</h3>
+              <p>Please wait while we fetch the latest products</p>
             </div>
           ) : error ? (
-            <div className={styles.error}>
-              <p>Error loading products: {error}</p>
-              <button onClick={() => fetchProducts(categorySlug)} className="btn btn-primary">
+            <div className={styles.errorSection}>
+              <div className={styles.errorIcon}>⚠️</div>
+              <h3>Error Loading Products</h3>
+              <p>{error}</p>
+              <button onClick={() => fetchProducts(categorySlug)} className={styles.retryButton}>
                 Try Again
               </button>
             </div>
           ) : (
-            <ProductGrid
-              products={products}
-              categoryTitle={categoryInfo.name}
-            />
-          )}
-
-          {/* Category-specific content */}
-          {categorySlug === 'iphone-parts' && (
-            <div className={styles.categoryInfo}>
-              <h2>iPhone Repair Parts</h2>
-              <p>We carry genuine Apple parts and high-quality compatible replacements for all iPhone models from iPhone 6 to iPhone 15 series.</p>
-              <div className={styles.features}>
-                <div className={styles.feature}>
-                  <h3>Screen Assemblies</h3>
-                  <p>OLED and LCD screens with touch digitizer included</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>Batteries</h3>
-                  <p>Original capacity batteries with 1-year warranty</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>Charging Ports</h3>
-                  <p>Lightning and USB-C charging assemblies</p>
-                </div>
-              </div>
+            <div className={styles.productsSection}>
+              <ProductGrid
+                products={products}
+                categoryTitle={categoryInfo.name}
+              />
             </div>
           )}
 
-          {categorySlug === 'samsung-parts' && (
-            <div className={styles.categoryInfo}>
-              <h2>Samsung Repair Parts</h2>
-              <p>Complete range of parts for Samsung Galaxy S, Note, A, and Z series devices.</p>
-              <div className={styles.features}>
-                <div className={styles.feature}>
-                  <h3>AMOLED Screens</h3>
-                  <p>High-quality AMOLED displays for all Galaxy models</p>
+          {/* Category Information */}
+          {categorySlug && !loading && !error && (
+            <div className={styles.categoryInfoSection}>
+              <div className={styles.categoryInfo}>
+                <div className={styles.categoryHeader}>
+                  <h2>About {categoryInfo.name}</h2>
+                  <div className={styles.categoryBadge}>
+                    <span className={styles.badgeIcon}>
+                      {categorySlug === 'iphone-parts' ? '🍎' :
+                       categorySlug === 'samsung-parts' ? '📱' :
+                       categorySlug === 'ipad-parts' ? '📱' :
+                       categorySlug === 'repair-tools' ? '🔧' : '📦'}
+                    </span>
+                    <span>Premium Quality</span>
+                  </div>
                 </div>
-                <div className={styles.feature}>
-                  <h3>Batteries</h3>
-                  <p>Original and compatible batteries with warranty</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>USB-C Ports</h3>
-                  <p>Complete charging port assemblies</p>
-                </div>
-              </div>
-            </div>
-          )}
 
-          {categorySlug === 'ipad-parts' && (
-            <div className={styles.categoryInfo}>
-              <h2>iPad Repair Parts</h2>
-              <p>Professional replacement parts for all iPad models including iPad Pro, iPad Air, and iPad Mini.</p>
-              <div className={styles.features}>
-                <div className={styles.feature}>
-                  <h3>LCD Assemblies</h3>
-                  <p>High-resolution LCD screens with digitizer</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>Batteries</h3>
-                  <p>High-capacity batteries for extended use</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>Home Buttons</h3>
-                  <p>Touch ID and Face ID components</p>
-                </div>
-              </div>
-            </div>
-          )}
+                {categorySlug === 'iphone-parts' && (
+                  <div className={styles.categoryContent}>
+                    <p className={styles.categoryDescription}>
+                      We carry genuine Apple parts and high-quality compatible replacements for all iPhone models
+                      from iPhone 6 to iPhone 15 series. Our parts are sourced from trusted manufacturers and
+                      come with comprehensive warranties.
+                    </p>
+                    <div className={styles.categoryFeatures}>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>📱</div>
+                        <div className={styles.featureContent}>
+                          <h4>Screen Assemblies</h4>
+                          <p>OLED and LCD screens with touch digitizer included</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>🔋</div>
+                        <div className={styles.featureContent}>
+                          <h4>Batteries</h4>
+                          <p>Original capacity batteries with 1-year warranty</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>⚡</div>
+                        <div className={styles.featureContent}>
+                          <h4>Charging Ports</h4>
+                          <p>Lightning and USB-C charging assemblies</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-          {categorySlug === 'repair-tools' && (
-            <div className={styles.categoryInfo}>
-              <h2>Professional Repair Tools</h2>
-              <p>Complete toolkit for professional mobile device technicians and DIY enthusiasts.</p>
-              <div className={styles.features}>
-                <div className={styles.feature}>
-                  <h3>Precision Tools</h3>
-                  <p>Screwdrivers, pry tools, and specialized equipment</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>Tool Kits</h3>
-                  <p>Complete sets for specific device repairs</p>
-                </div>
-                <div className={styles.feature}>
-                  <h3>Heat Equipment</h3>
-                  <p>Professional heat guns and adhesive removers</p>
-                </div>
+                {categorySlug === 'samsung-parts' && (
+                  <div className={styles.categoryContent}>
+                    <p className={styles.categoryDescription}>
+                      Complete range of parts for Samsung Galaxy S, Note, A, and Z series devices.
+                      All parts are tested for compatibility and come with manufacturer warranties.
+                    </p>
+                    <div className={styles.categoryFeatures}>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>📱</div>
+                        <div className={styles.featureContent}>
+                          <h4>AMOLED Screens</h4>
+                          <p>High-quality AMOLED displays for all Galaxy models</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>🔋</div>
+                        <div className={styles.featureContent}>
+                          <h4>Batteries</h4>
+                          <p>Original and compatible batteries with warranty</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>⚡</div>
+                        <div className={styles.featureContent}>
+                          <h4>USB-C Ports</h4>
+                          <p>Complete charging port assemblies</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {categorySlug === 'ipad-parts' && (
+                  <div className={styles.categoryContent}>
+                    <p className={styles.categoryDescription}>
+                      Professional replacement parts for all iPad models including iPad Pro, iPad Air, and iPad Mini.
+                      All parts are designed for easy installation and maximum compatibility.
+                    </p>
+                    <div className={styles.categoryFeatures}>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>📱</div>
+                        <div className={styles.featureContent}>
+                          <h4>LCD Assemblies</h4>
+                          <p>High-resolution LCD screens with digitizer</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>🔋</div>
+                        <div className={styles.featureContent}>
+                          <h4>Batteries</h4>
+                          <p>High-capacity batteries for extended use</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>🏠</div>
+                        <div className={styles.featureContent}>
+                          <h4>Home Buttons</h4>
+                          <p>Touch ID and Face ID components</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {categorySlug === 'repair-tools' && (
+                  <div className={styles.categoryContent}>
+                    <p className={styles.categoryDescription}>
+                      Complete toolkit for professional mobile device technicians and DIY enthusiasts.
+                      All tools are designed for precision work and long-lasting durability.
+                    </p>
+                    <div className={styles.categoryFeatures}>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>🔧</div>
+                        <div className={styles.featureContent}>
+                          <h4>Precision Tools</h4>
+                          <p>Screwdrivers, pry tools, and specialized equipment</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>📦</div>
+                        <div className={styles.featureContent}>
+                          <h4>Tool Kits</h4>
+                          <p>Complete sets for specific device repairs</p>
+                        </div>
+                      </div>
+                      <div className={styles.feature}>
+                        <div className={styles.featureIcon}>🔥</div>
+                        <div className={styles.featureContent}>
+                          <h4>Heat Equipment</h4>
+                          <p>Professional heat guns and adhesive removers</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
 
           {/* Call to Action */}
           <div className={styles.ctaSection}>
-            <h2>Need Help Finding the Right Part?</h2>
-            <p>Our expert technicians are here to help you find the perfect replacement parts for your repair needs.</p>
-            <div className={styles.ctaButtons}>
-              <Link href="/contact" className="btn btn-primary">
-                Contact Support
-              </Link>
-              <Link href="/products" className="btn btn-secondary">
-                Browse All Products
-              </Link>
+            <div className={styles.ctaContent}>
+              <div className={styles.ctaText}>
+                <h2>Need Help Finding the Right Part?</h2>
+                <p>Our expert technicians are here to help you find the perfect replacement parts for your repair needs.</p>
+              </div>
+              <div className={styles.ctaButtons}>
+                <Link href="/contact" className={styles.ctaPrimary}>
+                  <span>Contact Support</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </Link>
+                <Link href="/products" className={styles.ctaSecondary}>
+                  <span>Browse All Products</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 18l6-6-6-6"/>
+                  </svg>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

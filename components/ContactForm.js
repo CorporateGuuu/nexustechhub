@@ -27,14 +27,23 @@ const ContactForm = () => {
     setSubmitStatus(null);
 
     try {
-      // For development, simulate API call
-      if (process.env.NODE_ENV === 'development') {
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate network delay
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          inquiryType: formData.subject.toLowerCase().replace(' ', '_')
+        }),
+      });
 
-        // Mock successful submission
+      const data = await response.json();
+
+      if (response.ok) {
         setSubmitStatus({
           type: 'success',
-          message: 'Thank you for your message! We\'ll get back to you within 24 hours.'
+          message: data.message || 'Thank you for your message! We\'ll get back to you within 24 hours.'
         });
 
         // Reset form
@@ -46,44 +55,13 @@ const ContactForm = () => {
           message: ''
         });
       } else {
-        // Production API call
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to send message');
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-          setSubmitStatus({
-            type: 'success',
-            message: 'Thank you for your message! We\'ll get back to you within 24 hours.'
-          });
-
-          // Reset form
-          setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            subject: '',
-            message: ''
-          });
-        } else {
-          throw new Error(data.message || 'Failed to send message');
-        }
+        throw new Error(data.message || 'Failed to send message');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus({
         type: 'error',
-        message: 'Sorry, there was an error sending your message. Please try again or contact us directly.'
+        message: error.message || 'Sorry, there was an error sending your message. Please try again or contact us directly.'
       });
     } finally {
       setIsSubmitting(false);
