@@ -105,51 +105,14 @@ const Header = () => {
         }
       ]
     },
-    {
-      id: 5,
-      title: 'Services',
-      url: '/services',
-      submenu: [
-        {
-          title: 'Business Services',
-          items: [
-            { title: 'Bulk Ordering', url: '/services/bulk-ordering', count: '' },
-            { title: 'Custom Orders', url: '/services/custom-orders', count: '' },
-            { title: 'Technical Support', url: '/services/support', count: '' },
-          ]
-        },
-        {
-          title: 'Other Services',
-          items: [
-            { title: 'LCD Buyback', url: '/lcd-buyback', count: '' },
-            { title: 'Repair Training', url: '/services/training', count: '' },
-            { title: 'Warranty Claims', url: '/services/warranty', count: '' },
-          ]
-        }
-      ]
-    }
+
   ];
 
 
 
   return (
     <header className={styles.header}>
-      {/* Top Bar */}
-      <div className={styles.topBar}>
-        <div className={styles.container}>
-          <div className={styles.topBarContent}>
-            <div className={styles.contactInfo}>
-              <span>+971 58 553 1029</span>
-              <span>sales@nexustechhub.com</span>
-            </div>
-            <div className={styles.topBarLinks}>
-              <Link href="/lcd-buyback">LCD Buyback</Link>
-              <Link href="/services">Services</Link>
-              <Link href="/support">Support</Link>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Main Header */}
       <div className={styles.mainHeader}>
@@ -165,7 +128,6 @@ const Header = () => {
               />
               <div className={styles.logoText}>
                 <span className={styles.logoTitle}>Nexus Tech Hub</span>
-                <span className={styles.logoSubtitle}>Wholesale Parts</span>
               </div>
             </Link>
           </div>

@@ -101,7 +101,7 @@ export default function IPhoneParts() {
             <div className={styles.categoryStats}>
               <span className={styles.stat}>500+ Products</span>
               <span className={styles.stat}>Bulk Discounts Available</span>
-              <span className={styles.stat}>1 Year Warranty</span>
+              <span className={styles.stat}>30 Days Warranty</span>
             </div>
           </div>
           <div className={styles.categoryImage}>
@@ -186,7 +186,7 @@ export default function IPhoneParts() {
             <div className={styles.feature}>
               <div className={styles.featureIcon}>🛡️</div>
               <h3>Quality Guarantee</h3>
-              <p>1 year warranty on all parts with technical support</p>
+              <p>30 days warranty on all parts with technical support</p>
             </div>
             <div className={styles.feature}>
               <div className={styles.featureIcon}>🚚</div>

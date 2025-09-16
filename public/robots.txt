@@ -8,8 +8,7 @@ Disallow: /api/
 Disallow: /unauthorized
 
 # Host
-Host: https://nexustechhub.netlify.app
+Host: https://nexustechhub.com
 
 # Sitemaps
-Sitemap: https://nexustechhub.netlify.app/sitemap.xml
 Sitemap: https://nexustechhub.com/sitemap.xml
