@@ -6,11 +6,11 @@ import styles from './Layout.module.css';
 
 export default function Layout({ children, title, description }) {
   const pageTitle = title 
-    ? `${title} | Nexus TechHub`
-    : 'Nexus TechHub - Professional Repair Parts & Tools';
+    ? `${title} | Nexus Tech Hub`
+    : 'Nexus Tech Hub - Professional Repair Parts & Tools';
 
-  const pageDescription = description || 
-    'Nexus TechHub offers high-quality mobile device parts and repair tools for professionals and DIY enthusiasts in UAE.';
+  const pageDescription = description ||
+    'Nexus Tech Hub offers high-quality mobile device parts and repair tools for professionals and DIY enthusiasts in UAE.';
 
   return (
     <div className={styles.layout}>
@@ -33,7 +33,7 @@ export default function Layout({ children, title, description }) {
         <meta property="twitter:image" content="/images/og-image.jpg" />
         
         {/* Business Information */}
-        <meta name="author" content="Nexus TechHub" />
+        <meta name="author" content="Nexus Tech Hub" />
         <meta name="contact" content="+971 58 553 1029" />
         <meta name="location" content="Compass Building, Al Shohada Road, AL Hamra Industrial Zone-FZ, Ras Al Khaimah, United Arab Emirates" />
       </Head>

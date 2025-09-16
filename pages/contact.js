@@ -10,8 +10,8 @@ export default function Contact() {
   return (
     <>
       <SEOHead
-        title="Contact Nexus TechHub - Professional Mobile Repair Parts Support UAE"
-        description="Get in touch with Nexus TechHub for professional mobile repair parts, technical support, and bulk order inquiries. Located in Ras Al Khaimah, UAE."
+        title="Contact Nexus Tech Hub - Professional Mobile Repair Parts Support UAE"
+        description="Get in touch with Nexus Tech Hub for professional mobile repair parts, technical support, and bulk order inquiries. Located in Ras Al Khaimah, UAE."
         keywords="contact Nexus TechHub, mobile repair parts support, UAE, Ras Al Khaimah, technical support, iPhone parts, Samsung parts"
         canonicalUrl="https://nexustechhub.netlify.app/contact"
       />
@@ -19,7 +19,7 @@ export default function Contact() {
       <Header />
       <div className={styles.contactContainer}>
         <div className={styles.contactHeader}>
-          <h1>Contact Nexus TechHub</h1>
+          <h1>Contact Nexus Tech Hub</h1>
           <p>Get in touch with our expert team for professional repair parts, technical support, and bulk order inquiries.</p>
         </div>
 
@@ -125,7 +125,7 @@ export default function Contact() {
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Nexus TechHub Location - Ras Al Khaimah, UAE"
+            title="Nexus Tech Hub Location - Ras Al Khaimah, UAE"
           ></iframe>
         </div>
       </div>

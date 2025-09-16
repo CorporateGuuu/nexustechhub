@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { analytics } from '../components/Analytics';
 import { logger } from '../components/Logger';
 
@@ -37,17 +37,17 @@ const initialState = {
 function cartReducer(state, action) {
   switch (action.type) {
     case CART_ACTIONS.ADD_ITEM: {
-      const { product, quantity = 1, options = {} } = action.payload;
+      const { product, quantity = 1, options = {}, cartItemId } = action.payload;
       const existingItemIndex = state.items.findIndex(
-        item => item.id === product.id && 
+        item => item.id === product.id &&
         JSON.stringify(item.options) === JSON.stringify(options)
       );
 
       let newItems;
       if (existingItemIndex >= 0) {
         // Update existing item quantity
-        newItems = state.items.map((item, index) => 
-          index === existingItemIndex 
+        newItems = state.items.map((item, index) =>
+          index === existingItemIndex
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -55,6 +55,7 @@ function cartReducer(state, action) {
         // Add new item
         const newItem = {
           id: product.id,
+          cart_item_id: cartItemId,
           sku: product.sku,
           name: product.name,
           price: getCustomerPrice(product, state.customerType),
@@ -63,8 +64,8 @@ function cartReducer(state, action) {
           category: product.category,
           quantity,
           options,
-          inStock: product.inStock,
-          maxQuantity: product.maxQuantity || 999,
+          inStock: product.stock > 0,
+          maxQuantity: product.stock || 999,
           addedAt: new Date().toISOString()
         };
         newItems = [...state.items, newItem];
@@ -180,63 +181,202 @@ function calculateTotals(state) {
 // Cart Provider Component
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [user, setUser] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Load cart from localStorage on mount
+  // Generate session ID for guest users
   useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem('nexus-cart');
-      if (savedCart) {
-        const cartData = JSON.parse(savedCart);
-        dispatch({ type: CART_ACTIONS.LOAD_CART, payload: cartData });
-      }
-    } catch (error) {
-      console.error('Failed to load cart from localStorage', error);
+    let session = localStorage.getItem('cart-session-id');
+    if (!session) {
+      session = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('cart-session-id', session);
     }
+    setSessionId(session);
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  // Load cart from API on mount
   useEffect(() => {
-    try {
-      localStorage.setItem('nexus-cart', JSON.stringify(state));
-    } catch (error) {
-      console.error('Failed to save cart to localStorage', error);
+    if (sessionId) {
+      loadCartFromAPI();
     }
-  }, [state]);
+  }, [sessionId, user]);
+
+  // Load cart from API
+  const loadCartFromAPI = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/cart?user_id=${user?.id || ''}&session_id=${sessionId}`);
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        dispatch({ type: CART_ACTIONS.LOAD_CART, payload: {
+          items: result.data.items || [],
+          customerType: state.customerType
+        }});
+      }
+    } catch (error) {
+      console.error('Failed to load cart from API:', error);
+      // Fallback to localStorage
+      try {
+        const savedCart = localStorage.getItem('nexus-cart');
+        if (savedCart) {
+          const cartData = JSON.parse(savedCart);
+          dispatch({ type: CART_ACTIONS.LOAD_CART, payload: cartData });
+        }
+      } catch (localError) {
+        console.error('Failed to load cart from localStorage:', localError);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Sync cart changes to API
+  const syncCartToAPI = async (cartData) => {
+    try {
+      // This would be called after local state updates to sync with API
+      // For now, we'll keep it simple and sync on specific actions
+    } catch (error) {
+      console.error('Failed to sync cart to API:', error);
+    }
+  };
 
   // Cart actions
-  const addToCart = (product, quantity = 1, options = {}) => {
-    dispatch({
-      type: CART_ACTIONS.ADD_ITEM,
-      payload: { product, quantity, options }
-    });
-  };
+  const addToCart = async (product, quantity = 1, options = {}) => {
+    try {
+      setIsLoading(true);
 
-  const removeFromCart = (id, options = {}) => {
-    const item = state.items.find(item => 
-      item.id === id && JSON.stringify(item.options) === JSON.stringify(options)
-    );
-    
-    if (item) {
-      dispatch({ type: CART_ACTIONS.REMOVE_ITEM, payload: { id, options } });
-      
-      analytics.trackPurchase('remove_from_cart', {
-        item_id: id,
-        item_name: item.name,
-        value: item.price * item.quantity,
-        currency: 'AED'
+      // First update local state for immediate UI feedback
+      dispatch({
+        type: CART_ACTIONS.ADD_ITEM,
+        payload: { product, quantity, options }
       });
 
-      logger.info('Item removed from cart', { productId: id });
+      // Then sync with API
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user?.id,
+          product_id: product.id,
+          quantity: quantity,
+          variant_id: options.variant_id,
+          session_id: sessionId
+        })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        console.error('Failed to add item to cart:', result.error);
+        // Revert local state on API failure
+        loadCartFromAPI();
+      } else {
+        analytics.trackPurchase('add_to_cart', {
+          item_id: product.id,
+          item_name: product.name,
+          value: product.price * quantity,
+          currency: 'AED'
+        });
+        logger.info('Item added to cart', { productId: product.id, quantity });
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      // Revert local state on error
+      loadCartFromAPI();
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const updateQuantity = (id, quantity, options = {}) => {
-    dispatch({ 
-      type: CART_ACTIONS.UPDATE_QUANTITY, 
-      payload: { id, quantity, options } 
-    });
-    
-    logger.info('Cart quantity updated', { productId: id, quantity });
+  const removeFromCart = async (id, options = {}) => {
+    try {
+      setIsLoading(true);
+
+      // Find the cart item to get its database ID
+      const cartItem = state.items.find(item =>
+        item.id === id && JSON.stringify(item.options) === JSON.stringify(options)
+      );
+
+      if (cartItem) {
+        // Update local state first
+        dispatch({ type: CART_ACTIONS.REMOVE_ITEM, payload: { id, options } });
+
+        // Then sync with API
+        const response = await fetch(`/api/cart/${cartItem.cart_item_id}`, {
+          method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          console.error('Failed to remove item from cart:', result.error);
+          // Revert local state on API failure
+          loadCartFromAPI();
+        } else {
+          analytics.trackPurchase('remove_from_cart', {
+            item_id: id,
+            item_name: cartItem.name,
+            value: cartItem.price * cartItem.quantity,
+            currency: 'AED'
+          });
+          logger.info('Item removed from cart', { productId: id });
+        }
+      }
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      // Revert local state on error
+      loadCartFromAPI();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateQuantity = async (id, quantity, options = {}) => {
+    try {
+      setIsLoading(true);
+
+      // Find the cart item to get its database ID
+      const cartItem = state.items.find(item =>
+        item.id === id && JSON.stringify(item.options) === JSON.stringify(options)
+      );
+
+      if (cartItem) {
+        // Update local state first
+        dispatch({
+          type: CART_ACTIONS.UPDATE_QUANTITY,
+          payload: { id, quantity, options }
+        });
+
+        // Then sync with API
+        const response = await fetch(`/api/cart/${cartItem.cart_item_id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ quantity })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+          console.error('Failed to update cart item:', result.error);
+          // Revert local state on API failure
+          loadCartFromAPI();
+        } else {
+          logger.info('Cart quantity updated', { productId: id, quantity });
+        }
+      }
+    } catch (error) {
+      console.error('Error updating cart quantity:', error);
+      // Revert local state on error
+      loadCartFromAPI();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const clearCart = () => {

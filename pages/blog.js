@@ -60,11 +60,11 @@ function RepairGuides() {
   return (
     <>
       <Head>
-        <title>Repair Guides - Midas Technical Solutions</title>
+        <title>Repair Guides - Nexus Tech Hub</title>
         <meta name="description" content="Step-by-step repair guides for phones, tablets, and laptops. Learn how to fix your devices with our expert tutorials." />
       </Head>
       
-      <Layout title="Repair Guides - Midas Technical Solutions" description="Step-by-step repair guides for phones, tablets, and laptops. Learn how to fix your devices with our expert tutorials.">
+      <Layout title="Repair Guides - Nexus Tech Hub" description="Step-by-step repair guides for phones, tablets, and laptops. Learn how to fix your devices with our expert tutorials.">
 
         <div className="container" style={{ padding: '40px 20px' }}>
           <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Repair Guides</h1>

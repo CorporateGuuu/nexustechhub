@@ -5,8 +5,8 @@ import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
 function PrivacyPolicy() {
   return (
     <Layout
-      title="Privacy Policy - Midas Technical Solutions"
-      description="Learn about how Midas Technical Solutions collects, uses, and protects your personal information."
+      title="Privacy Policy - Nexus Tech Hub"
+      description="Learn about how Nexus Tech Hub collects, uses, and protects your personal information."
     >
       <main>
         <div className="container" style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto' }}>
