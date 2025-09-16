@@ -4,16 +4,19 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
+import { useCart } from '../../contexts/CartContext';
 import styles from '../../styles/ProductDetail.module.css';
 
 export default function ProductDetail() {
   const router = useRouter();
   const { id } = router.query;
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   // Get product by ID from mock data (same as category page)
   const getProductById = (productId) => {
@@ -1012,9 +1015,19 @@ export default function ProductDetail() {
     setQuantity(prev => Math.max(1, prev + change));
   };
 
-  const handleAddToCart = () => {
-    // Add to cart functionality would go here
-    alert(`Added ${quantity} ${product.name} to cart!`);
+  const handleAddToCart = async () => {
+    if (!product) return;
+
+    setIsAddingToCart(true);
+    try {
+      await addToCart(product, quantity);
+      // Success feedback could be added here
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      // Error handling could be added here
+    } finally {
+      setIsAddingToCart(false);
+    }
   };
 
   if (loading) {
@@ -1151,9 +1164,10 @@ export default function ProductDetail() {
               <button
                 className={styles.addToCartBtn}
                 onClick={handleAddToCart}
-                disabled={product.stock === 0}
+                disabled={product.stock === 0 || isAddingToCart}
               >
-                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                {product.stock === 0 ? 'Out of Stock' :
+                 isAddingToCart ? 'Adding...' : 'Add to Cart'}
               </button>
 
               <div className={styles.purchaseInfo}>
