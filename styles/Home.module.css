@@ -161,7 +161,7 @@
 
 .originalPrice {
   font-size: 1rem;
-  color: #9ca3af;
+  color: #374151;
   text-decoration: line-through;
 }
 
@@ -338,7 +338,7 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
-.categoryContent h3 {
+.categoryTitle {
   font-size: 1.5rem;
   font-weight: 700;
   color: #1e293b;

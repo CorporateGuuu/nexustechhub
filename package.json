@@ -29,7 +29,8 @@
     "audit:fix": "npm audit fix",
     "precommit": "npm run lint && npm run test",
     "validate:build": "echo 'Build validation completed'",
-    "analyze": "cross-env ANALYZE=true npm run build"
+    "analyze": "cross-env ANALYZE=true npm run build",
+    "analyze:bundle": "cross-env ANALYZE=true next build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -94,10 +95,12 @@
     "@cloudflare/workers-types": "^4.20250430.0",
     "@netlify/plugin-nextjs": "^5.11.2",
     "@netlify/plugin-sitemap": "^0.8.1",
+    "@next/bundle-analyzer": "^15.5.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.5.1",
     "babel-jest": "^29.7.0",
+    "cross-env": "^10.0.0",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "cssnano": "^7.0.6",
     "eslint": "^8.57.1",
@@ -112,6 +115,7 @@
     "jest-watch-typeahead": "^2.2.2",
     "lint-staged": "^15.2.0",
     "msw": "^2.0.11",
+    "netlify-plugin-cypress": "^2.2.1",
     "netlify-plugin-sitemap": "npm:@netlify/plugin-sitemap@^0.8.1",
     "next-pwa": "^5.6.0",
     "postcss": "^8.5.3",

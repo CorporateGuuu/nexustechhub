@@ -6,6 +6,7 @@
   NODE_VERSION = "18"
   NODE_ENV = "production"
   NEXTAUTH_URL = "https://nexustechhub.netlify.app"
+  CYPRESS_BASE_URL = "https://nexustechhub.netlify.app"
   # Secrets scanning configuration
   # Exclude documentation, setup files, env files, and build output from secrets scanning
   SECRETS_SCAN_OMIT_PATHS = "docs/,lib/,Scripts/,.env*,.netlify/"
@@ -40,6 +41,17 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Optimize JavaScript bundle caching
+[[headers]]
+  for = "/_next/static/chunks/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_next/static/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # Security headers for API routes
 [[headers]]
   for = "/api/*"
@@ -67,3 +79,7 @@
 # Cypress plugin for E2E testing
 [[plugins]]
   package = "netlify-plugin-cypress"
+  [plugins.inputs]
+    enable = true
+    record = false
+    spec = "cypress/e2e/**/*.cy.js"

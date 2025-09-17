@@ -1074,6 +1074,7 @@ const Header = () => {
                   <button
                     onClick={() => setIsPreOwnedModalOpen(true)}
                     className={styles.navLink}
+                    aria-label="Open pre-owned devices modal"
                     style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 'inherit', color: 'inherit' }}
                   >
                     {item.title}
@@ -1126,8 +1127,8 @@ const Header = () => {
                 placeholder="Search products..."
                 className={styles.searchInput}
               />
-              <button type="submit" className={styles.searchButton}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <button type="submit" className={styles.searchButton} aria-label="Search products">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <circle cx="11" cy="11" r="8"></circle>
                   <path d="M21 21l-4.35-4.35"></path>
                 </svg>
@@ -1137,9 +1138,9 @@ const Header = () => {
 
           {/* Header Actions */}
           <div className={styles.headerActions}>
-            <Link href="/cart" className={styles.cartLink}>
+            <Link href="/cart" className={styles.cartLink} aria-label="Shopping cart">
               <div className={styles.cartIcon}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <circle cx="9" cy="21" r="1"></circle>
                   <circle cx="20" cy="21" r="1"></circle>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -1148,8 +1149,8 @@ const Header = () => {
               <span>Cart</span>
             </Link>
 
-            <Link href="/account" className={styles.accountLink}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <Link href="/account" className={styles.accountLink} aria-label="User account">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
