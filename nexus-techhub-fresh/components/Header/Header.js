@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import PreOwnedModal from './PreOwnedModal';
+import PreOwnedModal from '../PreOwnedModal';
 import styles from './Header.module.css';
 
 const Header = () => {
