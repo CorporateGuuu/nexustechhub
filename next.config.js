@@ -3,6 +3,21 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 module.exports = withBundleAnalyzer({
+  // Content Security Policy for XSS protection
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.stripe.com https://js.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com;"
+          }
+        ]
+      }
+    ];
+  },
+
   // Performance optimizations
   images: {
     domains: ['localhost'],

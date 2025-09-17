@@ -87,21 +87,13 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid #ffffff;
+  border: 2px solid transparent;
+  border-image: linear-gradient(135deg, #3b82f6, #7c3aed) 1;
   flex-shrink: 0;
   position: relative;
 }
 
-.cart_item_image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  padding: 2px;
-  background: linear-gradient(135deg, #3b82f6, #7c3aed);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-}
+
 
 .cart_item_image img {
   width: 100%;

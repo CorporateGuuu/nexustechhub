@@ -5,7 +5,7 @@
 [build.environment]
   NODE_VERSION = "18"
   NODE_ENV = "production"
-  NEXTAUTH_URL = "https://nexustechhub.netlify.app"
+
   CYPRESS_BASE_URL = "https://nexustechhub.netlify.app"
   # Secrets scanning configuration
   # Exclude documentation, setup files, env files, and build output from secrets scanning

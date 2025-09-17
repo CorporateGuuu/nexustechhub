@@ -4,7 +4,6 @@ import { CartProvider } from '../contexts/CartContext';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // Lazy load third-party components
-const SessionProvider = React.lazy(() => import('next-auth/react').then(mod => ({ default: mod.SessionProvider })));
 const WebVitals = React.lazy(() => import('../components/WebVitals'));
 const ChatBot = React.lazy(() => import('../components/ChatBot'));
 
@@ -74,13 +73,11 @@ function ThirdPartyProviders({ children }) {
         {children}
       </CartProvider>
     }>
-      <SessionProvider>
-        <CartProvider>
-          {children}
-          <WebVitals />
-          <ChatBot />
-        </CartProvider>
-      </SessionProvider>
+      <CartProvider>
+        {children}
+        <WebVitals />
+        <ChatBot />
+      </CartProvider>
     </Suspense>
   );
 }
