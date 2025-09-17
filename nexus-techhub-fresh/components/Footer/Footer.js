@@ -164,11 +164,9 @@ const Footer = () => {
             <h4 className={styles.footerHeading}>Shipping Partners</h4>
             <div className={styles.shippingInfo}>
               <div className={styles.shippingItem}>
-                <span className={styles.shippingLogo}>FedEx</span>
                 <span>FedEx</span>
               </div>
               <div className={styles.shippingItem}>
-                <span className={styles.shippingLogo}>UPS</span>
                 <span>UPS</span>
               </div>
             </div>
