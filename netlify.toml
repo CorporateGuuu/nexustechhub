@@ -63,3 +63,7 @@
 # Functions configuration
 [functions]
   directory = "netlify/functions"
+
+# Cypress plugin for E2E testing
+[[plugins]]
+  package = "netlify-plugin-cypress"
