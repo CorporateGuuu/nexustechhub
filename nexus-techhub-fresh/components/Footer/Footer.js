@@ -159,6 +159,21 @@ const Footer = () => {
             </div>
           </div>
 
+          {/* Shipping Info */}
+          <div className={styles.footerSection}>
+            <h4 className={styles.footerHeading}>Shipping Partners</h4>
+            <div className={styles.shippingInfo}>
+              <div className={styles.shippingItem}>
+                <span className={styles.shippingLogo}>🚚</span>
+                <span>FedEx</span>
+              </div>
+              <div className={styles.shippingItem}>
+                <span className={styles.shippingLogo}>📦</span>
+                <span>UPS</span>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -278,6 +293,9 @@ const Footer = () => {
               <span className={styles.paymentIcon}>💳</span>
               <span className={styles.paymentIcon}>💰</span>
               <span className={styles.paymentIcon}>🏦</span>
+              <span className={styles.paymentIcon}>📱</span>
+              <span className={styles.paymentIcon}>₿</span>
+              <span className={styles.paymentIcon}>💎</span>
             </div>
           </div>
         </div>
