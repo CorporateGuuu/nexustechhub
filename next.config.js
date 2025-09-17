@@ -1,6 +1,13 @@
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-});
+let withBundleAnalyzer;
+
+try {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  });
+} catch (error) {
+  // Fallback if bundle analyzer is not available
+  withBundleAnalyzer = (config) => config;
+}
 
 module.exports = withBundleAnalyzer({
   // Content Security Policy for XSS protection
