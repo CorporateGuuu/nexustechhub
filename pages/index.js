@@ -183,7 +183,7 @@ export default function Home() {
                       e.target.src = '/images/categories/placeholder.svg';
                       e.target.style.opacity = '0.7';
                     }}
-                    loading="lazy"
+                    loading={index < 2 ? "eager" : "lazy"}
                   />
                   <div className={styles.categoryOverlay}>
                     <span className={styles.categoryOverlayBtn}>Shop Now</span>
@@ -199,7 +199,7 @@ export default function Home() {
                        category.name === 'Repair Tools' ? 'RT' : 'PR'}
                     </div>
                     <div>
-                      <h3>{category.name}</h3>
+                      <div className={styles.categoryTitle}>{category.name}</div>
                     </div>
                   </div>
                   <p>{category.description}</p>
