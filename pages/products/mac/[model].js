@@ -5,7 +5,7 @@ import Layout from '../../../nexus-techhub-fresh/components/Layout/Layout';
 import { useCart } from '../../../contexts/CartContext';
 import styles from '../../../styles/ModelPage.module.css';
 
-export default function IPadModel() {
+export default function MacModel() {
   const router = useRouter();
   const { model } = router.query;
   const { addToCart } = useCart();
@@ -13,48 +13,78 @@ export default function IPadModel() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('screens');
 
-  // Mock data for different iPad models
+  // Mock data for different Mac models
   const getModelData = (modelSlug) => {
     const modelMap = {
-      'ipad-pro-13-7th-gen-2024': {
-        name: 'iPad Pro 13" 7th Gen (2024)',
-        displayName: 'iPad Pro 13" (7th Gen 2024)',
-        releaseYear: '2024',
-        display: '13" Ultra Retina XDR OLED',
+      'imac-27-a2115': {
+        name: 'iMac 27" (A2115)',
+        displayName: 'iMac 27" (A2115)',
+        releaseYear: '2020',
+        display: '27" Retina 5K',
+        processor: 'Intel Core i5/i7',
+        memory: ['8GB', '16GB', '32GB', '64GB'],
         storage: ['256GB', '512GB', '1TB', '2TB'],
+        colors: ['Silver', 'Space Gray']
+      },
+      'imac-27-a1862': {
+        name: 'iMac 27" (A1862)',
+        displayName: 'iMac 27" (A1862)',
+        releaseYear: '2019',
+        display: '27" Retina 5K',
+        processor: 'Intel Core i5/i7/i9',
+        memory: ['8GB', '16GB', '32GB', '64GB'],
+        storage: ['256GB', '512GB', '1TB', '2TB', '3TB'],
+        colors: ['Silver', 'Space Gray']
+      },
+      'imac-24-a2438': {
+        name: 'iMac 24" (A2438)',
+        displayName: 'iMac 24" (A2438)',
+        releaseYear: '2021',
+        display: '24" Retina 4.5K',
+        processor: 'Apple M1',
+        memory: ['8GB', '16GB'],
+        storage: ['256GB', '512GB', '1TB', '2TB'],
+        colors: ['Blue', 'Green', 'Pink', 'Silver', 'Yellow', 'Orange', 'Purple']
+      },
+      'macbook-pro-16-a2991': {
+        name: 'MacBook Pro 16" (A2991)',
+        displayName: 'MacBook Pro 16" (A2991)',
+        releaseYear: '2023',
+        display: '16.2" Liquid Retina XDR',
+        processor: 'Apple M3 Pro/M3 Max',
+        memory: ['18GB', '36GB', '48GB'],
+        storage: ['512GB', '1TB', '2TB', '4TB', '8TB'],
         colors: ['Space Black', 'Silver']
       },
-      'ipad-pro-12-9-6th-gen-2022': {
-        name: 'iPad Pro 12.9" 6th Gen (2022)',
-        displayName: 'iPad Pro 12.9" (6th Gen 2022)',
-        releaseYear: '2022',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['128GB', '256GB', '512GB', '1TB', '2TB'],
-        colors: ['Space Gray', 'Silver']
-      },
-      'ipad-pro-12-9-5th-gen-2021': {
-        name: 'iPad Pro 12.9" 5th Gen (2021)',
-        displayName: 'iPad Pro 12.9" (5th Gen 2021)',
+      'macbook-pro-16-a2780': {
+        name: 'MacBook Pro 16" (A2780)',
+        displayName: 'MacBook Pro 16" (A2780)',
         releaseYear: '2021',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['128GB', '256GB', '512GB', '1TB', '2TB'],
+        display: '16.2" Liquid Retina XDR',
+        processor: 'Apple M1 Pro/M1 Max',
+        memory: ['16GB', '32GB', '64GB'],
+        storage: ['512GB', '1TB', '2TB', '4TB', '8TB'],
         colors: ['Space Gray', 'Silver']
       },
-      'ipad-pro-12-9-4th-gen-2020': {
-        name: 'iPad Pro 12.9" 4th Gen (2020)',
-        displayName: 'iPad Pro 12.9" (4th Gen 2020)',
-        releaseYear: '2020',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['128GB', '256GB', '512GB', '1TB'],
-        colors: ['Space Gray', 'Silver']
+      'macbook-air-15-a2941': {
+        name: 'MacBook Air 15" (A2941)',
+        displayName: 'MacBook Air 15" (A2941)',
+        releaseYear: '2023',
+        display: '15.3" Liquid Retina',
+        processor: 'Apple M2',
+        memory: ['8GB', '16GB', '24GB'],
+        storage: ['256GB', '512GB', '1TB', '2TB'],
+        colors: ['Midnight', 'Starlight', 'Silver', 'Space Gray']
       },
-      'ipad-pro-12-9-3rd-gen-2018': {
-        name: 'iPad Pro 12.9" 3rd Gen (2018)',
-        displayName: 'iPad Pro 12.9" (3rd Gen 2018)',
-        releaseYear: '2018',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['64GB', '256GB', '512GB', '1TB'],
-        colors: ['Space Gray', 'Silver', 'Gold']
+      'macbook-air-13-a2681': {
+        name: 'MacBook Air 13" (A2681)',
+        displayName: 'MacBook Air 13" (A2681)',
+        releaseYear: '2022',
+        display: '13.6" Liquid Retina',
+        processor: 'Apple M2',
+        memory: ['8GB', '16GB', '24GB'],
+        storage: ['256GB', '512GB', '1TB', '2TB'],
+        colors: ['Midnight', 'Starlight', 'Silver', 'Space Gray']
       }
     };
 
@@ -62,9 +92,11 @@ export default function IPadModel() {
       name: modelSlug.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
       displayName: modelSlug.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
       releaseYear: '2022',
-      display: '10.9" Liquid Retina',
-      storage: ['64GB', '128GB', '256GB'],
-      colors: ['Space Gray', 'Silver', 'Blue', 'Pink', 'Green']
+      display: '13.3" Retina',
+      processor: 'Apple M2',
+      memory: ['8GB', '16GB'],
+      storage: ['256GB', '512GB', '1TB'],
+      colors: ['Space Gray', 'Silver']
     };
   };
 
@@ -77,52 +109,52 @@ export default function IPadModel() {
         {
           id: `${modelSlug}-screen`,
           name: `${modelData.displayName} Screen Assembly`,
-          price: modelSlug.includes('pro-13') ? 599.99 : modelSlug.includes('pro-12-9') ? 499.99 : 249.99,
+          price: modelSlug.includes('27') ? 899.99 : modelSlug.includes('16') ? 699.99 : 499.99,
           image: `/images/products/${modelSlug}-screen.jpg`,
           compatibility: modelData.displayName,
-          type: modelSlug.includes('2024') || modelSlug.includes('2022') || modelSlug.includes('2021') ? 'Liquid Retina XDR' : 'Retina LCD',
+          type: modelSlug.includes('retina') || modelSlug.includes('liquid') ? 'Retina LCD' : 'LCD Display',
+          stock: 8,
+          rating: 4.7,
+          reviews: 45
+        }
+      ],
+      keyboards: [
+        {
+          id: `${modelSlug}-keyboard`,
+          name: `${modelData.displayName} Keyboard Assembly`,
+          price: modelSlug.includes('pro') ? 249.99 : 199.99,
+          image: `/images/products/${modelSlug}-keyboard.jpg`,
+          compatibility: modelData.displayName,
+          type: modelSlug.includes('2021') || modelSlug.includes('2023') ? 'Magic Keyboard with Touch ID' : 'Magic Keyboard',
           stock: 15,
-          rating: 4.8,
-          reviews: 89
+          rating: 4.5,
+          reviews: 78
         }
       ],
       batteries: [
         {
           id: `${modelSlug}-battery`,
           name: `${modelData.displayName} Battery Replacement`,
-          price: modelSlug.includes('pro') ? 129.99 : 99.99,
+          price: modelSlug.includes('16') ? 199.99 : modelSlug.includes('15') ? 179.99 : 149.99,
           image: `/images/products/${modelSlug}-battery.jpg`,
           capacity: 'Original Apple capacity',
           compatibility: modelData.displayName,
-          stock: 25,
+          stock: 12,
           rating: 4.6,
-          reviews: 134
-        }
-      ],
-      cameras: [
-        {
-          id: `${modelSlug}-camera`,
-          name: `${modelData.displayName} Front Camera Assembly`,
-          price: 79.99,
-          image: `/images/products/${modelSlug}-camera.jpg`,
-          type: 'Ultra Wide front camera with Center Stage',
-          compatibility: modelData.displayName,
-          stock: 35,
-          rating: 4.5,
           reviews: 67
         }
       ],
       charging: [
         {
           id: `${modelSlug}-charging`,
-          name: `${modelData.displayName} USB-C Port`,
-          price: 45.99,
+          name: `${modelData.displayName} Charging Port`,
+          price: 89.99,
           image: `/images/products/${modelSlug}-charging.jpg`,
-          type: 'USB-C with Thunderbolt support',
+          type: 'USB-C with Thunderbolt',
           compatibility: modelData.displayName,
-          stock: 40,
+          stock: 20,
           rating: 4.4,
-          reviews: 112
+          reviews: 89
         }
       ]
     };
@@ -148,9 +180,9 @@ export default function IPadModel() {
   };
 
   const categories = [
-    { id: 'screens', name: 'Screens', icon: '📱' },
+    { id: 'screens', name: 'Screens', icon: '🖥️' },
+    { id: 'keyboards', name: 'Keyboards', icon: '⌨️' },
     { id: 'batteries', name: 'Batteries', icon: '🔋' },
-    { id: 'cameras', name: 'Cameras', icon: '📷' },
     { id: 'charging', name: 'Charging Ports', icon: '🔌' }
   ];
 
@@ -168,7 +200,7 @@ export default function IPadModel() {
   return (
     <Layout
       title={`${modelData.displayName} Parts - Professional Repair Components | Nexus Tech Hub`}
-      description={`Complete range of repair parts for ${modelData.displayName}. High-quality screens, batteries, and components with warranty.`}
+      description={`Complete range of repair parts for ${modelData.displayName}. High-quality screens, keyboards, batteries, and components.`}
     >
       <div className={styles.modelPage}>
         {/* Breadcrumb */}
@@ -176,8 +208,6 @@ export default function IPadModel() {
           <Link href="/">Home</Link>
           <span className={styles.separator}>/</span>
           <Link href="/products">Products</Link>
-          <span className={styles.separator}>/</span>
-          <Link href="/products/ipad-parts">iPad Parts</Link>
           <span className={styles.separator}>/</span>
           <span className={styles.current}>{modelData.displayName}</span>
         </div>
@@ -189,6 +219,8 @@ export default function IPadModel() {
             <div className={styles.modelSpecs}>
               <span>📅 Released: {modelData.releaseYear}</span>
               <span>📺 Display: {modelData.display}</span>
+              <span>🖥️ Processor: {modelData.processor}</span>
+              <span>🧠 Memory: {modelData.memory.join(', ')}</span>
               <span>💾 Storage: {modelData.storage.join(', ')}</span>
             </div>
             <div className={styles.modelColors}>
@@ -197,7 +229,7 @@ export default function IPadModel() {
           </div>
           <div className={styles.modelImage}>
             <img
-              src={`/images/tablets/${model}.jpg`}
+              src={`/images/macs/${model}.jpg`}
               alt={modelData.displayName}
               onError={(e) => {
                 e.target.src = '/images/products/placeholder.svg';
@@ -286,27 +318,25 @@ export default function IPadModel() {
 
         {/* Related Models */}
         <div className={styles.relatedModels}>
-          <h2>Other iPad Models</h2>
+          <h2>Other Mac Models</h2>
           <div className={styles.modelsGrid}>
-            <Link href="/products/ipad/ipad-pro-13-7th-gen-2024" className={styles.modelLink}>
-              iPad Pro 13" (2024)
+            <Link href="/products/mac/imac-24-a2438" className={styles.modelLink}>
+              iMac 24" (A2438)
             </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-6th-gen-2022" className={styles.modelLink}>
-              iPad Pro 12.9" (2022)
+            <Link href="/products/mac/macbook-pro-16-a2991" className={styles.modelLink}>
+              MacBook Pro 16" (A2991)
             </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-5th-gen-2021" className={styles.modelLink}>
-              iPad Pro 12.9" (2021)
+            <Link href="/products/mac/macbook-air-15-a2941" className={styles.modelLink}>
+              MacBook Air 15" (A2941)
             </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-4th-gen-2020" className={styles.modelLink}>
-              iPad Pro 12.9" (2020)
+            <Link href="/products/mac/macbook-air-13-a2681" className={styles.modelLink}>
+              MacBook Air 13" (A2681)
             </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-3rd-gen-2018" className={styles.modelLink}>
-              iPad Pro 12.9" (2018)
+            <Link href="/products/mac/imac-27-a2115" className={styles.modelLink}>
+              iMac 27" (A2115)
             </Link>
-          </div>
-          <div className={styles.viewAll}>
-            <Link href="/products/ipad-parts" className={styles.viewAllBtn}>
-              View All iPad Models →
+            <Link href="/products/mac/macbook-pro-16-a2780" className={styles.modelLink}>
+              MacBook Pro 16" (A2780)
             </Link>
           </div>
         </div>
@@ -315,7 +345,7 @@ export default function IPadModel() {
         <div className={styles.supportSection}>
           <div className={styles.supportContent}>
             <h2>Need Help with {modelData.displayName}?</h2>
-            <p>Our technical experts can help you identify the right parts and provide repair guidance.</p>
+            <p>Our technical experts specialize in Mac repairs and can help you identify the right parts.</p>
             <div className={styles.supportActions}>
               <Link href="/services/support" className={styles.supportBtn}>
                 Get Technical Support
@@ -332,18 +362,16 @@ export default function IPadModel() {
 }
 
 export async function getStaticPaths() {
-  // Generate paths for popular iPad models
+  // Generate paths for popular Mac models
   const models = [
-    'ipad-pro-13-7th-gen-2024',
-    'ipad-pro-12-9-6th-gen-2022',
-    'ipad-pro-12-9-5th-gen-2021',
-    'ipad-pro-12-9-4th-gen-2020',
-    'ipad-pro-12-9-3rd-gen-2018',
-    'ipad-pro-11-4th-gen-2022',
-    'ipad-pro-11-3rd-gen-2021',
-    'ipad-pro-11-2nd-gen-2020',
-    'ipad-air-5th-gen-2022',
-    'ipad-air-4th-gen-2020'
+    'imac-27-a2115',
+    'imac-27-a1862',
+    'imac-24-a2438',
+    'macbook-pro-16-a2991',
+    'macbook-pro-16-a2780',
+    'macbook-air-15-a2941',
+    'macbook-air-13-a2681',
+    'macbook-air-13-a2337'
   ];
 
   const paths = models.map(model => ({

@@ -5,66 +5,103 @@ import Layout from '../../../nexus-techhub-fresh/components/Layout/Layout';
 import { useCart } from '../../../contexts/CartContext';
 import styles from '../../../styles/ModelPage.module.css';
 
-export default function IPadModel() {
+export default function AppleModel() {
   const router = useRouter();
   const { model } = router.query;
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('screens');
+  const [selectedCategory, setSelectedCategory] = useState('parts');
 
-  // Mock data for different iPad models
+  // Mock data for different Apple product models
   const getModelData = (modelSlug) => {
     const modelMap = {
-      'ipad-pro-13-7th-gen-2024': {
-        name: 'iPad Pro 13" 7th Gen (2024)',
-        displayName: 'iPad Pro 13" (7th Gen 2024)',
-        releaseYear: '2024',
-        display: '13" Ultra Retina XDR OLED',
-        storage: ['256GB', '512GB', '1TB', '2TB'],
-        colors: ['Space Black', 'Silver']
+      // Apple Watch models
+      'watch-series-9-45mm': {
+        name: 'Apple Watch Series 9 (45MM)',
+        displayName: 'Apple Watch Series 9 (45MM)',
+        category: 'Watch',
+        releaseYear: '2023',
+        display: '45mm Retina LTPO OLED',
+        processor: 'Apple S9',
+        storage: ['64GB'],
+        colors: ['Midnight', 'Starlight', 'Silver', 'Pink', 'Product Red']
       },
-      'ipad-pro-12-9-6th-gen-2022': {
-        name: 'iPad Pro 12.9" 6th Gen (2022)',
-        displayName: 'iPad Pro 12.9" (6th Gen 2022)',
+      'watch-series-9-41mm': {
+        name: 'Apple Watch Series 9 (41MM)',
+        displayName: 'Apple Watch Series 9 (41MM)',
+        category: 'Watch',
+        releaseYear: '2023',
+        display: '41mm Retina LTPO OLED',
+        processor: 'Apple S9',
+        storage: ['64GB'],
+        colors: ['Midnight', 'Starlight', 'Silver', 'Pink', 'Product Red']
+      },
+      'watch-ultra-2-49mm': {
+        name: 'Apple Watch Ultra 2 (49MM)',
+        displayName: 'Apple Watch Ultra 2 (49MM)',
+        category: 'Watch',
+        releaseYear: '2023',
+        display: '49mm Retina LTPO OLED',
+        processor: 'Apple S9',
+        storage: ['64GB'],
+        colors: ['Titanium']
+      },
+      'watch-series-8-45mm': {
+        name: 'Apple Watch Series 8 (45MM)',
+        displayName: 'Apple Watch Series 8 (45MM)',
+        category: 'Watch',
         releaseYear: '2022',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['128GB', '256GB', '512GB', '1TB', '2TB'],
-        colors: ['Space Gray', 'Silver']
+        display: '45mm Retina LTPO OLED',
+        processor: 'Apple S8',
+        storage: ['32GB'],
+        colors: ['Midnight', 'Starlight', 'Silver', 'Pink', 'Product Red']
       },
-      'ipad-pro-12-9-5th-gen-2021': {
-        name: 'iPad Pro 12.9" 5th Gen (2021)',
-        displayName: 'iPad Pro 12.9" (5th Gen 2021)',
+
+      // AirPods models
+      'airpods-pro-2nd-gen': {
+        name: 'AirPods Pro (2nd Gen)',
+        displayName: 'AirPods Pro (2nd Generation)',
+        category: 'AirPods',
+        releaseYear: '2022',
+        features: ['Active Noise Cancellation', 'Transparency Mode', 'Spatial Audio'],
+        colors: ['White']
+      },
+      'airpods-3rd-gen': {
+        name: 'AirPods (3rd Gen)',
+        displayName: 'AirPods (3rd Generation)',
+        category: 'AirPods',
         releaseYear: '2021',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['128GB', '256GB', '512GB', '1TB', '2TB'],
-        colors: ['Space Gray', 'Silver']
+        features: ['Spatial Audio', 'Adaptive EQ'],
+        colors: ['White']
       },
-      'ipad-pro-12-9-4th-gen-2020': {
-        name: 'iPad Pro 12.9" 4th Gen (2020)',
-        displayName: 'iPad Pro 12.9" (4th Gen 2020)',
+      'airpods-max': {
+        name: 'AirPods Max',
+        displayName: 'AirPods Max',
+        category: 'AirPods',
         releaseYear: '2020',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['128GB', '256GB', '512GB', '1TB'],
-        colors: ['Space Gray', 'Silver']
+        features: ['Active Noise Cancellation', 'Spatial Audio', 'Over-ear Design'],
+        colors: ['Space Gray', 'Silver', 'Pink', 'Blue', 'Green']
       },
-      'ipad-pro-12-9-3rd-gen-2018': {
-        name: 'iPad Pro 12.9" 3rd Gen (2018)',
-        displayName: 'iPad Pro 12.9" (3rd Gen 2018)',
-        releaseYear: '2018',
-        display: '12.9" Liquid Retina XDR',
-        storage: ['64GB', '256GB', '512GB', '1TB'],
-        colors: ['Space Gray', 'Silver', 'Gold']
+
+      // iPod models
+      'ipod-touch-7': {
+        name: 'iPod Touch 7th Gen',
+        displayName: 'iPod Touch (7th Generation)',
+        category: 'iPod',
+        releaseYear: '2019',
+        display: '4" Retina',
+        storage: ['32GB', '128GB', '256GB'],
+        colors: ['Space Gray', 'Silver', 'Gold', 'Pink', 'Blue']
       }
     };
 
     return modelMap[modelSlug] || {
       name: modelSlug.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
       displayName: modelSlug.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      releaseYear: '2022',
-      display: '10.9" Liquid Retina',
-      storage: ['64GB', '128GB', '256GB'],
-      colors: ['Space Gray', 'Silver', 'Blue', 'Pink', 'Green']
+      category: 'Apple Product',
+      releaseYear: '2023',
+      colors: ['Black', 'White']
     };
   };
 
@@ -73,61 +110,33 @@ export default function IPadModel() {
   // Parts data for the specific model
   const getPartsForModel = (modelSlug, category) => {
     const baseParts = {
-      screens: [
+      parts: [
         {
-          id: `${modelSlug}-screen`,
-          name: `${modelData.displayName} Screen Assembly`,
-          price: modelSlug.includes('pro-13') ? 599.99 : modelSlug.includes('pro-12-9') ? 499.99 : 249.99,
-          image: `/images/products/${modelSlug}-screen.jpg`,
+          id: `${modelSlug}-repair-kit`,
+          name: `${modelData.displayName} Repair Kit`,
+          price: modelSlug.includes('watch') ? 89.99 : modelSlug.includes('airpods') ? 49.99 : 39.99,
+          image: `/images/products/${modelSlug}-kit.jpg`,
           compatibility: modelData.displayName,
-          type: modelSlug.includes('2024') || modelSlug.includes('2022') || modelSlug.includes('2021') ? 'Liquid Retina XDR' : 'Retina LCD',
-          stock: 15,
-          rating: 4.8,
-          reviews: 89
-        }
-      ],
-      batteries: [
+          type: 'Complete repair kit with tools and parts',
+          stock: 25,
+          rating: 4.5,
+          reviews: 67
+        },
         {
           id: `${modelSlug}-battery`,
           name: `${modelData.displayName} Battery Replacement`,
-          price: modelSlug.includes('pro') ? 129.99 : 99.99,
+          price: modelSlug.includes('watch-ultra') ? 79.99 : modelSlug.includes('watch') ? 59.99 : 29.99,
           image: `/images/products/${modelSlug}-battery.jpg`,
           capacity: 'Original Apple capacity',
           compatibility: modelData.displayName,
-          stock: 25,
-          rating: 4.6,
-          reviews: 134
-        }
-      ],
-      cameras: [
-        {
-          id: `${modelSlug}-camera`,
-          name: `${modelData.displayName} Front Camera Assembly`,
-          price: 79.99,
-          image: `/images/products/${modelSlug}-camera.jpg`,
-          type: 'Ultra Wide front camera with Center Stage',
-          compatibility: modelData.displayName,
-          stock: 35,
-          rating: 4.5,
-          reviews: 67
-        }
-      ],
-      charging: [
-        {
-          id: `${modelSlug}-charging`,
-          name: `${modelData.displayName} USB-C Port`,
-          price: 45.99,
-          image: `/images/products/${modelSlug}-charging.jpg`,
-          type: 'USB-C with Thunderbolt support',
-          compatibility: modelData.displayName,
           stock: 40,
           rating: 4.4,
-          reviews: 112
+          reviews: 89
         }
       ]
     };
 
-    return baseParts[category] || [];
+    return baseParts[category] || baseParts.parts;
   };
 
   useEffect(() => {
@@ -148,10 +157,9 @@ export default function IPadModel() {
   };
 
   const categories = [
-    { id: 'screens', name: 'Screens', icon: '📱' },
+    { id: 'parts', name: 'Repair Parts', icon: '🔧' },
     { id: 'batteries', name: 'Batteries', icon: '🔋' },
-    { id: 'cameras', name: 'Cameras', icon: '📷' },
-    { id: 'charging', name: 'Charging Ports', icon: '🔌' }
+    { id: 'accessories', name: 'Accessories', icon: '🎧' }
   ];
 
   if (loading) {
@@ -168,7 +176,7 @@ export default function IPadModel() {
   return (
     <Layout
       title={`${modelData.displayName} Parts - Professional Repair Components | Nexus Tech Hub`}
-      description={`Complete range of repair parts for ${modelData.displayName}. High-quality screens, batteries, and components with warranty.`}
+      description={`Complete range of repair parts for ${modelData.displayName}. High-quality components with warranty.`}
     >
       <div className={styles.modelPage}>
         {/* Breadcrumb */}
@@ -176,8 +184,6 @@ export default function IPadModel() {
           <Link href="/">Home</Link>
           <span className={styles.separator}>/</span>
           <Link href="/products">Products</Link>
-          <span className={styles.separator}>/</span>
-          <Link href="/products/ipad-parts">iPad Parts</Link>
           <span className={styles.separator}>/</span>
           <span className={styles.current}>{modelData.displayName}</span>
         </div>
@@ -188,8 +194,10 @@ export default function IPadModel() {
             <h1>{modelData.displayName} Parts</h1>
             <div className={styles.modelSpecs}>
               <span>📅 Released: {modelData.releaseYear}</span>
-              <span>📺 Display: {modelData.display}</span>
-              <span>💾 Storage: {modelData.storage.join(', ')}</span>
+              {modelData.display && <span>📺 Display: {modelData.display}</span>}
+              {modelData.processor && <span>🖥️ Processor: {modelData.processor}</span>}
+              {modelData.storage && <span>💾 Storage: {modelData.storage.join(', ')}</span>}
+              {modelData.features && <span>✨ Features: {modelData.features.join(', ')}</span>}
             </div>
             <div className={styles.modelColors}>
               <span>🎨 Colors: {modelData.colors.join(', ')}</span>
@@ -197,7 +205,7 @@ export default function IPadModel() {
           </div>
           <div className={styles.modelImage}>
             <img
-              src={`/images/tablets/${model}.jpg`}
+              src={`/images/apple/${model}.jpg`}
               alt={modelData.displayName}
               onError={(e) => {
                 e.target.src = '/images/products/placeholder.svg';
@@ -286,28 +294,44 @@ export default function IPadModel() {
 
         {/* Related Models */}
         <div className={styles.relatedModels}>
-          <h2>Other iPad Models</h2>
+          <h2>Other {modelData.category} Models</h2>
           <div className={styles.modelsGrid}>
-            <Link href="/products/ipad/ipad-pro-13-7th-gen-2024" className={styles.modelLink}>
-              iPad Pro 13" (2024)
-            </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-6th-gen-2022" className={styles.modelLink}>
-              iPad Pro 12.9" (2022)
-            </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-5th-gen-2021" className={styles.modelLink}>
-              iPad Pro 12.9" (2021)
-            </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-4th-gen-2020" className={styles.modelLink}>
-              iPad Pro 12.9" (2020)
-            </Link>
-            <Link href="/products/ipad/ipad-pro-12-9-3rd-gen-2018" className={styles.modelLink}>
-              iPad Pro 12.9" (2018)
-            </Link>
-          </div>
-          <div className={styles.viewAll}>
-            <Link href="/products/ipad-parts" className={styles.viewAllBtn}>
-              View All iPad Models →
-            </Link>
+            {modelData.category === 'Watch' && (
+              <>
+                <Link href="/products/apple/watch-series-9-45mm" className={styles.modelLink}>
+                  Watch Series 9 (45MM)
+                </Link>
+                <Link href="/products/apple/watch-series-9-41mm" className={styles.modelLink}>
+                  Watch Series 9 (41MM)
+                </Link>
+                <Link href="/products/apple/watch-ultra-2-49mm" className={styles.modelLink}>
+                  Watch Ultra 2 (49MM)
+                </Link>
+                <Link href="/products/apple/watch-series-8-45mm" className={styles.modelLink}>
+                  Watch Series 8 (45MM)
+                </Link>
+              </>
+            )}
+            {modelData.category === 'AirPods' && (
+              <>
+                <Link href="/products/apple/airpods-pro-2nd-gen" className={styles.modelLink}>
+                  AirPods Pro (2nd Gen)
+                </Link>
+                <Link href="/products/apple/airpods-3rd-gen" className={styles.modelLink}>
+                  AirPods (3rd Gen)
+                </Link>
+                <Link href="/products/apple/airpods-max" className={styles.modelLink}>
+                  AirPods Max
+                </Link>
+              </>
+            )}
+            {modelData.category === 'iPod' && (
+              <>
+                <Link href="/products/apple/ipod-touch-7" className={styles.modelLink}>
+                  iPod Touch 7
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -332,18 +356,19 @@ export default function IPadModel() {
 }
 
 export async function getStaticPaths() {
-  // Generate paths for popular iPad models
+  // Generate paths for popular Apple product models
   const models = [
-    'ipad-pro-13-7th-gen-2024',
-    'ipad-pro-12-9-6th-gen-2022',
-    'ipad-pro-12-9-5th-gen-2021',
-    'ipad-pro-12-9-4th-gen-2020',
-    'ipad-pro-12-9-3rd-gen-2018',
-    'ipad-pro-11-4th-gen-2022',
-    'ipad-pro-11-3rd-gen-2021',
-    'ipad-pro-11-2nd-gen-2020',
-    'ipad-air-5th-gen-2022',
-    'ipad-air-4th-gen-2020'
+    // Apple Watch
+    'watch-series-9-45mm',
+    'watch-series-9-41mm',
+    'watch-ultra-2-49mm',
+    'watch-series-8-45mm',
+    // AirPods
+    'airpods-pro-2nd-gen',
+    'airpods-3rd-gen',
+    'airpods-max',
+    // iPod
+    'ipod-touch-7'
   ];
 
   const paths = models.map(model => ({
