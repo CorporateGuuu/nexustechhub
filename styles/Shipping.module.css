@@ -1,0 +1,483 @@
+/* Shipping Page Styles */
+.shippingPage {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.pageHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pageHeader h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.pageHeader p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Shipping Options */
+.shippingOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.shippingCard {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.shippingCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.shippingCard.recommended {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.shippingCard.recommended::before {
+  content: 'Most Popular';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #007bff;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.shippingIcon {
+  width: 80px;
+  height: 80px;
+  background: #007bff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 2rem;
+  color: white;
+}
+
+.shippingCard h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.shippingCard .price {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.shippingCard .duration {
+  color: #666;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.shippingCard p {
+  margin: 0 0 20px 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+.featuresList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+
+.featuresList li {
+  padding: 5px 0;
+  color: #555;
+  position: relative;
+  padding-left: 20px;
+}
+
+.featuresList li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.selectBtn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.selectBtn:hover {
+  background: #0056b3;
+}
+
+/* Shipping Calculator */
+.shippingCalculator {
+  background: #f8f9fa;
+  padding: 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.calculatorHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.calculatorHeader h2 {
+  margin: 0 0 15px 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.calculatorHeader p {
+  margin: 0;
+  color: #666;
+}
+
+.calculatorForm {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.formInput,
+.formSelect {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.formInput:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.calculateBtn {
+  width: 100%;
+  padding: 15px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calculateBtn:hover {
+  background: #0056b3;
+}
+
+.calculationResult {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.resultPrice {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.resultDetails {
+  color: #666;
+}
+
+/* Shipping Policy */
+.shippingPolicy {
+  margin-bottom: 40px;
+}
+
+.policySection h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #007bff;
+}
+
+.policyContent {
+  color: #555;
+  line-height: 1.6;
+}
+
+.policyContent h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin: 30px 0 15px 0;
+}
+
+.policyContent p {
+  margin-bottom: 15px;
+}
+
+.policyContent ul {
+  margin-bottom: 15px;
+  padding-left: 30px;
+}
+
+.policyContent li {
+  margin-bottom: 8px;
+}
+
+/* International Shipping */
+.internationalShipping {
+  background: #f8f9fa;
+  padding: 40px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.internationalShipping h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+}
+
+.countriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.countryCard {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.countryCard h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.countryCard .shippingTime {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.countryCard .shippingCost {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.customsNote {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.customsNote h4 {
+  margin: 0 0 10px 0;
+  color: #856404;
+  font-size: 1.1rem;
+}
+
+.customsNote p {
+  margin: 0;
+  color: #856404;
+}
+
+/* Tracking */
+.trackingSection {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 40px;
+  margin-bottom: 40px;
+}
+
+.trackingSection h2 {
+  margin: 0 0 20px 0;
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+}
+
+.trackingForm {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.trackingInput {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: border-color 0.2s;
+}
+
+.trackingInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.trackBtn {
+  width: 100%;
+  padding: 15px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.trackBtn:hover {
+  background: #0056b3;
+}
+
+/* Contact Section */
+.contactSection {
+  text-align: center;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.contactSection h2 {
+  margin: 0 0 15px 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.contactSection p {
+  margin: 0 0 30px 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.contactOptions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.contactOption {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 200px;
+}
+
+.contactOption h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.contactOption p {
+  margin: 0 0 15px 0;
+  color: #666;
+}
+
+.contactBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.contactBtn:hover {
+  background: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .shippingPage {
+    padding: 15px;
+  }
+
+  .pageHeader h1 {
+    font-size: 2rem;
+  }
+
+  .shippingOptions {
+    grid-template-columns: 1fr;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .countriesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contactOptions {
+    flex-direction: column;
+  }
+}
