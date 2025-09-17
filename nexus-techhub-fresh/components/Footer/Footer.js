@@ -164,11 +164,11 @@ const Footer = () => {
             <h4 className={styles.footerHeading}>Shipping Partners</h4>
             <div className={styles.shippingInfo}>
               <div className={styles.shippingItem}>
-                <span className={styles.shippingLogo}>🚚</span>
+                <span className={styles.shippingLogo}>FedEx</span>
                 <span>FedEx</span>
               </div>
               <div className={styles.shippingItem}>
-                <span className={styles.shippingLogo}>📦</span>
+                <span className={styles.shippingLogo}>UPS</span>
                 <span>UPS</span>
               </div>
             </div>
@@ -290,12 +290,12 @@ const Footer = () => {
           <div className={styles.paymentMethods}>
             <span className={styles.paymentLabel}>We Accept:</span>
             <div className={styles.paymentIcons}>
-              <span className={styles.paymentIcon}>💳</span>
-              <span className={styles.paymentIcon}>💰</span>
-              <span className={styles.paymentIcon}>🏦</span>
-              <span className={styles.paymentIcon}>📱</span>
-              <span className={styles.paymentIcon}>₿</span>
-              <span className={styles.paymentIcon}>💎</span>
+              <span className={styles.paymentIcon}>Credit Cards</span>
+              <span className={styles.paymentIcon}>Cash</span>
+              <span className={styles.paymentIcon}>Bank Transfer</span>
+              <span className={styles.paymentIcon}>Mobile Payment</span>
+              <span className={styles.paymentIcon}>Bitcoin</span>
+              <span className={styles.paymentIcon}>Cryptocurrency</span>
             </div>
           </div>
         </div>
