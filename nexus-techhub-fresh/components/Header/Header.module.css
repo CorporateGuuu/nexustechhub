@@ -199,6 +199,45 @@
   overflow-y: auto;
 }
 
+/* Adjust mega menu position for items that would go off-screen */
+.navItem:nth-child(9) .megaMenu, /* Board Components */
+.navItem:nth-child(10) .megaMenu { /* Refurbishing */
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+}
+
+.navItem:nth-child(11) .megaMenu { /* Pre-Owned Devices - if it exists */
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1200px) {
+  .megaMenu {
+    width: 500px;
+    max-width: 95vw;
+  }
+
+  /* Force right alignment for last 3 items on medium screens */
+  .navItem:nth-child(8) .megaMenu,
+  .navItem:nth-child(9) .megaMenu,
+  .navItem:nth-child(10) .megaMenu,
+  .navItem:nth-child(11) .megaMenu {
+    left: auto;
+    right: 0;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .megaMenu {
+    width: 450px;
+    max-width: 90vw;
+  }
+}
+
 .megaMenu.active {
   opacity: 1;
   visibility: visible;
@@ -416,8 +455,8 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   z-index: 2000;
   opacity: 0;
   visibility: hidden;

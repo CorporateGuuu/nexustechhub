@@ -1,8 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from './Footer.module.css';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      setMessage('Please enter your email address');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMessage('Please enter a valid email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Thank you for subscribing!');
+        setEmail('');
+      } else {
+        setMessage(data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      setMessage('Network error. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <footer className={styles.footer}>
       {/* Main Footer Content */}
@@ -119,6 +162,72 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Authorized Distributors Section */}
+      <div className={styles.distributorsSection}>
+        <div className={styles.distributorsContent}>
+          <h3 className={styles.distributorsTitle}>Authorized Distributors</h3>
+          <div className={styles.distributorsGrid}>
+            <div className={styles.distributorItem}>
+              <div className={styles.distributorLogo}>
+                <img src="/images/apple-logo.svg" alt="Apple" />
+              </div>
+              <span className={styles.distributorText}>Authorized Distributor</span>
+            </div>
+            <div className={styles.distributorItem}>
+              <div className={styles.distributorLogo}>
+                <img src="/images/google-logo.svg" alt="Google" />
+              </div>
+              <span className={styles.distributorText}>Authorized Distributor</span>
+            </div>
+            <div className={styles.distributorItem}>
+              <div className={styles.distributorLogo}>
+                <img src="/images/oneplus-logo.svg" alt="OnePlus" />
+              </div>
+              <span className={styles.distributorText}>Authorized Distributor</span>
+            </div>
+            <div className={styles.distributorItem}>
+              <div className={styles.distributorLogo}>
+                <img src="/images/motorola-logo.svg" alt="Motorola" />
+              </div>
+              <span className={styles.distributorText}>Authorized Distributor</span>
+            </div>
+            <div className={styles.distributorItem}>
+              <div className={styles.distributorLogo}>
+                <img src="/images/lg-logo.svg" alt="LG" />
+              </div>
+              <span className={styles.distributorText}>Authorized Distributor</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Certifications Section */}
+      <div className={styles.certificationsSection}>
+        <div className={styles.certificationsContent}>
+          <h3 className={styles.certificationsTitle}>Certifications</h3>
+          <div className={styles.certificationsGrid}>
+            <div className={styles.certificationItem}>
+              <div className={styles.certificationLogo}>
+                <img src="/images/iso-45001-logo.svg" alt="ISO 45001" />
+              </div>
+              <span className={styles.certificationText}>Certified</span>
+            </div>
+            <div className={styles.certificationItem}>
+              <div className={styles.certificationLogo}>
+                <img src="/images/iso-9001-logo.svg" alt="ISO 9001" />
+              </div>
+              <span className={styles.certificationText}>Certified</span>
+            </div>
+            <div className={styles.certificationItem}>
+              <div className={styles.certificationLogo}>
+                <img src="/images/iso-14001-logo.svg" alt="ISO 14001" />
+              </div>
+              <span className={styles.certificationText}>Certified</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Newsletter Section */}
       <div className={styles.newsletterSection}>
         <div className={styles.newsletterContent}>
@@ -126,17 +235,29 @@ const Footer = () => {
             <h3>Stay Updated with Latest Parts</h3>
             <p>Subscribe to get exclusive deals and new product announcements</p>
           </div>
-          <form className={styles.newsletterForm}>
+          <form className={styles.newsletterForm} onSubmit={handleSubmit}>
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email address"
               className={styles.newsletterInput}
               aria-label="Email address for newsletter"
+              disabled={isSubmitting}
             />
-            <button type="submit" className={styles.newsletterButton}>
-              Subscribe
+            <button
+              type="submit"
+              className={styles.newsletterButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Subscribing...' : 'Subscribe'}
             </button>
           </form>
+          {message && (
+            <div className={`${styles.message} ${message.includes('Thank you') ? styles.success : styles.error}`}>
+              {message}
+            </div>
+          )}
         </div>
       </div>
 

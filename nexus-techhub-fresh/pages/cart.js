@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import styles from '../../styles/CartPage.module.css';
+import styles from '../styles/CartPage.module.css';
 import Layout from '../components/Layout/Layout';
 
 export default function Cart() {
@@ -329,37 +329,41 @@ export default function Cart() {
           </div>
 
           <div className={styles.cart_summary}>
-            <h2>Order Summary</h2>
-
-            <div className={styles.summary_row}>
-              <span>Items ({cart.item_count}):</span>
-              <span>${cart.subtotal.toFixed(2)}</span>
+            <div className={styles.summary_header}>
+              <h2 className={styles.summary_title}>Order Summary</h2>
             </div>
 
-            <div className={styles.summary_row}>
-              <span>Shipping:</span>
-              <span>Free</span>
-            </div>
+            <div className={styles.summary_content}>
+              <div className={styles.summary_row}>
+                <span>Items ({cart.item_count}):</span>
+                <span>${cart.subtotal.toFixed(2)}</span>
+              </div>
 
-            <div className={`${styles.summary_row} ${styles.total}`}>
-              <span>Total:</span>
-              <span>${cart.subtotal.toFixed(2)}</span>
-            </div>
+              <div className={styles.summary_row}>
+                <span>Shipping:</span>
+                <span>Free</span>
+              </div>
 
-            <button
-              onClick={proceedToCheckout}
-              disabled={updating}
-              className="btn btn-primary checkout_button"
-            >
-              Proceed to Checkout
-            </button>
+              <div className={`${styles.summary_row} ${styles.total}`}>
+                <span>Total:</span>
+                <span>${cart.subtotal.toFixed(2)}</span>
+              </div>
 
-            <div className={styles.guest_checkout_notice}>
-              <p>
-                <Link href={`/auth/signin?callbackUrl=${encodeURIComponent('/cart')}`}>
-                  Sign in
-                </Link> to use saved addresses and payment methods.
-              </p>
+              <button
+                onClick={proceedToCheckout}
+                disabled={updating}
+                className={styles.checkout_button}
+              >
+                Proceed to Checkout
+              </button>
+
+              <div className={styles.guest_checkout_notice}>
+                <p>
+                  <Link href={`/auth/signin?callbackUrl=${encodeURIComponent('/cart')}`}>
+                    Sign in
+                  </Link> to use saved addresses and payment methods.
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -218,3 +218,24 @@ CREATE TRIGGER update_orders_updated_at
 BEFORE UPDATE ON orders
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
+
+-- Newsletter Subscribers Table
+CREATE TABLE newsletter_subscribers (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    subscribed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN DEFAULT TRUE,
+    unsubscribed_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create index for newsletter subscribers
+CREATE INDEX idx_newsletter_subscribers_email ON newsletter_subscribers(email);
+CREATE INDEX idx_newsletter_subscribers_is_active ON newsletter_subscribers(is_active);
+
+-- Create trigger for newsletter subscribers
+CREATE TRIGGER update_newsletter_subscribers_updated_at
+BEFORE UPDATE ON newsletter_subscribers
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
