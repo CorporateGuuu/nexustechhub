@@ -1,0 +1,18 @@
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="60" rx="8" fill="#EB0028"/>
+  <circle cx="30" cy="30" r="20" fill="white"/>
+  <text x="30" y="36" text-anchor="middle" fill="#EB0028" font-family="Arial, sans-serif" font-size="14" font-weight="bold">1+</text>
+  <text x="30" y="52" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="6" font-weight="bold">ONEPLUS</text>
+</svg>
+EOF && cat > motorola-logo.svg << 'EOF'
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="60" rx="8" fill="#E1140A"/>
+  <text x="30" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10" font-weight="bold">MOTOROLA</text>
+  <text x="30" y="52" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="6" font-weight="bold">MOTO</text>
+</svg>
+EOF && cat > lg-logo.svg << 'EOF'
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="60" rx="8" fill="#A50034"/>
+  <text x="30" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">LG</text>
+  <text x="30" y="52" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="6" font-weight="bold">LIFE'S GOOD</text>
+</svg>

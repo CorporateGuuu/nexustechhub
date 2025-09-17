@@ -485,8 +485,8 @@
   font-weight: 800;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
-  background-clip: text;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -508,8 +508,8 @@
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: white;
   font-size: 1rem;
   outline: none;
@@ -561,8 +561,8 @@
   color: #1f2937;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  background-clip: text;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
