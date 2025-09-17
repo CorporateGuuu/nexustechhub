@@ -1043,7 +1043,7 @@ const Header = () => {
   ];
 
   return (
-    <header className={styles.header}>
+    <header className={styles.header} role="banner">
       <div className={styles.mainHeader}>
         {/* Logo */}
         <div className={styles.logo}>
@@ -1061,7 +1061,7 @@ const Header = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className={styles.desktopNav}>
+        <nav className={styles.desktopNav} role="navigation" aria-label="Main navigation">
           <div className={styles.navList}>
             {menuItems.map((item) => (
               <div
@@ -1115,7 +1115,7 @@ const Header = () => {
               </div>
             ))}
           </div>
-        </div>
+        </nav>
 
         {/* Right Side Container */}
         <div className={styles.rightSide}>
