@@ -400,7 +400,7 @@ export default function Checkout() {
                         checked={paymentMethod === 'card'}
                         onChange={(e) => setPaymentMethod(e.target.value)}
                       />
-                      <span className={styles.paymentIcon}>💳</span>
+                      <span className={styles.paymentIcon}>Card</span>
                       <span>Credit/Debit Card</span>
                     </label>
                     <label className={styles.paymentMethod}>
@@ -411,7 +411,7 @@ export default function Checkout() {
                         checked={paymentMethod === 'apple_pay'}
                         onChange={(e) => setPaymentMethod(e.target.value)}
                       />
-                      <span className={styles.paymentIcon}>📱</span>
+                      <span className={styles.paymentIcon}>Apple Pay</span>
                       <span>Apple Pay</span>
                     </label>
                     <label className={styles.paymentMethod}>
@@ -422,7 +422,7 @@ export default function Checkout() {
                         checked={paymentMethod === 'google_pay'}
                         onChange={(e) => setPaymentMethod(e.target.value)}
                       />
-                      <span className={styles.paymentIcon}>🎯</span>
+                      <span className={styles.paymentIcon}>Google Pay</span>
                       <span>Google Pay</span>
                     </label>
                   </div>
@@ -488,8 +488,8 @@ export default function Checkout() {
                 </button>
 
                 <div className={styles.checkoutFooter}>
-                  <p>🔒 Secure checkout powered by Stripe</p>
-                  <p>📦 Free shipping on orders over AED 100</p>
+                  <p>Secure checkout powered by Stripe</p>
+                  <p>Free shipping on orders over AED 100</p>
                 </div>
               </div>
             </div>

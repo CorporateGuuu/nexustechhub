@@ -240,12 +240,12 @@ export default function Register() {
             <h2>Why Choose Nexus Tech Hub?</h2>
             <p>Join thousands of professionals who trust us for their repair needs.</p>
             <ul className="benefits-list">
-              <li>🛠️ Professional-grade tools & parts</li>
-              <li>🎯 OEM quality guaranteed</li>
-              <li>🚚 Fast worldwide shipping</li>
-              <li>💰 Competitive pricing</li>
-              <li>🛡️ Secure payment & data protection</li>
-              <li>📞 Expert technical support</li>
+              <li>Professional-grade tools & parts</li>
+              <li>OEM quality guaranteed</li>
+              <li>Fast worldwide shipping</li>
+              <li>Competitive pricing</li>
+              <li>Secure payment & data protection</li>
+              <li>Expert technical support</li>
             </ul>
           </div>
         </div>

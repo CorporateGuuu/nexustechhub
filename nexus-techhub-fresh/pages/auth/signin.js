@@ -133,11 +133,11 @@ export default function SignIn() {
             <h2>Join Nexus Tech Hub</h2>
             <p>Get access to exclusive deals, faster checkout, and order tracking.</p>
             <ul className="benefits-list">
-              <li>🚚 Free shipping on orders over $100</li>
-              <li>⚡ Fast, reliable delivery</li>
-              <li>🔄 Easy returns & exchanges</li>
-              <li>📞 24/7 customer support</li>
-              <li>💳 Secure payment processing</li>
+              <li>Free shipping on orders over $100</li>
+              <li>Fast, reliable delivery</li>
+              <li>Easy returns & exchanges</li>
+              <li>24/7 customer support</li>
+              <li>Secure payment processing</li>
             </ul>
           </div>
         </div>
