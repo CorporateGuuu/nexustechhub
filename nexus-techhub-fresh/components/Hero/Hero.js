@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Hero.module.css';
 
@@ -7,31 +7,31 @@ const Hero = () => {
 
   const slides = [
     {
-      title: "iPhone Parts Wholesale",
-      subtitle: "Bulk pricing on screens, batteries, and components",
+      title: "Premium iPhone Components",
+      subtitle: "Authentic OEM screens, batteries & premium parts with unbeatable wholesale pricing",
       image: "/images/products/iphone-15-pro-max-screen.jpg",
-      cta: "Shop iPhone Parts",
+      cta: "Explore iPhone Parts",
       link: "/products/iphone-parts"
     },
     {
-      title: "Samsung Galaxy Parts",
-      subtitle: "OEM quality parts for all Galaxy models",
+      title: "Samsung Galaxy Excellence",
+      subtitle: "Original equipment manufacturer parts for all Galaxy devices - quality guaranteed",
       image: "/images/products/samsung-s24-ultra-screen.jpg",
-      cta: "Shop Samsung Parts",
+      cta: "Browse Samsung Parts",
       link: "/products/samsung-parts"
     },
     {
-      title: "iPad & Tablet Components",
-      subtitle: "Professional repair parts for tablets",
+      title: "Professional Tablet Solutions",
+      subtitle: "Complete repair components for iPad, Surface, and premium tablet devices",
       image: "/images/products/ipad-pro-12-9-screen.jpg",
-      cta: "Shop iPad Parts",
+      cta: "Shop Tablet Parts",
       link: "/products/ipad-parts"
     },
     {
-      title: "Repair Tools & Equipment",
-      subtitle: "Complete workshop solutions",
+      title: "Advanced Repair Tools",
+      subtitle: "Professional-grade equipment and comprehensive workshop solutions for technicians",
       image: "/images/products/professional-toolkit.jpg",
-      cta: "Shop Tools",
+      cta: "View Repair Tools",
       link: "/products/repair-tools"
     }
   ];

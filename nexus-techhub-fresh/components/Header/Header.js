@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import PreOwnedModal from '../PreOwnedModal';
+import Cart from '../Cart/Cart';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -1138,16 +1139,7 @@ const Header = () => {
 
           {/* Header Actions */}
           <div className={styles.headerActions}>
-            <Link href="/cart" className={styles.cartLink} aria-label="Shopping cart">
-              <div className={styles.cartIcon}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-              </div>
-              <span>Cart</span>
-            </Link>
+            <Cart />
 
             <Link href="/account" className={styles.accountLink} aria-label="User account">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
