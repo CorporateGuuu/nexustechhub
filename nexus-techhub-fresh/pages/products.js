@@ -1,101 +1,115 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Layout from '../components/Layout/Layout';
+import { supabase, getProducts } from '../lib/supabase';
 import styles from '../styles/ProductGrid.module.css';
 
 export default function Products() {
-  const categories = [
-    {
-      name: 'Apple',
-      slug: 'apple',
-      description: 'iPhone, iPad, Mac, and Apple Watch parts',
-      image: '/images/categories/apple-parts.jpg',
-      count: '150+ products',
-      color: 'from-red-500 to-pink-500',
-      icon: '🍎'
-    },
-    {
-      name: 'Samsung',
-      slug: 'samsung',
-      description: 'Galaxy S, Note, A, and Tab series parts',
-      image: '/images/categories/samsung-parts.jpg',
-      count: '120+ products',
-      color: 'from-blue-500 to-cyan-500',
-      icon: '📱'
-    },
-    {
-      name: 'Google',
-      slug: 'google',
-      description: 'Pixel and Chromebook parts',
-      image: '/images/categories/google-parts.jpg',
-      count: '45+ products',
-      color: 'from-green-500 to-emerald-500',
-      icon: '🤖'
-    },
-    {
-      name: 'Motorola',
-      slug: 'motorola',
-      description: 'Moto G, Edge, and Razr series parts',
-      image: '/images/categories/motorola-parts.jpg',
-      count: '60+ products',
-      color: 'from-purple-500 to-violet-500',
-      icon: '📞'
-    },
-    {
-      name: 'Accessories',
-      slug: 'accessories',
-      description: 'Cables, cases, and essential accessories',
-      image: '/images/categories/accessories.jpg',
-      count: '200+ products',
-      color: 'from-yellow-500 to-orange-500',
-      icon: '🔌'
-    },
-    {
-      name: 'Tools & Supplies',
-      slug: 'tools-supplies',
-      description: 'Professional repair tools and supplies',
-      image: '/images/categories/tools.jpg',
-      count: '80+ products',
-      color: 'from-gray-500 to-slate-500',
-      icon: '🔧'
-    },
-    {
-      name: 'Board Components',
-      slug: 'board-components',
-      description: 'Logic boards, batteries, and components',
-      image: '/images/categories/components.jpg',
-      count: '300+ products',
-      color: 'from-indigo-500 to-blue-500',
-      icon: '⚡'
-    },
-    {
-      name: 'Refurbished Devices',
-      slug: 'refurbishing',
-      description: 'Quality refurbished devices at great prices',
-      image: '/images/categories/refurbished.jpg',
-      count: '75+ products',
-      color: 'from-teal-500 to-cyan-500',
-      icon: '♻️'
-    },
-    {
-      name: 'Game Console',
-      slug: 'game-console',
-      description: 'PlayStation, Xbox, and Nintendo parts',
-      image: '/images/categories/game-console.jpg',
-      count: '40+ products',
-      color: 'from-red-500 to-rose-500',
-      icon: '🎮'
-    },
-    {
-      name: 'Other Parts',
-      slug: 'other-parts',
-      description: 'Parts for Huawei, Xiaomi, TCL, and more',
-      image: '/images/categories/other-parts.jpg',
-      count: '90+ products',
-      color: 'from-amber-500 to-yellow-500',
-      icon: '📦'
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    category: '',
+    brand: '',
+    search: '',
+    sort_by: 'created_at',
+    sort_order: 'desc',
+    min_price: '',
+    max_price: ''
+  });
+
+  // Color mapping for categories
+  const categoryColors = {
+    'apple': 'from-red-500 to-pink-500',
+    'samsung': 'from-blue-500 to-cyan-500',
+    'google': 'from-green-500 to-emerald-500',
+    'motorola': 'from-purple-500 to-violet-500',
+    'accessories': 'from-yellow-500 to-orange-500',
+    'tools-supplies': 'from-gray-500 to-slate-500',
+    'board-components': 'from-indigo-500 to-blue-500',
+    'refurbishing': 'from-teal-500 to-cyan-500',
+    'game-console': 'from-red-500 to-rose-500',
+    'other-parts': 'from-amber-500 to-yellow-500'
+  };
+
+  // Icon mapping for categories
+  const categoryIcons = {
+    'apple': '🍎',
+    'samsung': '📱',
+    'google': '🤖',
+    'motorola': '📞',
+    'accessories': '🔌',
+    'tools-supplies': '🔧',
+    'board-components': '⚡',
+    'refurbishing': '♻️',
+    'game-console': '🎮',
+    'other-parts': '�'
+  };
+
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .is('parent_id', null) // Only main categories
+        .order('name');
+
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return;
+      }
+
+      // Get product counts for each category
+      const categoriesWithCounts = await Promise.all(
+        data.map(async (category) => {
+          const { count } = await supabase
+            .from('products')
+            .select('*', { count: 'exact', head: true })
+            .eq('category_id', category.id);
+
+          return {
+            ...category,
+            count: count || 0,
+            color: categoryColors[category.slug] || 'from-gray-500 to-gray-600',
+            icon: categoryIcons[category.slug] || '📦'
+          };
+        })
+      );
+
+      setCategories(categoriesWithCounts);
+    } catch (error) {
+      console.error('Error in fetchCategories:', error);
     }
-  ];
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await getProducts({
+        limit: 12,
+        is_featured: true
+      });
+
+      if (error) {
+        console.error('Error fetching products:', error);
+        return;
+      }
+
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error in fetchProducts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(prev => ({ ...prev, ...newFilters }));
+  };
 
   return (
     <Layout title="Products" description="Browse our complete catalog of mobile device parts and repair tools">
