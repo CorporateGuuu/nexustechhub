@@ -1,4 +1,4 @@
--- vscode-sql: dialect=postgresql
+-- language: postgresql
 -- Complete Nexus Tech Hub Database Setup
 -- Run this script in Supabase SQL Editor to set up all tables, categories, and products
 -- PostgreSQL syntax - Compatible with Supabase

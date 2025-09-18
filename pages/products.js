@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
 import ProductGrid from '../components/ProductGrid';
+import SearchBar from '../components/SearchBar';
+import ProductFilters from '../components/ProductFilters';
 import styles from '../styles/Products.module.css';
 
 export default function Products() {
@@ -10,30 +12,75 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentFilters, setCurrentFilters] = useState({});
 
-  // Fetch products from API
-  const fetchProducts = async (category = 'all') => {
+  // Fetch products from API with search and filters
+  const fetchProducts = async (filters = {}) => {
     try {
       setLoading(true);
       let url = '/api/products?limit=50';
 
-      if (category !== 'all') {
-        url += `&category=${category}`;
+      // Add search query
+      if (searchQuery) {
+        url += `&search=${encodeURIComponent(searchQuery)}`;
+      }
+
+      // Add category filter
+      if (filters.category && filters.category !== 'all') {
+        url += `&category=${filters.category}`;
+      }
+
+      // Add brand filter
+      if (filters.brand && filters.brand !== 'all') {
+        url += `&brand=${filters.brand}`;
+      }
+
+      // Add price filters
+      if (filters.minPrice) {
+        url += `&min_price=${filters.minPrice}`;
+      }
+      if (filters.maxPrice) {
+        url += `&max_price=${filters.maxPrice}`;
+      }
+
+      // Add other filters
+      if (filters.isFeatured) {
+        url += `&is_featured=true`;
+      }
+      if (filters.isNew) {
+        url += `&is_new=true`;
+      }
+      if (filters.inStock) {
+        // This would need to be implemented in the API
+        // For now, we'll filter client-side
+      }
+
+      // Add sorting
+      if (filters.sortBy) {
+        url += `&sort_by=${filters.sortBy}&sort_order=${filters.sortOrder || 'asc'}`;
       }
 
       const response = await fetch(url);
       const data = await response.json();
 
+      let filteredProducts = data.success ? (data.data || []) : [];
+
+      // Apply client-side filters that aren't supported by API
+      if (filters.inStock) {
+        filteredProducts = filteredProducts.filter(product => product.stock > 0);
+      }
+
       if (data.success) {
-        setProducts(data.data || []);
+        setProducts(filteredProducts);
       } else {
         // Fallback to mock data if API fails
-        setProducts(getMockProducts(category));
+        setProducts(getMockProducts(filters.category || 'all'));
       }
     } catch (err) {
       console.error('Error fetching products:', err);
       // Fallback to mock data
-      setProducts(getMockProducts(category));
+      setProducts(getMockProducts(filters.category || 'all'));
     } finally {
       setLoading(false);
     }
@@ -130,14 +177,28 @@ export default function Products() {
 
     return allProducts.filter(product => {
       switch (category) {
-        case 'iphone-parts':
-          return product.category === 'iPhone Parts';
-        case 'samsung-parts':
+        case 'apple':
+          return ['iPhone Parts', 'iPad Parts', 'MacBook Parts'].includes(product.category);
+        case 'samsung':
           return product.category === 'Samsung Parts';
-        case 'ipad-parts':
-          return product.category === 'iPad Parts';
-        case 'repair-tools':
+        case 'motorola':
+          return product.category === 'Motorola Parts';
+        case 'google':
+          return product.category === 'Google Parts';
+        case 'other-parts':
+          return ['LG Parts', 'Microsoft Parts', 'Asus Parts', 'OnePlus Parts', 'ZTE Parts', 'Huawei Parts', 'Xiaomi Parts', 'Sony Parts', 'TCL Parts', 'Lenovo Parts', 'Amazon Parts'].includes(product.category);
+        case 'game-console':
+          return ['Microsoft Console Parts', 'Sony Console Parts', 'Nintendo Console Parts', 'Oculus Console Parts', 'Valve Console Parts'].includes(product.category);
+        case 'accessories':
+          return product.category === 'Accessories';
+        case 'tools-supplies':
           return product.category === 'Repair Tools';
+        case 'refurbishing':
+          return product.category === 'Refurbished Parts';
+        case 'board-components':
+          return product.category === 'Board Components';
+        case 'pre-owned-devices':
+          return product.category === 'Pre-Owned Devices';
         default:
           return true;
       }
@@ -147,7 +208,19 @@ export default function Products() {
   // Handle category change
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    fetchProducts(category);
+    fetchProducts({ ...currentFilters, category });
+  };
+
+  // Handle search
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    fetchProducts({ ...currentFilters, search: query });
+  };
+
+  // Handle filters change
+  const handleFiltersChange = (filters) => {
+    setCurrentFilters(filters);
+    fetchProducts({ ...filters, search: searchQuery });
   };
 
   // Load products on component mount
@@ -157,10 +230,17 @@ export default function Products() {
 
   const categories = [
     { id: 'all', name: 'All Products', url: '/products' },
-    { id: 'iphone-parts', name: 'iPhone Parts', url: '/products/iphone-parts' },
-    { id: 'samsung-parts', name: 'Samsung Parts', url: '/products/samsung-parts' },
-    { id: 'ipad-parts', name: 'iPad Parts', url: '/products/ipad-parts' },
-    { id: 'repair-tools', name: 'Repair Tools', url: '/products/repair-tools' }
+    { id: 'apple', name: 'Apple', url: '/products/apple' },
+    { id: 'samsung', name: 'Samsung', url: '/products/samsung' },
+    { id: 'motorola', name: 'Motorola', url: '/products/motorola' },
+    { id: 'google', name: 'Google', url: '/products/google' },
+    { id: 'other-parts', name: 'Other Parts', url: '/products/other-parts' },
+    { id: 'game-console', name: 'Game Console', url: '/products/game-console' },
+    { id: 'accessories', name: 'Accessories', url: '/products/accessories' },
+    { id: 'tools-supplies', name: 'Tools & Supplies', url: '/products/tools-supplies' },
+    { id: 'refurbishing', name: 'Refurbishing', url: '/products/refurbishing' },
+    { id: 'board-components', name: 'Board Components', url: '/products/board-components' },
+    { id: 'pre-owned-devices', name: 'Pre-Owned Devices', url: '/products/pre-owned-devices' }
   ];
 
   const getCategoryTitle = () => {
@@ -193,6 +273,20 @@ export default function Products() {
               </button>
             ))}
           </div>
+
+          {/* Search Bar */}
+          <div className={styles.searchSection}>
+            <SearchBar
+              onSearch={handleSearch}
+              placeholder="Search for repair parts, tools, and components..."
+            />
+          </div>
+
+          {/* Filters */}
+          <ProductFilters
+            onFiltersChange={handleFiltersChange}
+            initialFilters={currentFilters}
+          />
 
           {/* Products Grid */}
           {loading ? (

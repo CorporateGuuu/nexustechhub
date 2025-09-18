@@ -471,6 +471,15 @@
   margin: 0 auto;
 }
 
+/* Search Section */
+.searchSection {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+}
+
 /* Category Navigation */
 .categoryNavigation {
   background: white;
