@@ -12,9 +12,10 @@ CREATE TABLE categories (
     slug VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     image_url VARCHAR(255),
-    parent_id INTEGER REFERENCES categories(id),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    parent_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES categories(id)
 );
 
 -- Products Table
@@ -26,22 +27,23 @@ CREATE TABLE products (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     discount_percentage DECIMAL(5, 2),
-    stock_quantity INTEGER NOT NULL DEFAULT 0,
+    stock_quantity INT NOT NULL DEFAULT 0,
     is_featured BOOLEAN DEFAULT FALSE,
     is_new BOOLEAN DEFAULT FALSE,
     image_url VARCHAR(255),
     weight DECIMAL(8, 2),
     dimensions VARCHAR(50),
-    category_id INTEGER REFERENCES categories(id),
+    category_id INT,
     brand VARCHAR(100),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 -- Product Specifications Table
 CREATE TABLE product_specifications (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    product_id INT,
     display VARCHAR(255),
     processor VARCHAR(255),
     memory VARCHAR(255),
@@ -50,27 +52,30 @@ CREATE TABLE product_specifications (
     battery VARCHAR(255),
     connectivity VARCHAR(255),
     operating_system VARCHAR(255),
-    additional_features TEXT
+    additional_features TEXT,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Product Images Table (for multiple images per product)
 CREATE TABLE product_images (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    product_id INT,
     image_url VARCHAR(255) NOT NULL,
     is_primary BOOLEAN DEFAULT FALSE,
-    display_order INTEGER DEFAULT 0
+    display_order INT DEFAULT 0,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Product Variants Table (for color, size, etc.)
 CREATE TABLE product_variants (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+    product_id INT,
     variant_type VARCHAR(50) NOT NULL, -- e.g., 'color', 'size', 'capacity'
     variant_value VARCHAR(50) NOT NULL,
     price_adjustment DECIMAL(10, 2) DEFAULT 0.00,
-    stock_quantity INTEGER NOT NULL DEFAULT 0,
-    sku VARCHAR(50) UNIQUE
+    stock_quantity INT NOT NULL DEFAULT 0,
+    sku VARCHAR(50) UNIQUE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Users Table
@@ -82,14 +87,14 @@ CREATE TABLE users (
     last_name VARCHAR(100),
     phone VARCHAR(20),
     is_admin BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- User Addresses Table
 CREATE TABLE user_addresses (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    user_id INT,
     address_line1 VARCHAR(255) NOT NULL,
     address_line2 VARCHAR(255),
     city VARCHAR(100) NOT NULL,
@@ -97,93 +102,109 @@ CREATE TABLE user_addresses (
     postal_code VARCHAR(20) NOT NULL,
     country VARCHAR(100) NOT NULL,
     is_default BOOLEAN DEFAULT FALSE,
-    address_type VARCHAR(20) DEFAULT 'shipping' -- 'shipping', 'billing', 'both'
+    address_type VARCHAR(20) DEFAULT 'shipping', -- 'shipping', 'billing', 'both'
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Shopping Cart Table
 CREATE TABLE carts (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    user_id INT,
     session_id VARCHAR(100), -- For guest users
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Cart Items Table
 CREATE TABLE cart_items (
     id SERIAL PRIMARY KEY,
-    cart_id INTEGER REFERENCES carts(id) ON DELETE CASCADE,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
-    variant_id INTEGER REFERENCES product_variants(id) ON DELETE SET NULL,
-    quantity INTEGER NOT NULL DEFAULT 1,
-    price_at_addition DECIMAL(10, 2) NOT NULL
+    cart_id INT,
+    product_id INT,
+    variant_id INT,
+    quantity INT NOT NULL DEFAULT 1,
+    price_at_addition DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE SET NULL
 );
 
 -- Orders Table
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    user_id INT,
     order_number VARCHAR(50) NOT NULL UNIQUE,
     status VARCHAR(20) NOT NULL DEFAULT 'pending', -- 'pending', 'processing', 'shipped', 'delivered', 'cancelled'
     total_amount DECIMAL(10, 2) NOT NULL,
-    shipping_address_id INTEGER REFERENCES user_addresses(id),
-    billing_address_id INTEGER REFERENCES user_addresses(id),
+    shipping_address_id INT,
+    billing_address_id INT,
     shipping_method VARCHAR(50),
     shipping_cost DECIMAL(10, 2) DEFAULT 0.00,
     payment_method VARCHAR(50),
     payment_status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'paid', 'failed', 'refunded'
     notes TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (shipping_address_id) REFERENCES user_addresses(id),
+    FOREIGN KEY (billing_address_id) REFERENCES user_addresses(id)
 );
 
 -- Order Items Table
 CREATE TABLE order_items (
     id SERIAL PRIMARY KEY,
-    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
-    product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
-    variant_id INTEGER REFERENCES product_variants(id) ON DELETE SET NULL,
-    quantity INTEGER NOT NULL,
+    order_id INT,
+    product_id INT,
+    variant_id INT,
+    quantity INT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    total_price DECIMAL(10, 2) NOT NULL
+    total_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL,
+    FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE SET NULL
 );
 
 -- Reviews Table
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    product_id INT,
+    user_id INT,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     title VARCHAR(255),
     comment TEXT,
     is_verified_purchase BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Wishlist Table
 CREATE TABLE wishlists (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    user_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Wishlist Items Table
 CREATE TABLE wishlist_items (
     id SERIAL PRIMARY KEY,
-    wishlist_id INTEGER REFERENCES wishlists(id) ON DELETE CASCADE,
-    product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
-    added_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    wishlist_id INT,
+    product_id INT,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (wishlist_id) REFERENCES wishlists(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Newsletter Subscribers Table
 CREATE TABLE newsletter_subscribers (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    subscribed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE,
-    unsubscribed_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    unsubscribed_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create indexes for performance
@@ -202,45 +223,50 @@ CREATE INDEX idx_reviews_rating ON reviews(rating);
 CREATE INDEX idx_newsletter_subscribers_email ON newsletter_subscribers(email);
 CREATE INDEX idx_newsletter_subscribers_is_active ON newsletter_subscribers(is_active);
 
--- Create function to automatically update updated_at timestamp
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
+-- Create triggers for all tables with updated_at column
+
+-- Function to update updated_at column
+DROP FUNCTION IF EXISTS update_updated_at_column();
+CREATE FUNCTION update_updated_at_column()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS '
 BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
+    NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+';
 
--- Create triggers for all tables with updated_at column
+-- Create triggers for each table
 CREATE TRIGGER update_categories_updated_at
-BEFORE UPDATE ON categories
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON categories
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_products_updated_at
-BEFORE UPDATE ON products
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON products
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_users_updated_at
-BEFORE UPDATE ON users
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_carts_updated_at
-BEFORE UPDATE ON carts
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON carts
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_orders_updated_at
-BEFORE UPDATE ON orders
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON orders
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_newsletter_subscribers_updated_at
-BEFORE UPDATE ON newsletter_subscribers
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+    BEFORE UPDATE ON newsletter_subscribers
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- ==========================================
 -- 2. INSERT CATEGORIES (from categories-seed.sql)
@@ -454,4 +480,4 @@ INSERT INTO products (name, slug, sku, description, price, discount_percentage, 
 ('Galaxy Note 20 Ultra Screen', 'galaxy-note-20-ultra-screen', 'GN20U-SCRN-001', '6.9-inch Dynamic AMOLED 2X display for Galaxy Note 20 Ultra with S Pen', 329.99, 15, 25, true, 'Samsung', (SELECT id FROM categories WHERE slug = 'note-series'), '/images/products/note-20-ultra-screen.jpg'),
 ('Galaxy Note 20 Ultra Battery', 'galaxy-note-20-ultra-battery', 'GN20U-BATT-001', '4500mAh battery replacement for Galaxy Note 20 Ultra', 74.99, 5, 40, false, 'Samsung', (SELECT id FROM categories WHERE slug = 'note-series'), '/images/products/note-20-ultra-battery.jpg'),
 ('Galaxy Note 20 Ultra S Pen', 'galaxy-note-20-ultra-s-pen', 'GN20U-SPEN-001', 'Bluetooth S Pen replacement for Galaxy Note 20 Ultra', 49.99, 0, 60, true, 'Samsung', (SELECT id FROM categories WHERE slug = 'note-series'), '/images/products/note-20-ultra-s-pen.jpg'),
-('Galaxy Note 20 Ultra Camera Module', 'galaxy-note-20-ultra-camera', 'GN20U-CAM-001', 'Quad camera system with
+('Galaxy Note 20 Ultra Camera Module', 'galaxy-note-20-ultra-camera', 'GN20U-CAM-001', 'Quad camera system with 108MP main sensor for Galaxy Note 20 Ultra', 179.99, 10, 20, false, 'Samsung', (SELECT id FROM categories WHERE slug = 'note-series'), '/images/products/note-20-ultra-camera.jpg');
