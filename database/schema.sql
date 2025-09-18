@@ -183,42 +183,53 @@ CREATE INDEX idx_cart_items_product_id ON cart_items(product_id);
 CREATE INDEX idx_reviews_product_id ON reviews(product_id);
 CREATE INDEX idx_reviews_user_id ON reviews(user_id);
 CREATE INDEX idx_reviews_rating ON reviews(rating);
-
--- Create function to automatically update updated_at timestamp
-DROP FUNCTION IF EXISTS update_updated_at_column();
-CREATE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+GO
 
 -- Create triggers for all tables with updated_at column
 CREATE TRIGGER update_categories_updated_at
-BEFORE UPDATE ON categories
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+ON categories
+FOR UPDATE
+AS
+BEGIN
+UPDATE categories SET updated_at = GETDATE() WHERE id IN (SELECT id FROM inserted);
+END;
+GO
 
 CREATE TRIGGER update_products_updated_at
-BEFORE UPDATE ON products
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+ON products
+FOR UPDATE
+AS
+BEGIN
+UPDATE products SET updated_at = GETDATE() WHERE id IN (SELECT id FROM inserted);
+END;
+GO
 
 CREATE TRIGGER update_users_updated_at
-BEFORE UPDATE ON users
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+ON users
+FOR UPDATE
+AS
+BEGIN
+UPDATE users SET updated_at = GETDATE() WHERE id IN (SELECT id FROM inserted);
+END;
+GO
 
 CREATE TRIGGER update_carts_updated_at
-BEFORE UPDATE ON carts
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+ON carts
+FOR UPDATE
+AS
+BEGIN
+UPDATE carts SET updated_at = GETDATE() WHERE id IN (SELECT id FROM inserted);
+END;
+GO
 
 CREATE TRIGGER update_orders_updated_at
-BEFORE UPDATE ON orders
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+ON orders
+FOR UPDATE
+AS
+BEGIN
+UPDATE orders SET updated_at = GETDATE() WHERE id IN (SELECT id FROM inserted);
+END;
+GO
 
 -- Newsletter Subscribers Table
 CREATE TABLE newsletter_subscribers (
@@ -234,12 +245,17 @@ CREATE TABLE newsletter_subscribers (
 -- Create index for newsletter subscribers
 CREATE INDEX idx_newsletter_subscribers_email ON newsletter_subscribers(email);
 CREATE INDEX idx_newsletter_subscribers_is_active ON newsletter_subscribers(is_active);
+GO
 
 -- Create trigger for newsletter subscribers
 CREATE TRIGGER update_newsletter_subscribers_updated_at
-BEFORE UPDATE ON newsletter_subscribers
-FOR EACH ROW
-EXECUTE FUNCTION update_updated_at_column();
+ON newsletter_subscribers
+FOR UPDATE
+AS
+BEGIN
+UPDATE newsletter_subscribers SET updated_at = GETDATE() WHERE id IN (SELECT id FROM inserted);
+END;
+GO
 
 -- Insert main categories
 INSERT INTO categories (name, slug, description, image_url) VALUES
