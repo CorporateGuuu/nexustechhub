@@ -1,8 +1,10 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Hero.module.css';
 
 const Hero = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const slides = [
     {
       title: "iPhone Parts Wholesale",
@@ -33,6 +35,19 @@ const Hero = () => {
       link: "/products/repair-tools"
     }
   ];
+
+  // Auto-play carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+  };
 
   return (
     <section className={styles.hero}>
@@ -92,8 +107,7 @@ const Hero = () => {
               {slides.map((slide, index) => (
                 <div
                   key={index}
-                  className={`${styles.carouselSlide} ${index === 0 ? styles.active : ''}`}
-                  style={{ transform: `translateX(${index * 100}%)` }}
+                  className={`${styles.carouselSlide} ${index === currentSlide ? styles.active : ''}`}
                 >
                   <div className={styles.slideContent}>
                     <div className={styles.slideImage}>
@@ -121,7 +135,8 @@ const Hero = () => {
               {slides.map((_, index) => (
                 <button
                   key={index}
-                  className={`${styles.indicator} ${index === 0 ? styles.active : ''}`}
+                  className={`${styles.indicator} ${index === currentSlide ? styles.active : ''}`}
+                  onClick={() => goToSlide(index)}
                 />
               ))}
             </div>
