@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase, getCart, addToCart, updateCartItem, removeFromCart } from '../lib/supabase';
+import { supabase, getCart, addToCart, updateCartItem, removeFromCart } from '../../lib/supabase';
 
 const CartContext = createContext();
 

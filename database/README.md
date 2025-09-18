@@ -7,7 +7,8 @@ This directory contains all the SQL scripts needed to set up the complete Nexus 
 - `schema.sql` - Database schema with all tables, indexes, and triggers
 - `categories-seed.sql` - Hierarchical category structure matching the website navigation
 - `products-seed.sql` - Sample products for major subcategories (140+ products)
-- `setup-all.sql` - Combined script (may be truncated due to size)
+- `setup-all.sql` - Combined script (SQL Server syntax warnings in VSCode)
+- `setup-all.pgsql` - Combined script (proper PostgreSQL syntax highlighting)
 
 ## Setup Instructions
 
@@ -27,10 +28,11 @@ This directory contains all the SQL scripts needed to set up the complete Nexus 
    - Copy and paste the contents of `products-seed.sql`
    - Click "Run" to add sample products
 
-### Option 2: Use Combined Script
+### Option 2: Use Combined Script (Fixed)
 
 - Copy and paste the contents of `setup-all.sql` into Supabase SQL Editor
-- Note: This file may be truncated due to size limits
+- This file now contains the complete setup with all tables, categories, and products
+- Note: The file uses PostgreSQL syntax (SERIAL, TIMESTAMPTZ, etc.) compatible with Supabase
 
 ## Database Structure
 

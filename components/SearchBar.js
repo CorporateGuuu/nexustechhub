@@ -32,15 +32,26 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
     { name: 'Repair Tools', slug: 'repair-tools', count: '20+ products' }
   ];
 
-  // Mock search results for demonstration
-  const mockSearchResults = [
-    { id: 'ip15-pro-screen', name: 'iPhone 15 Pro OLED Screen Assembly', category: 'iPhone Parts', price: 349.99 },
-    { id: 'sg-s24-screen', name: 'Samsung Galaxy S24 OLED Screen Assembly', category: 'Samsung Parts', price: 279.99 },
-    { id: 'ipad-pro-screen', name: 'iPad Pro 11" Liquid Retina Display', category: 'iPad Parts', price: 349.99 },
-    { id: 'toolkit-pro', name: 'Professional iFixit Repair Toolkit', category: 'Repair Tools', price: 199.99 },
-    { id: 'ip15-battery', name: 'iPhone 15 Series Battery Replacement', category: 'iPhone Parts', price: 89.99 },
-    { id: 'heat-gun', name: 'Professional Heat Gun with LCD Display', category: 'Repair Tools', price: 89.99 }
-  ];
+  // Fetch real search results from API
+  const fetchSearchResults = async (query) => {
+    try {
+      const response = await fetch(`/api/products?search=${encodeURIComponent(query)}&limit=10`);
+      const data = await response.json();
+      if (data.success) {
+        return data.data.map(product => ({
+          id: product.id,
+          name: product.name,
+          category: product.category,
+          price: product.price,
+          discount_percentage: product.discount_percentage || 0
+        }));
+      }
+      return [];
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+      return [];
+    }
+  };
 
   // Handle search input
   const handleInputChange = (e) => {
@@ -49,15 +60,15 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
 
     if (value.length > 0) {
       setIsLoading(true);
-      // Simulate API call delay
-      setTimeout(() => {
-        const filtered = mockSearchResults.filter(item =>
-          item.name.toLowerCase().includes(value.toLowerCase()) ||
-          item.category.toLowerCase().includes(value.toLowerCase())
-        );
-        setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+      // Fetch real search results
+      fetchSearchResults(value).then(results => {
+        setSuggestions(results.slice(0, 5)); // Limit to 5 suggestions
         setIsLoading(false);
-      }, 300);
+      }).catch(error => {
+        console.error('Error fetching suggestions:', error);
+        setSuggestions([]);
+        setIsLoading(false);
+      });
       setShowSuggestions(true);
     } else {
       setSuggestions([]);

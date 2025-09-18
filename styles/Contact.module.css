@@ -221,7 +221,7 @@
   flex-direction: column;
 }
 
-label {
+.label {
   font-weight: 600;
   color: #374151;
   margin-bottom: 0.75rem;
