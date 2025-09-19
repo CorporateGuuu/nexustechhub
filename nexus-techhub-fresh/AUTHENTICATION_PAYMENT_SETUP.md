@@ -6,6 +6,11 @@ This guide covers the complete setup for user authentication and Stripe payment 
 
 ### Prerequisites
 
+```bash
+# Prerequisites list
+- Node.js 18+ installed
+- Supabase account and project
+- Stripe account (for payments)
 ```
 
 ## 📚 Additional Resources
@@ -18,14 +23,19 @@ This guide covers the complete setup for user authentication and Stripe payment 
 ## 🤝 Support
 
 For issues with authentication or payments:
+
 1. Check the troubleshooting section above
 2. Review Stripe and Supabase documentation
 3. Contact the development team
+
+### System Requirements
+
 - Node.js 18+ installed
 - Supabase account and project
 - Stripe account (for payments)
 
 ### 1. Install Dependencies
+
 ```bash
 cd nexus-techhub-fresh
 npm install next-auth @auth/prisma-adapter stripe
@@ -260,6 +270,7 @@ export default async function handler(req, res) {
 ### Email Templates
 
 The system supports automated emails for:
+
 - Order confirmations
 - Shipping notifications
 - Password resets
@@ -287,6 +298,7 @@ npm run dev
 ### Testing Payments
 
 Use Stripe test cards for development:
+
 - **Success**: `4242 4242 4242 4242`
 - **Decline**: `4000 0000 0000 0002`
 - **Require Authentication**: `4000 0025 0000 3155`
@@ -296,6 +308,7 @@ Use Stripe test cards for development:
 ### Environment Variables
 
 For production, update these variables:
+
 ```env
 NEXTAUTH_URL=https://yourdomain.com
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
@@ -340,9 +353,12 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 ### Debug Mode
 
 Enable debug logging:
+
 ```env
 NEXTAUTH_DEBUG=true
 STRIPE_DEBUG=true
+```
+
 ---
 
 **Note**: This setup provides a complete e-commerce authentication and payment system. Always test thoroughly in development before deploying to production.

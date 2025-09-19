@@ -1,7 +1,7 @@
--- vscode-sql: dialect=postgresql
+-- vscode-sql: dialect=mysql
 -- Complete Nexus Tech Hub Database Setup
--- Run this script in Supabase SQL Editor to set up all tables, categories, and products
--- PostgreSQL syntax - Compatible with Supabase
+-- Run this script in MySQL to set up all tables, categories, and products
+-- MySQL syntax
 
 -- ==========================================
 -- 1. CREATE TABLES (from schema.sql)
@@ -9,35 +9,37 @@
 
 -- Categories Table
 CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     image_url VARCHAR(255),
-    parent_id INTEGER REFERENCES categories(id),
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    parent_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_id) REFERENCES categories(id)
 );
 
 -- Products Table
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     sku VARCHAR(50) UNIQUE,
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     discount_percentage DECIMAL(5, 2),
-    stock_quantity INTEGER NOT NULL DEFAULT 0,
-    is_featured BOOLEAN DEFAULT FALSE,
-    is_new BOOLEAN DEFAULT FALSE,
+    stock_quantity INT NOT NULL DEFAULT 0,
+    is_featured TINYINT(1) DEFAULT FALSE,
+    is_new TINYINT(1) DEFAULT FALSE,
     image_url VARCHAR(255),
     weight DECIMAL(8, 2),
     dimensions VARCHAR(50),
-    category_id INTEGER REFERENCES categories(id),
+    category_id INT,
     brand VARCHAR(100),
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 -- Product Specifications Table
@@ -206,30 +208,48 @@ CREATE INDEX idx_newsletter_subscribers_is_active ON newsletter_subscribers(is_a
 
 -- Create triggers for all tables with updated_at column
 
--- Function to update updated_at column
-DROP FUNCTION IF EXISTS update_updated_at_column();
-CREATE FUNCTION update_updated_at_column()
-RETURNS TRIGGER
-LANGUAGE plpgsql
-AS '
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-';
-
 -- Create triggers for each table
-CREATE TRIGGER update_categories_updated_at BEFORE UPDATE ON categories FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_categories_updated_at
+    BEFORE UPDATE ON categories
+    FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
 
-CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_products_updated_at
+    BEFORE UPDATE ON products
+    FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
 
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
 
-CREATE TRIGGER update_carts_updated_at BEFORE UPDATE ON carts FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_carts_updated_at
+    BEFORE UPDATE ON carts
+    FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
 
-CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON orders FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_orders_updated_at
+    BEFORE UPDATE ON orders
+    FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
 
-CREATE TRIGGER update_newsletter_subscribers_updated_at BEFORE UPDATE ON newsletter_subscribers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_newsletter_subscribers_updated_at
+    BEFORE UPDATE ON newsletter_subscribers
+    FOR EACH ROW
+BEGIN
+    SET NEW.updated_at = NOW();
+END;
 
 -- ==========================================
 -- 2. INSERT CATEGORIES (from categories-seed.sql)
