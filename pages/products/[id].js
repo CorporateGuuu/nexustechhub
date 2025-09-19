@@ -7,6 +7,9 @@ import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
 import { useCart } from '../../contexts/CartContext';
 import styles from '../../styles/ProductDetail.module.css';
 
+// Force dynamic rendering to avoid SSR issues with cart context
+export const dynamic = 'force-dynamic';
+
 export default function ProductDetail() {
   const router = useRouter();
   const { id } = router.query;
