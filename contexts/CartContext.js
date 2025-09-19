@@ -445,6 +445,34 @@ export function CartProvider({ children }) {
 // Custom hook to use cart context
 export function useCart() {
   const context = useContext(CartContext);
+
+  // During server-side rendering or before hydration, return a safe default
+  if (typeof window === 'undefined' || !context) {
+    return {
+      items: [],
+      totalItems: 0,
+      subtotal: 0,
+      discount: null,
+      discountAmount: 0,
+      shipping: 0,
+      tax: 0,
+      total: 0,
+      customerType: 'retail',
+      currency: 'AED',
+      lastUpdated: null,
+      addToCart: () => {},
+      removeFromCart: () => {},
+      updateQuantity: () => {},
+      clearCart: () => {},
+      applyDiscount: () => {},
+      removeDiscount: () => {},
+      setShipping: () => {},
+      setCustomerType: () => {},
+      getItemCount: () => 0,
+      isInCart: () => false
+    };
+  }
+
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
