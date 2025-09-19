@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Head from 'next/head';
 import { CartProvider } from '../contexts/CartContext';
+import { AuthProvider } from '../contexts/AuthContext';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 // Lazy load third-party components
@@ -61,23 +62,29 @@ function ThirdPartyProviders({ children }) {
 
   if (!mounted) {
     return (
-      <CartProvider>
-        {children}
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </AuthProvider>
     );
   }
 
   return (
     <Suspense fallback={
-      <CartProvider>
-        {children}
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </AuthProvider>
     }>
-      <CartProvider>
-        {children}
-        <WebVitals />
-        <ChatBot />
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          {children}
+          <WebVitals />
+          <ChatBot />
+        </CartProvider>
+      </AuthProvider>
     </Suspense>
   );
 }

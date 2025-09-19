@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useAuth } from '../../contexts/AuthContext';
 import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
 import styles from '../../styles/Home.module.css';
 
 export default function SignIn() {
   const router = useRouter();
+  const { signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,34 +32,16 @@ export default function SignIn() {
     setSuccess('');
 
     try {
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const { error } = await signIn(formData.email, formData.password);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccess(data.message);
-        // Store session data
-        if (data.sessionId) {
-          localStorage.setItem('sessionId', data.sessionId);
-        }
-        if (data.session) {
-          localStorage.setItem('userSession', JSON.stringify(data.session));
-        }
-        if (data.user) {
-          localStorage.setItem('userData', JSON.stringify(data.user));
-        }
+      if (error) {
+        setError(error.message || 'Sign in failed. Please try again.');
+      } else {
+        setSuccess('Login successful! Redirecting...');
         // Redirect to account page after successful login
         setTimeout(() => {
           router.push('/account');
         }, 1500);
-      } else {
-        setError(data.message || 'Sign in failed. Please try again.');
       }
     } catch (error) {
       console.error('Sign in error:', error);
