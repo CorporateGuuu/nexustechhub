@@ -1,7 +1,7 @@
--- vscode-sql: dialect=mysql
+-- vscode-sql: dialect=postgresql
 -- Complete Nexus Tech Hub Database Setup
--- Run this script in MySQL to set up all tables, categories, and products
--- MySQL syntax
+-- Run this script in PostgreSQL to set up all tables, categories, and products
+-- PostgreSQL syntax
 
 -- ==========================================
 -- 1. CREATE TABLES (from schema.sql)
@@ -9,20 +9,20 @@
 
 -- Categories Table
 CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
     image_url VARCHAR(255),
     parent_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (parent_id) REFERENCES categories(id)
 );
 
 -- Products Table
 CREATE TABLE products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     sku VARCHAR(50) UNIQUE,
@@ -30,15 +30,15 @@ CREATE TABLE products (
     price DECIMAL(10, 2) NOT NULL,
     discount_percentage DECIMAL(5, 2),
     stock_quantity INT NOT NULL DEFAULT 0,
-    is_featured TINYINT(1) DEFAULT FALSE,
-    is_new TINYINT(1) DEFAULT FALSE,
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_new BOOLEAN DEFAULT FALSE,
     image_url VARCHAR(255),
     weight DECIMAL(8, 2),
     dimensions VARCHAR(50),
     category_id INT,
     brand VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
@@ -206,50 +206,45 @@ CREATE INDEX idx_reviews_rating ON reviews(rating);
 CREATE INDEX idx_newsletter_subscribers_email ON newsletter_subscribers(email);
 CREATE INDEX idx_newsletter_subscribers_is_active ON newsletter_subscribers(is_active);
 
--- Create triggers for all tables with updated_at column
+-- Create function for updating updated_at column
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Create triggers for each table
+-- Create triggers for all tables with updated_at column
 CREATE TRIGGER update_categories_updated_at
     BEFORE UPDATE ON categories
     FOR EACH ROW
-BEGIN
-    SET NEW.updated_at = NOW();
-END;
+    EXECUTE FUNCTION update_updated_at();
 
 CREATE TRIGGER update_products_updated_at
     BEFORE UPDATE ON products
     FOR EACH ROW
-BEGIN
-    SET NEW.updated_at = NOW();
-END;
+    EXECUTE FUNCTION update_updated_at();
 
 CREATE TRIGGER update_users_updated_at
     BEFORE UPDATE ON users
     FOR EACH ROW
-BEGIN
-    SET NEW.updated_at = NOW();
-END;
+    EXECUTE FUNCTION update_updated_at();
 
 CREATE TRIGGER update_carts_updated_at
     BEFORE UPDATE ON carts
     FOR EACH ROW
-BEGIN
-    SET NEW.updated_at = NOW();
-END;
+    EXECUTE FUNCTION update_updated_at();
 
 CREATE TRIGGER update_orders_updated_at
     BEFORE UPDATE ON orders
     FOR EACH ROW
-BEGIN
-    SET NEW.updated_at = NOW();
-END;
+    EXECUTE FUNCTION update_updated_at();
 
 CREATE TRIGGER update_newsletter_subscribers_updated_at
     BEFORE UPDATE ON newsletter_subscribers
     FOR EACH ROW
-BEGIN
-    SET NEW.updated_at = NOW();
-END;
+    EXECUTE FUNCTION update_updated_at();
 
 -- ==========================================
 -- 2. INSERT CATEGORIES (from categories-seed.sql)
