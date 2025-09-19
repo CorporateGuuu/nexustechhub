@@ -4,6 +4,9 @@ import Link from 'next/link';
 import Layout from '../../components/Layout/Layout';
 import { useCart } from '../../contexts/CartContext';
 
+// Force dynamic rendering to avoid SSR issues with cart context
+export const dynamic = 'force-dynamic';
+
 export default function CheckoutSuccess() {
   const router = useRouter();
   const { session_id } = router.query;

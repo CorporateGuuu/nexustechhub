@@ -5,6 +5,31 @@ const CartContext = createContext();
 
 export const useCart = () => {
   const context = useContext(CartContext);
+
+  // During server-side rendering or before hydration, return a safe default
+  if (typeof window === 'undefined' || !context) {
+    return {
+      cart: {
+        id: null,
+        user_id: null,
+        session_id: null,
+        items: [],
+        item_count: 0,
+        total: 0
+      },
+      loading: false,
+      user: null,
+      addItem: () => {},
+      updateItem: () => {},
+      removeItem: () => {},
+      clearCart: () => {},
+      getTotal: () => 0,
+      getItemCount: () => 0,
+      isInCart: () => false,
+      getItemQuantity: () => 0
+    };
+  }
+
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
