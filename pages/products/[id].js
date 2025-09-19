@@ -10,7 +10,7 @@ import styles from '../../styles/ProductDetail.module.css';
 export default function ProductDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const { addToCart } = useCart();
+  const { addToCart, isInCart, getItemCount } = useCart();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
