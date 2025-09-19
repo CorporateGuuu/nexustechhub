@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import PreOwnedModal from '../PreOwnedModal';
 import Cart from '../Cart/Cart';
+import SearchBar from '../../components/SearchBar';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -1120,22 +1121,16 @@ const Header = () => {
 
         {/* Right Side Container */}
         <div className={styles.rightSide}>
-          {/* Search Bar */}
-          <div className={styles.searchContainer}>
-            <form className={styles.searchForm}>
-              <input
-                type="text"
-                placeholder="Search products..."
-                className={styles.searchInput}
-              />
-              <button type="submit" className={styles.searchButton} aria-label="Search products">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="M21 21l-4.35-4.35"></path>
-                </svg>
-              </button>
-            </form>
-          </div>
+        {/* Search Bar */}
+        <div className={styles.searchContainer}>
+          <SearchBar
+            placeholder="Search products..."
+            onSearch={(query) => {
+              // Redirect to search page with query
+              window.location.href = `/search?q=${encodeURIComponent(query)}`;
+            }}
+          />
+        </div>
 
           {/* Header Actions */}
           <div className={styles.headerActions}>
