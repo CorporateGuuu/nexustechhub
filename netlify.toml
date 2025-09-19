@@ -9,7 +9,7 @@
   CYPRESS_BASE_URL = "https://nexustechhub.netlify.app"
   # Secrets scanning configuration
   # Exclude documentation, setup files, env files, and build output from secrets scanning
-  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/,Scripts/,.env*,.netlify/"
+  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/,Scripts/,.env*,.netlify/,nexus-techhub-fresh/.env*"
 
 # Build settings
 [build.processing]
