@@ -13,9 +13,95 @@ export default function AppleModel() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('parts');
 
-  // Mock data for different Apple product models
+  // Fetch products from database API
+  const fetchProductsFromAPI = async (modelSlug) => {
+    try {
+      // Map model slugs to category filters
+      const categoryMap = {
+        'iphone-17-air': 'iphone',
+        'iphone-17-pro-max': 'iphone',
+        'iphone-17-pro': 'iphone',
+        'iphone-17': 'iphone',
+        'iphone-16-pro-max': 'iphone',
+        'iphone-16-pro': 'iphone',
+        'iphone-16-plus': 'iphone',
+        'iphone-16': 'iphone',
+        'iphone-15-pro-max': 'iphone',
+        'iphone-15-pro': 'iphone',
+        'iphone-15-plus': 'iphone',
+        'iphone-15': 'iphone',
+        'iphone-14-pro-max': 'iphone',
+        'iphone-14-pro': 'iphone',
+        'iphone-14-plus': 'iphone',
+        'iphone-14': 'iphone',
+        'iphone-13-pro-max': 'iphone',
+        'iphone-13-pro': 'iphone',
+        'iphone-13-mini': 'iphone',
+        'iphone-13': 'iphone'
+      };
+
+      const categorySlug = categoryMap[modelSlug] || 'iphone';
+
+      const response = await fetch(`/api/products?category=${categorySlug}&limit=50`);
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        return data.data;
+      }
+
+      // Fallback to mock data if API fails
+      return getMockProductsForModel(modelSlug);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return getMockProductsForModel(modelSlug);
+    }
+  };
+
+  // Mock data for different Apple product models (fallback)
   const getModelData = (modelSlug) => {
     const modelMap = {
+      // iPhone models
+      'iphone-17-air': {
+        name: 'iPhone 17 Air',
+        displayName: 'iPhone 17 Air',
+        category: 'iPhone',
+        releaseYear: '2025',
+        display: '6.1" Super Retina XDR OLED',
+        processor: 'Apple A18',
+        storage: ['128GB', '256GB', '512GB'],
+        colors: ['Black Titanium', 'White Titanium', 'Blue Titanium', 'Natural Titanium']
+      },
+      'iphone-17-pro-max': {
+        name: 'iPhone 17 Pro Max',
+        displayName: 'iPhone 17 Pro Max',
+        category: 'iPhone',
+        releaseYear: '2025',
+        display: '6.9" Super Retina XDR OLED',
+        processor: 'Apple A18 Pro',
+        storage: ['256GB', '512GB', '1TB'],
+        colors: ['Black Titanium', 'White Titanium', 'Blue Titanium', 'Natural Titanium']
+      },
+      'iphone-17-pro': {
+        name: 'iPhone 17 Pro',
+        displayName: 'iPhone 17 Pro',
+        category: 'iPhone',
+        releaseYear: '2025',
+        display: '6.3" Super Retina XDR OLED',
+        processor: 'Apple A18 Pro',
+        storage: ['128GB', '256GB', '512GB', '1TB'],
+        colors: ['Black Titanium', 'White Titanium', 'Blue Titanium', 'Natural Titanium']
+      },
+      'iphone-17': {
+        name: 'iPhone 17',
+        displayName: 'iPhone 17',
+        category: 'iPhone',
+        releaseYear: '2025',
+        display: '6.1" Super Retina XDR OLED',
+        processor: 'Apple A18',
+        storage: ['128GB', '256GB', '512GB'],
+        colors: ['Midnight', 'Starlight', 'Blue', 'Purple', 'Red']
+      },
+
       // Apple Watch models
       'watch-series-9-45mm': {
         name: 'Apple Watch Series 9 (45MM)',
@@ -47,16 +133,6 @@ export default function AppleModel() {
         storage: ['64GB'],
         colors: ['Titanium']
       },
-      'watch-series-8-45mm': {
-        name: 'Apple Watch Series 8 (45MM)',
-        displayName: 'Apple Watch Series 8 (45MM)',
-        category: 'Watch',
-        releaseYear: '2022',
-        display: '45mm Retina LTPO OLED',
-        processor: 'Apple S8',
-        storage: ['32GB'],
-        colors: ['Midnight', 'Starlight', 'Silver', 'Pink', 'Product Red']
-      },
 
       // AirPods models
       'airpods-pro-2nd-gen': {
@@ -66,33 +142,6 @@ export default function AppleModel() {
         releaseYear: '2022',
         features: ['Active Noise Cancellation', 'Transparency Mode', 'Spatial Audio'],
         colors: ['White']
-      },
-      'airpods-3rd-gen': {
-        name: 'AirPods (3rd Gen)',
-        displayName: 'AirPods (3rd Generation)',
-        category: 'AirPods',
-        releaseYear: '2021',
-        features: ['Spatial Audio', 'Adaptive EQ'],
-        colors: ['White']
-      },
-      'airpods-max': {
-        name: 'AirPods Max',
-        displayName: 'AirPods Max',
-        category: 'AirPods',
-        releaseYear: '2020',
-        features: ['Active Noise Cancellation', 'Spatial Audio', 'Over-ear Design'],
-        colors: ['Space Gray', 'Silver', 'Pink', 'Blue', 'Green']
-      },
-
-      // iPod models
-      'ipod-touch-7': {
-        name: 'iPod Touch 7th Gen',
-        displayName: 'iPod Touch (7th Generation)',
-        category: 'iPod',
-        releaseYear: '2019',
-        display: '4" Retina',
-        storage: ['32GB', '128GB', '256GB'],
-        colors: ['Space Gray', 'Silver', 'Gold', 'Pink', 'Blue']
       }
     };
 
@@ -100,51 +149,78 @@ export default function AppleModel() {
       name: modelSlug.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
       displayName: modelSlug.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
       category: 'Apple Product',
-      releaseYear: '2023',
+      releaseYear: '2025',
       colors: ['Black', 'White']
     };
   };
 
   const modelData = getModelData(model);
 
-  // Parts data for the specific model
-  const getPartsForModel = (modelSlug, category) => {
-    const baseParts = {
-      parts: [
-        {
-          id: `${modelSlug}-repair-kit`,
-          name: `${modelData.displayName} Repair Kit`,
-          price: modelSlug.includes('watch') ? 89.99 : modelSlug.includes('airpods') ? 49.99 : 39.99,
-          image: `/images/products/${modelSlug}-kit.jpg`,
-          compatibility: modelData.displayName,
-          type: 'Complete repair kit with tools and parts',
-          stock: 25,
-          rating: 4.5,
-          reviews: 67
-        },
-        {
-          id: `${modelSlug}-battery`,
-          name: `${modelData.displayName} Battery Replacement`,
-          price: modelSlug.includes('watch-ultra') ? 79.99 : modelSlug.includes('watch') ? 59.99 : 29.99,
-          image: `/images/products/${modelSlug}-battery.jpg`,
-          capacity: 'Original Apple capacity',
-          compatibility: modelData.displayName,
-          stock: 40,
-          rating: 4.4,
-          reviews: 89
-        }
-      ]
-    };
+  // Mock products for fallback
+  const getMockProductsForModel = (modelSlug) => {
+    const mockProducts = [
+      {
+        id: `${modelSlug}-screen`,
+        name: `${modelData.displayName} Screen Assembly`,
+        price: 299.99,
+        image: `/images/products/${modelSlug}-screen.jpg`,
+        compatibility: modelData.displayName,
+        type: 'Premium OLED display replacement',
+        stock: 25,
+        rating: 4.8,
+        reviews: 156
+      },
+      {
+        id: `${modelSlug}-battery`,
+        name: `${modelData.displayName} Battery Replacement`,
+        price: 79.99,
+        image: `/images/products/${modelSlug}-battery.jpg`,
+        capacity: 'Original Apple capacity',
+        compatibility: modelData.displayName,
+        stock: 40,
+        rating: 4.6,
+        reviews: 203
+      },
+      {
+        id: `${modelSlug}-charging-port`,
+        name: `${modelData.displayName} Charging Port`,
+        price: 49.99,
+        image: `/images/products/${modelSlug}-charging.jpg`,
+        compatibility: modelData.displayName,
+        type: 'USB-C charging assembly',
+        stock: 60,
+        rating: 4.4,
+        reviews: 89
+      }
+    ];
 
-    return baseParts[category] || baseParts.parts;
+    return mockProducts;
+  };
+
+  // Parts data for the specific model (legacy function)
+  const getPartsForModel = (modelSlug, category) => {
+    return getMockProductsForModel(modelSlug);
   };
 
   useEffect(() => {
-    if (model) {
-      const parts = getPartsForModel(model, selectedCategory);
-      setProducts(parts);
-      setLoading(false);
-    }
+    const loadProducts = async () => {
+      if (model) {
+        setLoading(true);
+        try {
+          const fetchedProducts = await fetchProductsFromAPI(model);
+          setProducts(fetchedProducts);
+        } catch (error) {
+          console.error('Error loading products:', error);
+          // Fallback to mock data
+          const parts = getPartsForModel(model, selectedCategory);
+          setProducts(parts);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProducts();
   }, [model, selectedCategory]);
 
   const handleAddToCart = async (product) => {
