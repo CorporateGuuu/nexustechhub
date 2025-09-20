@@ -4,7 +4,7 @@
 
 -- iPhone Parts (Apple > iPhone) - 20 products
 INSERT INTO products (name, slug, sku, description, price, discount_percentage, stock_quantity, is_featured, brand, category_id, image_url) VALUES
-('iPhone 15 Pro Max Screen', 'iphone-15-pro-max-screen', 'IPH15PM-SCRN-001', 'Original OEM screen replacement for iPhone 15 Pro Max with premium glass and LCD', 299.99, 10, 50, true, 'Apple', (SELECT id FROM categories WHERE slug = 'iphone'), '/images/products/iphone-15-pro-max-screen.jpg'),
+('iPhone 15 Pro Max Screen', 'ip15-pro-max-screen', 'IPH15PM-SCRN-001', 'Original OEM screen replacement for iPhone 15 Pro Max with premium glass and LCD', 299.99, 10, 50, true, 'Apple', (SELECT id FROM categories WHERE slug = 'iphone'), '/images/products/iphone-15-pro-max-screen.jpg'),
 ('iPhone 15 Pro Battery', 'iphone-15-pro-battery', 'IPH15P-BATT-001', 'Genuine Apple battery replacement for iPhone 15 Pro with 1-year warranty', 89.99, 5, 100, false, 'Apple', (SELECT id FROM categories WHERE slug = 'iphone'), '/images/products/iphone-15-pro-battery.jpg'),
 ('iPhone 15 Pro Max Charging Port', 'iphone-15-pro-max-charging-port', 'IPH15PM-CHRG-001', 'USB-C charging port assembly for iPhone 15 Pro Max with flex cable', 49.99, 0, 75, false, 'Apple', (SELECT id FROM categories WHERE slug = 'iphone'), '/images/products/iphone-15-pro-max-charging-port.jpg'),
 ('iPhone 15 Pro Camera Module', 'iphone-15-pro-camera-module', 'IPH15P-CAM-001', 'Triple camera module replacement for iPhone 15 Pro with lens protection', 149.99, 15, 30, true, 'Apple', (SELECT id FROM categories WHERE slug = 'iphone'), '/images/products/iphone-15-pro-camera.jpg'),

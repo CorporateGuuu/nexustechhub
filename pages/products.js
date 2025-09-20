@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
-import ProductGrid from '../components/ProductGrid';
 import SearchBar from '../components/SearchBar';
-import ProductFilters from '../components/ProductFilters';
 import styles from '../styles/Products.module.css';
+
+// Dynamically import client-side components to prevent hydration mismatches
+const ProductGrid = dynamic(() => import('../components/ProductGrid'), { ssr: false });
+const ProductFilters = dynamic(() => import('../components/ProductFilters'), { ssr: false });
 
 export default function Products() {
   const [products, setProducts] = useState([]);

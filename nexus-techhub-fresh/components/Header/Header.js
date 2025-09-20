@@ -1145,10 +1145,6 @@ const Header = () => {
         <div className={styles.searchContainer}>
           <SearchBar
             placeholder="Search products..."
-            onSearch={(query) => {
-              // Redirect to search page with query
-              window.location.href = `/search?q=${encodeURIComponent(query)}`;
-            }}
           />
         </div>
 

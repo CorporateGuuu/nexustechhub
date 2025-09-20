@@ -26,22 +26,36 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        inquiryType: 'general'
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: '',
+          inquiryType: 'general'
+        });
+      } else {
+        setSubmitStatus('error');
+        console.error('Contact form submission error:', data.message);
+      }
     } catch (error) {
       setSubmitStatus('error');
+      console.error('Contact form submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
