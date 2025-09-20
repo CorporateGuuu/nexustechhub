@@ -50,7 +50,6 @@ Update your `.env.local` file with the following variables:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-SUPABASE_JWT_SECRET=your_supabase_jwt_secret
 
 # NextAuth Configuration
 NEXTAUTH_URL=http://localhost:3005
