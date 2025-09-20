@@ -8,312 +8,36 @@ export default function RepairTools() {
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sortBy, setSortBy] = useState('name');
   const [filterBy, setFilterBy] = useState('all');
 
-  // Repair Tools Data
-  const repairTools = [
-    {
-      id: 'toolkit-pro-65pc',
-      name: 'Professional iFixit Repair Toolkit - 65 Pieces',
-      price: 199.99,
-      originalPrice: 249.99,
-      image: '/images/products/professional-toolkit.jpg',
-      category: 'Toolkits',
-      brand: 'iFixit',
-      stock: 15,
-      rating: 4.9,
-      reviews: 234,
-      tags: ['toolkit', 'professional', '65 pieces', 'complete']
-    },
-    {
-      id: 'toolkit-essentials',
-      name: 'Essential Repair Toolkit - 32 Pieces',
-      price: 89.99,
-      image: '/images/products/essentials-toolkit.jpg',
-      category: 'Toolkits',
-      brand: 'Generic',
-      stock: 35,
-      rating: 4.6,
-      reviews: 187,
-      tags: ['toolkit', 'essentials', '32 pieces', 'basic']
-    },
-    {
-      id: 'screwdriver-precision-set',
-      name: 'Precision Screwdriver Set - 24 Pieces',
-      price: 49.99,
-      image: '/images/products/precision-screwdrivers.jpg',
-      category: 'Screwdrivers',
-      brand: 'Wera',
-      stock: 85,
-      rating: 4.7,
-      reviews: 312,
-      tags: ['screwdriver', 'precision', '24 pieces', 'magnetic']
-    },
-    {
-      id: 'screwdriver-torx-set',
-      name: 'Torx Screwdriver Set - 12 Pieces',
-      price: 39.99,
-      image: '/images/products/torx-screwdrivers.jpg',
-      category: 'Screwdrivers',
-      brand: 'Generic',
-      stock: 95,
-      rating: 4.5,
-      reviews: 198,
-      tags: ['screwdriver', 'torx', 'security', 'apple']
-    },
-    {
-      id: 'screwdriver-phillips-set',
-      name: 'Phillips Screwdriver Set - 8 Pieces',
-      price: 24.99,
-      image: '/images/products/phillips-screwdrivers.jpg',
-      category: 'Screwdrivers',
-      brand: 'Generic',
-      stock: 120,
-      rating: 4.4,
-      reviews: 267,
-      tags: ['screwdriver', 'phillips', 'various sizes']
-    },
-    {
-      id: 'screwdriver-pentalobe-set',
-      name: 'Pentalobe Screwdriver Set - 5 Pieces',
-      price: 29.99,
-      image: '/images/products/pentalobe-screwdrivers.jpg',
-      category: 'Screwdrivers',
-      brand: 'Generic',
-      stock: 75,
-      rating: 4.6,
-      reviews: 145,
-      tags: ['screwdriver', 'pentalobe', 'apple', 'security']
-    },
-    {
-      id: 'suction-cup-set',
-      name: 'Professional Suction Cup Set - 6 Pieces',
-      price: 34.99,
-      image: '/images/products/suction-cups.jpg',
-      category: 'Opening Tools',
-      brand: 'Generic',
-      stock: 60,
-      rating: 4.5,
-      reviews: 178,
-      tags: ['suction cup', 'opening tool', 'screen removal']
-    },
-    {
-      id: 'pry-tool-set',
-      name: 'Plastic Pry Tool Set - 8 Pieces',
-      price: 19.99,
-      image: '/images/products/pry-tools.jpg',
-      category: 'Opening Tools',
-      brand: 'Generic',
-      stock: 100,
-      rating: 4.3,
-      reviews: 234,
-      tags: ['pry tool', 'plastic', 'opening', 'safe']
-    },
-    {
-      id: 'heat-gun-professional',
-      name: 'Professional Heat Gun with LCD Display',
-      price: 79.99,
-      originalPrice: 99.99,
-      image: '/images/products/heat-gun.jpg',
-      category: 'Heat Tools',
-      brand: 'Generic',
-      stock: 25,
-      rating: 4.8,
-      reviews: 156,
-      tags: ['heat gun', 'professional', 'lcd', 'temperature control']
-    },
-    {
-      id: 'heat-gun-basic',
-      name: 'Basic Heat Gun for Repairs',
-      price: 39.99,
-      image: '/images/products/basic-heat-gun.jpg',
-      category: 'Heat Tools',
-      brand: 'Generic',
-      stock: 45,
-      rating: 4.4,
-      reviews: 198,
-      tags: ['heat gun', 'basic', 'repair', 'adhesive removal']
-    },
-    {
-      id: 'soldering-station',
-      name: 'Digital Soldering Station with Stand',
-      price: 149.99,
-      image: '/images/products/soldering-station.jpg',
-      category: 'Soldering',
-      brand: 'Generic',
-      stock: 20,
-      rating: 4.7,
-      reviews: 89,
-      tags: ['soldering station', 'digital', 'temperature control', 'stand']
-    },
-    {
-      id: 'soldering-iron-kit',
-      name: 'Soldering Iron Kit with Tips',
-      price: 69.99,
-      image: '/images/products/soldering-iron-kit.jpg',
-      category: 'Soldering',
-      brand: 'Generic',
-      stock: 35,
-      rating: 4.5,
-      reviews: 134,
-      tags: ['soldering iron', 'kit', 'tips', 'stand']
-    },
-    {
-      id: 'multimeter-digital',
-      name: 'Digital Multimeter with Auto-Ranging',
-      price: 59.99,
-      image: '/images/products/digital-multimeter.jpg',
-      category: 'Testing Tools',
-      brand: 'Generic',
-      stock: 40,
-      rating: 4.6,
-      reviews: 167,
-      tags: ['multimeter', 'digital', 'auto-ranging', 'testing']
-    },
-    {
-      id: 'logic-board-tester',
-      name: 'Logic Board Testing Kit',
-      price: 199.99,
-      image: '/images/products/logic-board-tester.jpg',
-      category: 'Testing Tools',
-      brand: 'Generic',
-      stock: 15,
-      rating: 4.8,
-      reviews: 76,
-      tags: ['logic board', 'tester', 'diagnostic', 'professional']
-    },
-    {
-      id: 'microscope-digital',
-      name: 'Digital Microscope with Stand - 1000x',
-      price: 129.99,
-      originalPrice: 159.99,
-      image: '/images/products/digital-microscope.jpg',
-      category: 'Inspection',
-      brand: 'Generic',
-      stock: 18,
-      rating: 4.7,
-      reviews: 98,
-      tags: ['microscope', 'digital', '1000x', 'inspection']
-    },
-    {
-      id: 'magnifying-lamp',
-      name: 'LED Magnifying Lamp with Stand',
-      price: 89.99,
-      image: '/images/products/magnifying-lamp.jpg',
-      category: 'Inspection',
-      brand: 'Generic',
-      stock: 30,
-      rating: 4.5,
-      reviews: 145,
-      tags: ['magnifying lamp', 'led', 'stand', 'inspection']
-    },
-    {
-      id: 'anti-static-wrist-strap',
-      name: 'Anti-Static Wrist Strap with Grounding Cord',
-      price: 14.99,
-      image: '/images/products/anti-static-wrist-strap.jpg',
-      category: 'Safety Equipment',
-      brand: 'Generic',
-      stock: 80,
-      rating: 4.4,
-      reviews: 234,
-      tags: ['anti-static', 'wrist strap', 'safety', 'grounding']
-    },
-    {
-      id: 'anti-static-mat',
-      name: 'Anti-Static Work Mat - 24x18 inches',
-      price: 39.99,
-      image: '/images/products/anti-static-mat.jpg',
-      category: 'Safety Equipment',
-      brand: 'Generic',
-      stock: 25,
-      rating: 4.6,
-      reviews: 156,
-      tags: ['anti-static', 'mat', 'work surface', 'safety']
-    },
-    {
-      id: 'tweezers-set',
-      name: 'Precision Tweezers Set - 6 Pieces',
-      price: 24.99,
-      image: '/images/products/precision-tweezers.jpg',
-      category: 'Hand Tools',
-      brand: 'Generic',
-      stock: 65,
-      rating: 4.5,
-      reviews: 198,
-      tags: ['tweezers', 'precision', '6 pieces', 'hand tools']
-    },
-    {
-      id: 'cutter-diagonal',
-      name: 'Diagonal Cutting Pliers - Professional Grade',
-      price: 29.99,
-      image: '/images/products/diagonal-cutters.jpg',
-      category: 'Hand Tools',
-      brand: 'Generic',
-      stock: 50,
-      rating: 4.6,
-      reviews: 167,
-      tags: ['cutters', 'diagonal', 'pliers', 'professional']
-    },
-    {
-      id: 'needle-nose-pliers',
-      name: 'Long Nose Pliers - 6 inches',
-      price: 19.99,
-      image: '/images/products/needle-nose-pliers.jpg',
-      category: 'Hand Tools',
-      brand: 'Generic',
-      stock: 70,
-      rating: 4.4,
-      reviews: 145,
-      tags: ['pliers', 'needle nose', 'long nose', '6 inches']
-    },
-    {
-      id: 'spudger-set',
-      name: 'Spudger Set - 5 Pieces',
-      price: 16.99,
-      image: '/images/products/spudger-set.jpg',
-      category: 'Opening Tools',
-      brand: 'Generic',
-      stock: 90,
-      rating: 4.3,
-      reviews: 178,
-      tags: ['spudger', '5 pieces', 'opening tool', 'safe']
-    },
-    {
-      id: 'adhesive-strips',
-      name: 'Screen Adhesive Strips - 50 Pack',
-      price: 12.99,
-      image: '/images/products/adhesive-strips.jpg',
-      category: 'Consumables',
-      brand: 'Generic',
-      stock: 120,
-      rating: 4.2,
-      reviews: 234,
-      tags: ['adhesive', 'strips', 'screen', '50 pack']
-    },
-    {
-      id: 'thermal-paste',
-      name: 'High-Quality Thermal Paste - 5g',
-      price: 9.99,
-      image: '/images/products/thermal-paste.jpg',
-      category: 'Consumables',
-      brand: 'Generic',
-      stock: 150,
-      rating: 4.4,
-      reviews: 312,
-      tags: ['thermal paste', '5g', 'heat transfer', 'consumable']
+  // Fetch repair tools from API
+  const fetchRepairTools = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('/api/products?category=repair-tools&limit=100');
+      const data = await response.json();
+
+      if (data.success) {
+        setProducts(data.data || []);
+      } else {
+        setError('Failed to load repair tools. Please try again.');
+        setProducts([]);
+      }
+    } catch (err) {
+      console.error('Error fetching repair tools:', err);
+      setError('Failed to load repair tools. Please try again.');
+      setProducts([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setProducts(repairTools);
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
+    fetchRepairTools();
   }, []);
 
   const filteredProducts = products.filter(product => {
@@ -328,9 +52,9 @@ export default function RepairTools() {
       case 'price-high':
         return b.price - a.price;
       case 'rating':
-        return b.rating - a.rating;
+        return (b.average_rating || 0) - (a.average_rating || 0);
       case 'newest':
-        return b.id.localeCompare(a.id);
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
       default:
         return a.name.localeCompare(b.name);
     }
@@ -365,6 +89,20 @@ export default function RepairTools() {
         <div className={styles.loadingContainer}>
           <div className={styles.loadingSpinner}></div>
           <h3>Loading Repair Tools...</h3>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout title="Repair Tools - Nexus Tech Hub" description="Professional mobile device repair tools and equipment">
+        <div className={styles.errorContainer}>
+          <h3>Error Loading Products</h3>
+          <p>{error}</p>
+          <button onClick={fetchRepairTools} className="btn btn-primary">
+            Try Again
+          </button>
         </div>
       </Layout>
     );
@@ -439,71 +177,86 @@ export default function RepairTools() {
 
         {/* Products Grid */}
         <div className={styles.productsGrid}>
-          {sortedProducts.map(product => (
-            <div key={product.id} className={styles.productCard}>
-              <div className={styles.productImage}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  onError={(e) => {
-                    e.target.src = '/images/products/placeholder.svg';
-                  }}
-                />
-                {product.originalPrice && (
-                  <div className={styles.discountBadge}>
-                    -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                  </div>
-                )}
-                <div className={styles.productOverlay}>
-                  <Link href={`/products/${product.id}`} className={styles.viewProductBtn}>
-                    View Details
-                  </Link>
-                </div>
-              </div>
-
-              <div className={styles.productInfo}>
-                <div className={styles.productCategory}>{product.category}</div>
-                <h3 className={styles.productName}>
-                  <Link href={`/products/${product.id}`}>{product.name}</Link>
-                </h3>
-                <div className={styles.productModel}>Brand: {product.brand}</div>
-
-                <div className={styles.productRating}>
-                  <div className={styles.stars}>
-                    {'★'.repeat(Math.floor(product.rating))}
-                    {'☆'.repeat(5 - Math.floor(product.rating))}
-                  </div>
-                  <span className={styles.ratingValue}>{product.rating}</span>
-                  <span className={styles.reviewCount}>({product.reviews})</span>
-                </div>
-
-                <div className={styles.productPrice}>
-                  <span className={styles.currentPrice}>${product.price}</span>
-                  {product.originalPrice && (
-                    <span className={styles.originalPrice}>${product.originalPrice}</span>
-                  )}
-                </div>
-
-                <div className={styles.productStock}>
-                  {product.stock > 10 ? (
-                    <span className={styles.inStock}>✓ In Stock</span>
-                  ) : product.stock > 0 ? (
-                    <span className={styles.lowStock}>⚠ Only {product.stock} left</span>
-                  ) : (
-                    <span className={styles.outOfStock}>✗ Out of Stock</span>
-                  )}
-                </div>
-
-                <button
-                  className={styles.addToCartBtn}
-                  onClick={() => handleAddToCart(product)}
-                  disabled={product.stock === 0}
-                >
-                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                </button>
-              </div>
+          {sortedProducts.length === 0 ? (
+            <div className={styles.noProducts}>
+              <h3>No repair tools found</h3>
+              <p>We're currently updating our repair tools inventory. Please check back soon!</p>
             </div>
-          ))}
+          ) : (
+            sortedProducts.map(product => {
+              const originalPrice = product.discount_percentage
+                ? product.price / (1 - product.discount_percentage / 100)
+                : null;
+
+              return (
+                <div key={product.id} className={styles.productCard}>
+                  <div className={styles.productImage}>
+                    <img
+                      src={product.image || '/images/products/placeholder.svg'}
+                      alt={product.name}
+                      onError={(e) => {
+                        e.target.src = '/images/products/placeholder.svg';
+                      }}
+                    />
+                    {product.discount_percentage && (
+                      <div className={styles.discountBadge}>
+                        -{product.discount_percentage}%
+                      </div>
+                    )}
+                    <div className={styles.productOverlay}>
+                      <Link href={`/products/${product.slug || product.id}`} className={styles.viewProductBtn}>
+                        View Details
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className={styles.productInfo}>
+                    <div className={styles.productCategory}>{product.category}</div>
+                    <h3 className={styles.productName}>
+                      <Link href={`/products/${product.slug || product.id}`}>{product.name}</Link>
+                    </h3>
+                    <div className={styles.productModel}>Brand: {product.brand}</div>
+
+                    {product.average_rating && (
+                      <div className={styles.productRating}>
+                        <div className={styles.stars}>
+                          {'★'.repeat(Math.floor(product.average_rating))}
+                          {'☆'.repeat(5 - Math.floor(product.average_rating))}
+                        </div>
+                        <span className={styles.ratingValue}>{product.average_rating.toFixed(1)}</span>
+                        <span className={styles.reviewCount}>({product.review_count || 0})</span>
+                      </div>
+                    )}
+
+                    <div className={styles.productPrice}>
+                      <span className={styles.currentPrice}>${product.price}</span>
+                      {originalPrice && (
+                        <span className={styles.originalPrice}>${originalPrice.toFixed(2)}</span>
+                      )}
+                    </div>
+
+                    <div className={styles.productStock}>
+                      {product.stock > 10 ? (
+                        <span className={styles.inStock}>✓ In Stock</span>
+                      ) : product.stock > 0 ? (
+                        <span className={styles.lowStock}>⚠ Only {product.stock} left</span>
+                      ) : (
+                        <span className={styles.outOfStock}>✗ Out of Stock</span>
+                      )}
+                    </div>
+
+                    <button
+                      className={styles.addToCartBtn}
+                      onClick={() => handleAddToCart(product)}
+                      disabled={product.stock === 0}
+                    >
+                      {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
         {/* Category Links */}

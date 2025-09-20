@@ -8,336 +8,36 @@ export default function SamsungParts() {
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sortBy, setSortBy] = useState('name');
   const [filterBy, setFilterBy] = useState('all');
 
-  // Samsung Parts Data
-  const samsungParts = [
-    {
-      id: 'sg-s24-ultra-screen',
-      name: 'Samsung Galaxy S24 Ultra AMOLED Screen',
-      price: 349.99,
-      originalPrice: 399.99,
-      image: '/images/products/samsung-s24-ultra-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S24 Ultra',
-      stock: 20,
-      rating: 4.9,
-      reviews: 87,
-      tags: ['screen', 'amoled', 'ultra', 's24', 's pen']
-    },
-    {
-      id: 'sg-s24-plus-screen',
-      name: 'Samsung Galaxy S24 Plus AMOLED Screen',
-      price: 299.99,
-      image: '/images/products/samsung-s24-plus-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S24 Plus',
-      stock: 28,
-      rating: 4.8,
-      reviews: 65,
-      tags: ['screen', 'amoled', 'plus', 's24']
-    },
-    {
-      id: 'sg-s24-screen',
-      name: 'Samsung Galaxy S24 OLED Screen Assembly',
-      price: 279.99,
-      image: '/images/products/samsung-s24-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S24',
-      stock: 30,
-      rating: 4.7,
-      reviews: 54,
-      tags: ['screen', 'amoled', 's24']
-    },
-    {
-      id: 'sg-s23-ultra-screen',
-      name: 'Samsung Galaxy S23 Ultra AMOLED Screen',
-      price: 319.99,
-      image: '/images/products/samsung-s23-ultra-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S23 Ultra',
-      stock: 22,
-      rating: 4.9,
-      reviews: 112,
-      tags: ['screen', 'amoled', 'ultra', 's23', 's pen']
-    },
-    {
-      id: 'sg-s23-plus-screen',
-      name: 'Samsung Galaxy S23 Plus AMOLED Screen',
-      price: 269.99,
-      image: '/images/products/samsung-s23-plus-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S23 Plus',
-      stock: 35,
-      rating: 4.8,
-      reviews: 78,
-      tags: ['screen', 'amoled', 'plus', 's23']
-    },
-    {
-      id: 'sg-s23-ultra-battery',
-      name: 'Samsung Galaxy S23 Ultra Battery',
-      price: 89.99,
-      originalPrice: 99.99,
-      image: '/images/products/samsung-s23-ultra-battery.jpg',
-      category: 'Batteries',
-      model: 'Galaxy S23 Ultra',
-      stock: 55,
-      rating: 4.6,
-      reviews: 145,
-      tags: ['battery', 'ultra', 's23', '5000mah']
-    },
-    {
-      id: 'sg-s23-battery',
-      name: 'Samsung Galaxy S23 Battery Replacement',
-      price: 79.99,
-      image: '/images/products/samsung-s23-battery.jpg',
-      category: 'Batteries',
-      model: 'Galaxy S23 Series',
-      stock: 80,
-      rating: 4.5,
-      reviews: 198,
-      tags: ['battery', 's23', '3900mah']
-    },
-    {
-      id: 'sg-s22-ultra-screen',
-      name: 'Samsung Galaxy S22 Ultra AMOLED Screen',
-      price: 289.99,
-      image: '/images/products/samsung-s22-ultra-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S22 Ultra',
-      stock: 25,
-      rating: 4.8,
-      reviews: 134,
-      tags: ['screen', 'amoled', 'ultra', 's22', 's pen']
-    },
-    {
-      id: 'sg-s22-plus-screen',
-      name: 'Samsung Galaxy S22 Plus AMOLED Screen',
-      price: 249.99,
-      image: '/images/products/samsung-s22-plus-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S22 Plus',
-      stock: 40,
-      rating: 4.7,
-      reviews: 89,
-      tags: ['screen', 'amoled', 'plus', 's22']
-    },
-    {
-      id: 'sg-s22-screen',
-      name: 'Samsung Galaxy S22 AMOLED Screen Assembly',
-      price: 229.99,
-      image: '/images/products/samsung-s22-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S22',
-      stock: 45,
-      rating: 4.6,
-      reviews: 76,
-      tags: ['screen', 'amoled', 's22']
-    },
-    {
-      id: 'sg-s21-ultra-screen',
-      name: 'Samsung Galaxy S21 Ultra AMOLED Screen',
-      price: 259.99,
-      image: '/images/products/samsung-s21-ultra-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S21 Ultra',
-      stock: 30,
-      rating: 4.8,
-      reviews: 156,
-      tags: ['screen', 'amoled', 'ultra', 's21']
-    },
-    {
-      id: 'sg-s21-plus-screen',
-      name: 'Samsung Galaxy S21 Plus AMOLED Screen',
-      price: 219.99,
-      image: '/images/products/samsung-s21-plus-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S21 Plus',
-      stock: 42,
-      rating: 4.7,
-      reviews: 98,
-      tags: ['screen', 'amoled', 'plus', 's21']
-    },
-    {
-      id: 'sg-s21-screen',
-      name: 'Samsung Galaxy S21 AMOLED Screen Assembly',
-      price: 199.99,
-      image: '/images/products/samsung-s21-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy S21',
-      stock: 50,
-      rating: 4.6,
-      reviews: 87,
-      tags: ['screen', 'amoled', 's21']
-    },
-    {
-      id: 'sg-z-fold5-screen',
-      name: 'Samsung Galaxy Z Fold 5 Inner Screen',
-      price: 599.99,
-      originalPrice: 699.99,
-      image: '/images/products/samsung-z-fold5-screen.jpg',
-      category: 'Foldable Screens',
-      model: 'Galaxy Z Fold 5',
-      stock: 15,
-      rating: 4.9,
-      reviews: 43,
-      tags: ['screen', 'amoled', 'fold', 'z fold 5', 'foldable']
-    },
-    {
-      id: 'sg-z-fold4-screen',
-      name: 'Samsung Galaxy Z Fold 4 Inner Screen',
-      price: 549.99,
-      image: '/images/products/samsung-z-fold4-screen.jpg',
-      category: 'Foldable Screens',
-      model: 'Galaxy Z Fold 4',
-      stock: 18,
-      rating: 4.8,
-      reviews: 67,
-      tags: ['screen', 'amoled', 'fold', 'z fold 4', 'foldable']
-    },
-    {
-      id: 'sg-z-fold3-screen',
-      name: 'Samsung Galaxy Z Fold 3 Inner Screen',
-      price: 499.99,
-      image: '/images/products/samsung-z-fold3-screen.jpg',
-      category: 'Foldable Screens',
-      model: 'Galaxy Z Fold 3',
-      stock: 20,
-      rating: 4.7,
-      reviews: 89,
-      tags: ['screen', 'amoled', 'fold', 'z fold 3', 'foldable']
-    },
-    {
-      id: 'sg-z-flip5-screen',
-      name: 'Samsung Galaxy Z Flip 5 Outer Screen',
-      price: 149.99,
-      image: '/images/products/samsung-z-flip5-screen.jpg',
-      category: 'Foldable Screens',
-      model: 'Galaxy Z Flip 5',
-      stock: 35,
-      rating: 4.6,
-      reviews: 54,
-      tags: ['screen', 'amoled', 'flip', 'z flip 5', 'outer']
-    },
-    {
-      id: 'sg-z-flip4-screen',
-      name: 'Samsung Galaxy Z Flip 4 Outer Screen',
-      price: 129.99,
-      image: '/images/products/samsung-z-flip4-screen.jpg',
-      category: 'Foldable Screens',
-      model: 'Galaxy Z Flip 4',
-      stock: 40,
-      rating: 4.5,
-      reviews: 78,
-      tags: ['screen', 'amoled', 'flip', 'z flip 4', 'outer']
-    },
-    {
-      id: 'sg-note20-ultra-screen',
-      name: 'Samsung Galaxy Note 20 Ultra Screen',
-      price: 199.99,
-      image: '/images/products/samsung-note20-ultra-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy Note 20 Ultra',
-      stock: 40,
-      rating: 4.7,
-      reviews: 123,
-      tags: ['screen', 'amoled', 'note', 'note 20', 's pen']
-    },
-    {
-      id: 'sg-note20-screen',
-      name: 'Samsung Galaxy Note 20 Screen Assembly',
-      price: 179.99,
-      image: '/images/products/samsung-note20-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy Note 20',
-      stock: 45,
-      rating: 4.6,
-      reviews: 98,
-      tags: ['screen', 'amoled', 'note', 'note 20', 's pen']
-    },
-    {
-      id: 'sg-a54-screen',
-      name: 'Samsung Galaxy A54 LCD Screen Assembly',
-      price: 149.99,
-      image: '/images/products/samsung-a54-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy A54',
-      stock: 65,
-      rating: 4.5,
-      reviews: 156,
-      tags: ['screen', 'amoled', 'a54', 'a series']
-    },
-    {
-      id: 'sg-a53-screen',
-      name: 'Samsung Galaxy A53 LCD Screen Assembly',
-      price: 129.99,
-      image: '/images/products/samsung-a53-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy A53',
-      stock: 70,
-      rating: 4.4,
-      reviews: 134,
-      tags: ['screen', 'amoled', 'a53', 'a series']
-    },
-    {
-      id: 'sg-a52-screen',
-      name: 'Samsung Galaxy A52 LCD Screen Assembly',
-      price: 119.99,
-      image: '/images/products/samsung-a52-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy A52',
-      stock: 75,
-      rating: 4.3,
-      reviews: 112,
-      tags: ['screen', 'amoled', 'a52', 'a series']
-    },
-    {
-      id: 'sg-a51-screen',
-      name: 'Samsung Galaxy A51 LCD Screen Assembly',
-      price: 99.99,
-      image: '/images/products/samsung-a51-screen.jpg',
-      category: 'Screens',
-      model: 'Galaxy A51',
-      stock: 80,
-      rating: 4.2,
-      reviews: 98,
-      tags: ['screen', 'amoled', 'a51', 'a series']
-    },
-    {
-      id: 'sg-usb-c-port',
-      name: 'Samsung USB-C Charging Port Assembly',
-      price: 39.99,
-      image: '/images/products/samsung-usb-c-port.jpg',
-      category: 'Charging Ports',
-      model: 'Galaxy Series',
-      stock: 120,
-      rating: 4.4,
-      reviews: 234,
-      tags: ['charging', 'port', 'usb-c', 'galaxy']
-    },
-    {
-      id: 'sg-micro-usb-port',
-      name: 'Samsung Micro USB Charging Port Assembly',
-      price: 29.99,
-      image: '/images/products/samsung-micro-usb-port.jpg',
-      category: 'Charging Ports',
-      model: 'Galaxy Series',
-      stock: 140,
-      rating: 4.3,
-      reviews: 187,
-      tags: ['charging', 'port', 'micro usb', 'galaxy']
+  // Fetch Samsung products from API
+  const fetchSamsungProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch('/api/products?brand=Samsung&limit=100');
+      const data = await response.json();
+
+      if (data.success) {
+        setProducts(data.data || []);
+      } else {
+        setError('Failed to load Samsung products. Please try again.');
+        setProducts([]);
+      }
+    } catch (err) {
+      console.error('Error fetching Samsung products:', err);
+      setError('Failed to load Samsung products. Please try again.');
+      setProducts([]);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setProducts(samsungParts);
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
+    fetchSamsungProducts();
   }, []);
 
   const filteredProducts = products.filter(product => {
@@ -352,9 +52,9 @@ export default function SamsungParts() {
       case 'price-high':
         return b.price - a.price;
       case 'rating':
-        return b.rating - a.rating;
+        return (b.average_rating || 0) - (a.average_rating || 0);
       case 'newest':
-        return b.id.localeCompare(a.id);
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
       default:
         return a.name.localeCompare(b.name);
     }
@@ -383,6 +83,20 @@ export default function SamsungParts() {
         <div className={styles.loadingContainer}>
           <div className={styles.loadingSpinner}></div>
           <h3>Loading Samsung Parts...</h3>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout title="Samsung Parts - Nexus Tech Hub" description="Professional Samsung Galaxy repair parts and components">
+        <div className={styles.errorContainer}>
+          <h3>Error Loading Products</h3>
+          <p>{error}</p>
+          <button onClick={fetchSamsungProducts} className="btn btn-primary">
+            Try Again
+          </button>
         </div>
       </Layout>
     );
@@ -457,71 +171,86 @@ export default function SamsungParts() {
 
         {/* Products Grid */}
         <div className={styles.productsGrid}>
-          {sortedProducts.map(product => (
-            <div key={product.id} className={styles.productCard}>
-              <div className={styles.productImage}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  onError={(e) => {
-                    e.target.src = '/images/products/placeholder.svg';
-                  }}
-                />
-                {product.originalPrice && (
-                  <div className={styles.discountBadge}>
-                    -{Math.round((1 - product.price / product.originalPrice) * 100)}%
-                  </div>
-                )}
-                <div className={styles.productOverlay}>
-                  <Link href={`/products/${product.id}`} className={styles.viewProductBtn}>
-                    View Details
-                  </Link>
-                </div>
-              </div>
-
-              <div className={styles.productInfo}>
-                <div className={styles.productCategory}>{product.category}</div>
-                <h3 className={styles.productName}>
-                  <Link href={`/products/${product.id}`}>{product.name}</Link>
-                </h3>
-                <div className={styles.productModel}>{product.model}</div>
-
-                <div className={styles.productRating}>
-                  <div className={styles.stars}>
-                    {'★'.repeat(Math.floor(product.rating))}
-                    {'☆'.repeat(5 - Math.floor(product.rating))}
-                  </div>
-                  <span className={styles.ratingValue}>{product.rating}</span>
-                  <span className={styles.reviewCount}>({product.reviews})</span>
-                </div>
-
-                <div className={styles.productPrice}>
-                  <span className={styles.currentPrice}>${product.price}</span>
-                  {product.originalPrice && (
-                    <span className={styles.originalPrice}>${product.originalPrice}</span>
-                  )}
-                </div>
-
-                <div className={styles.productStock}>
-                  {product.stock > 10 ? (
-                    <span className={styles.inStock}>✓ In Stock</span>
-                  ) : product.stock > 0 ? (
-                    <span className={styles.lowStock}>⚠ Only {product.stock} left</span>
-                  ) : (
-                    <span className={styles.outOfStock}>✗ Out of Stock</span>
-                  )}
-                </div>
-
-                <button
-                  className={styles.addToCartBtn}
-                  onClick={() => handleAddToCart(product)}
-                  disabled={product.stock === 0}
-                >
-                  {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                </button>
-              </div>
+          {sortedProducts.length === 0 ? (
+            <div className={styles.noProducts}>
+              <h3>No Samsung products found</h3>
+              <p>We're currently updating our Samsung parts inventory. Please check back soon!</p>
             </div>
-          ))}
+          ) : (
+            sortedProducts.map(product => {
+              const originalPrice = product.discount_percentage
+                ? product.price / (1 - product.discount_percentage / 100)
+                : null;
+
+              return (
+                <div key={product.id} className={styles.productCard}>
+                  <div className={styles.productImage}>
+                    <img
+                      src={product.image || '/images/products/placeholder.svg'}
+                      alt={product.name}
+                      onError={(e) => {
+                        e.target.src = '/images/products/placeholder.svg';
+                      }}
+                    />
+                    {product.discount_percentage && (
+                      <div className={styles.discountBadge}>
+                        -{product.discount_percentage}%
+                      </div>
+                    )}
+                    <div className={styles.productOverlay}>
+                      <Link href={`/products/${product.slug || product.id}`} className={styles.viewProductBtn}>
+                        View Details
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className={styles.productInfo}>
+                    <div className={styles.productCategory}>{product.category}</div>
+                    <h3 className={styles.productName}>
+                      <Link href={`/products/${product.slug || product.id}`}>{product.name}</Link>
+                    </h3>
+                    <div className={styles.productModel}>{product.brand} {product.sku}</div>
+
+                    {product.average_rating && (
+                      <div className={styles.productRating}>
+                        <div className={styles.stars}>
+                          {'★'.repeat(Math.floor(product.average_rating))}
+                          {'☆'.repeat(5 - Math.floor(product.average_rating))}
+                        </div>
+                        <span className={styles.ratingValue}>{product.average_rating.toFixed(1)}</span>
+                        <span className={styles.reviewCount}>({product.review_count || 0})</span>
+                      </div>
+                    )}
+
+                    <div className={styles.productPrice}>
+                      <span className={styles.currentPrice}>${product.price}</span>
+                      {originalPrice && (
+                        <span className={styles.originalPrice}>${originalPrice.toFixed(2)}</span>
+                      )}
+                    </div>
+
+                    <div className={styles.productStock}>
+                      {product.stock > 10 ? (
+                        <span className={styles.inStock}>✓ In Stock</span>
+                      ) : product.stock > 0 ? (
+                        <span className={styles.lowStock}>⚠ Only {product.stock} left</span>
+                      ) : (
+                        <span className={styles.outOfStock}>✗ Out of Stock</span>
+                      )}
+                    </div>
+
+                    <button
+                      className={styles.addToCartBtn}
+                      onClick={() => handleAddToCart(product)}
+                      disabled={product.stock === 0}
+                    >
+                      {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
         {/* Category Links */}
