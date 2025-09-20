@@ -42,6 +42,17 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@nexustechhub" />
 
+          {/* Font loading optimization to prevent layout shifts */}
+          <link
+            rel="preload"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            as="style"
+            onload="this.onload=null;this.rel='stylesheet'"
+          />
+          <noscript>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+          </noscript>
+
           {/* Additional meta tags for SEO and accessibility */}
           <meta name="robots" content="index, follow" />
           <meta name="author" content="Nexus Tech Hub" />
