@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import PreOwnedModal from '../PreOwnedModal';
 import Cart from '../Cart/Cart';
-import SearchBar from '../../components/SearchBar';
+import SearchBar from '../../../components/SearchBar';
 import styles from './Header.module.css';
 
 const Header = () => {
