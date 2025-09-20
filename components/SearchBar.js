@@ -92,7 +92,9 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
   };
 
   // Handle suggestion click
-  const handleSuggestionClick = (suggestion) => {
+  const handleSuggestionClick = (suggestion, event) => {
+    event.preventDefault();
+    event.stopPropagation();
     setQuery(suggestion.name);
     setShowSuggestions(false);
     // Redirect to product page
@@ -168,7 +170,7 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
                   <div
                     key={suggestion.id}
                     className={styles.suggestionItem}
-                    onClick={() => handleSuggestionClick(suggestion)}
+                    onClick={(event) => handleSuggestionClick(suggestion, event)}
                   >
                     <div className={styles.suggestionContent}>
                       <div className={styles.suggestionName}>{suggestion.name}</div>
