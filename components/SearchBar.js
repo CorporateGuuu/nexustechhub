@@ -95,8 +95,8 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
   const handleSuggestionClick = (suggestion) => {
     setQuery(suggestion.name);
     setShowSuggestions(false);
-    // You could redirect to product page here
-    // window.location.href = `/products/${suggestion.id}`;
+    // Redirect to product page
+    window.location.href = `/products/${suggestion.id}`;
   };
 
   // Handle popular search click
