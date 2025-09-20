@@ -77,136 +77,20 @@ export default function Products() {
       if (data.success) {
         setProducts(filteredProducts);
       } else {
-        // Fallback to mock data if API fails
-        setProducts(getMockProducts(filters.category || 'all'));
+        // Show error message instead of fallback to mock data
+        setError('Failed to load products. Please try again.');
+        setProducts([]);
       }
     } catch (err) {
       console.error('Error fetching products:', err);
-      // Fallback to mock data
-      setProducts(getMockProducts(filters.category || 'all'));
+      setError('Failed to load products. Please try again.');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Mock products for fallback
-  const getMockProducts = (category) => {
-    const allProducts = [
-      {
-        id: 'ip15-screen-oled',
-        name: 'iPhone 15 Pro OLED Screen Assembly',
-        category: 'iPhone Parts',
-        price: 299.99,
-        discount_percentage: 0,
-        stock: 50,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-IP15P-SCREEN-001'
-      },
-      {
-        id: 'ip14-battery',
-        name: 'iPhone 14 Battery Replacement',
-        category: 'iPhone Parts',
-        price: 89.99,
-        discount_percentage: 0,
-        stock: 100,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-IP14-BAT-001'
-      },
-      {
-        id: 'sg-s24-screen-oled',
-        name: 'Samsung Galaxy S24 OLED Screen Assembly',
-        category: 'Samsung Parts',
-        price: 249.99,
-        discount_percentage: 0,
-        stock: 30,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-SGS24-SCREEN-001'
-      },
-      {
-        id: 'sg-s23-battery',
-        name: 'Samsung Galaxy S23 Battery Replacement',
-        category: 'Samsung Parts',
-        price: 79.99,
-        discount_percentage: 0,
-        stock: 80,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-SGS23-BAT-001'
-      },
-      {
-        id: 'ipad-pro12-lcd',
-        name: 'iPad Pro 12.9" LCD Assembly',
-        category: 'iPad Parts',
-        price: 299.99,
-        discount_percentage: 0,
-        stock: 25,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-IPPRO12-LCD-001'
-      },
-      {
-        id: 'ipad-air5-digitizer',
-        name: 'iPad Air 5th Gen Digitizer',
-        category: 'iPad Parts',
-        price: 159.99,
-        discount_percentage: 0,
-        stock: 45,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-IPAIR5-DIGIT-001'
-      },
-      {
-        id: 'toolkit-pro-50pc',
-        name: 'Professional Repair Tool Kit - 50 Pieces',
-        category: 'Repair Tools',
-        price: 149.99,
-        discount_percentage: 0,
-        stock: 20,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-TOOLS-PRO50-001'
-      },
-      {
-        id: 'screwdriver-precision',
-        name: 'Precision Screwdriver Set - iPhone/Samsung',
-        category: 'Repair Tools',
-        price: 39.99,
-        discount_percentage: 0,
-        stock: 150,
-        image: '/images/products/placeholder.svg',
-        sku: 'NTH-TOOLS-SCREW-001'
-      }
-    ];
 
-    if (category === 'all') {
-      return allProducts;
-    }
-
-    return allProducts.filter(product => {
-      switch (category) {
-        case 'apple':
-          return ['iPhone Parts', 'iPad Parts', 'MacBook Parts'].includes(product.category);
-        case 'samsung':
-          return product.category === 'Samsung Parts';
-        case 'motorola':
-          return product.category === 'Motorola Parts';
-        case 'google':
-          return product.category === 'Google Parts';
-        case 'other-parts':
-          return ['LG Parts', 'Microsoft Parts', 'Asus Parts', 'OnePlus Parts', 'ZTE Parts', 'Huawei Parts', 'Xiaomi Parts', 'Sony Parts', 'TCL Parts', 'Lenovo Parts', 'Amazon Parts'].includes(product.category);
-        case 'game-console':
-          return ['Microsoft Console Parts', 'Sony Console Parts', 'Nintendo Console Parts', 'Oculus Console Parts', 'Valve Console Parts'].includes(product.category);
-        case 'accessories':
-          return product.category === 'Accessories';
-        case 'tools-supplies':
-          return product.category === 'Repair Tools';
-        case 'refurbishing':
-          return product.category === 'Refurbished Parts';
-        case 'board-components':
-          return product.category === 'Board Components';
-        case 'pre-owned-devices':
-          return product.category === 'Pre-Owned Devices';
-        default:
-          return true;
-      }
-    });
-  };
 
   // Handle category change
   const handleCategoryChange = (category) => {
