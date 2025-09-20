@@ -1,10 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
 import styles from '../styles/Account.module.css';
 
 export default function Account() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = () => {
+      // In a real app, this would check for authentication tokens/cookies
+      // For now, we'll simulate checking localStorage or cookies
+      const token = localStorage.getItem('authToken') || document.cookie.includes('authToken');
+
+      if (!token) {
+        // User is not authenticated, redirect to login
+        router.push('/auth/login?redirect=/account');
+        return;
+      }
+
+      setIsAuthenticated(true);
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <Layout title="Loading...">
+        <div className={styles.loading}>
+          <div className={styles.loadingSpinner}></div>
+          <p>Loading your account...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  // If not authenticated, show login prompt (fallback in case redirect doesn't work)
+  if (!isAuthenticated) {
+    return (
+      <Layout title="Login Required - Nexus Tech Hub">
+        <div className={styles.loginRequired}>
+          <div className={styles.loginCard}>
+            <h1>Login Required</h1>
+            <p>You must be logged in to access your account.</p>
+            <div className={styles.loginActions}>
+              <Link href="/auth/login" className={styles.loginBtn}>
+                Sign In
+              </Link>
+              <Link href="/auth/register" className={styles.registerBtn}>
+                Create Account
+              </Link>
+            </div>
+            <p className={styles.backLink}>
+              <Link href="/">← Back to Home</Link>
+            </p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   // Mock user data - in a real app, this would come from authentication
   const user = {
