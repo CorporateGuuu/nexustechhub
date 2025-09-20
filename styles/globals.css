@@ -183,10 +183,28 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
   width: 100%;
+  min-height: 100vh;
   position: relative;
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* Ensure content fits viewport */
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Minimize layout shifts from dynamic content */
+* {
+  /* Prevent layout shifts from content changes */
+  contain: layout style paint;
+}
+
+/* Reserve space for dynamic elements */
+.Layout_main__BzAPb,
+.Hero_hero__DIPbL {
+  /* Ensure these elements maintain their dimensions */
+  min-height: 50vh;
+  contain: layout;
 }
 
 /* Fix for iOS input zoom */

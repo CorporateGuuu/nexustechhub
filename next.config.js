@@ -1,5 +1,5 @@
 module.exports = {
-  // Content Security Policy for XSS protection
+  // Enhanced Content Security Policy for XSS protection
   async headers() {
     return [
       {
@@ -7,7 +7,9 @@ module.exports = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.stripe.com https://js.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com;"
+            value: process.env.NODE_ENV === 'production'
+              ? "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.stripe.com https://js.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+              : "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.stripe.com https://js.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com;"
           }
         ]
       }
@@ -44,6 +46,16 @@ module.exports = {
     serverComponentsExternalPackages: [],
     // Optimize third-party usage
     esmExternals: 'loose',
+    // Reduce bundle size
+    optimizeServerReact: true,
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
 
   // Optimize build output
@@ -51,8 +63,16 @@ module.exports = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
+  // Enable source maps for debugging
+  productionBrowserSourceMaps: true,
+
   // Optimized bundle analysis - balance between caching and request count
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
+    // Ensure source maps are generated for both dev and production
+    if (!dev) {
+      config.devtool = 'source-map';
+    }
+
     if (!isServer) {
       // More conservative chunk splitting to reduce request count
       config.optimization.splitChunks = {

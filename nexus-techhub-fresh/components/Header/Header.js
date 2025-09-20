@@ -1105,15 +1105,15 @@ const Header = () => {
                   </Link>
                 )}
 
-                {/* Mega Menu - Only render when active to reduce DOM size */}
+                {/* Mega Menu - Only render when active and limit items to reduce DOM size */}
                 {item.submenu && activeMegaMenu === item.id && (
                   <div className={`${styles.megaMenu} ${styles.active}`}>
                     <div className={styles.megaMenuContent}>
-                      {item.submenu.map((section, sectionIndex) => (
+                      {item.submenu.slice(0, 3).map((section, sectionIndex) => (
                         <div key={sectionIndex} className={styles.megaMenuColumn}>
                           <h3 className={styles.megaMenuTitle}>{section.title}</h3>
                           <div className={styles.megaMenuList}>
-                            {section.items.map((subItem, subIndex) => (
+                            {section.items.slice(0, 5).map((subItem, subIndex) => (
                               <div key={subIndex}>
                                 <Link href={subItem.url} className={styles.megaMenuLink}>
                                   {subItem.title}
@@ -1121,6 +1121,13 @@ const Header = () => {
                                 </Link>
                               </div>
                             ))}
+                            {section.items.length > 5 && (
+                              <div>
+                                <Link href={item.url} className={styles.megaMenuLink}>
+                                  View all {section.title.toLowerCase()} →
+                                </Link>
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}

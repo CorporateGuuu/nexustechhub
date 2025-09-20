@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import Head from 'next/head';
+import { Analytics } from '@vercel/analytics/react';
 import { CartProvider } from '../contexts/CartContext';
 import { AuthProvider } from '../contexts/AuthContext';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -191,33 +192,34 @@ function MyApp({ Component, pageProps }) {
       document.documentElement.dir = 'ltr';
     }
 
-    // Defer service worker registration to avoid blocking main thread
-    const registerSW = async () => {
-      if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-        try {
-          // Use requestIdleCallback if available, otherwise setTimeout
-          const register = () => {
-            navigator.serviceWorker.register('/sw.js')
-              .then((registration) => {
-                console.log('Service Worker registered successfully:', registration);
-              })
-              .catch((error) => {
-                console.log('Service Worker registration failed:', error);
-              });
-          };
-
-          if ('requestIdleCallback' in window) {
-            requestIdleCallback(register, { timeout: 5000 });
-          } else {
-            setTimeout(register, 100);
+    // Defer non-critical JavaScript execution to reduce initial load time
+    const deferNonCriticalJS = () => {
+      // Use requestIdleCallback for better performance
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          // Register service worker during idle time
+          if (navigator.serviceWorker) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {
+              // Silently fail if SW registration fails
+            });
           }
-        } catch (error) {
-          console.log('Service Worker registration error:', error);
-        }
+
+          // Defer any other non-critical initialization
+          if (window.gtag) {
+            // Analytics would go here if needed
+          }
+        }, { timeout: 8000 }); // 8 second timeout
+      } else {
+        // Fallback for browsers without requestIdleCallback
+        setTimeout(() => {
+          if (navigator.serviceWorker) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+          }
+        }, 3000);
       }
     };
 
-    registerSW();
+    deferNonCriticalJS();
   }, []);
 
   return (
@@ -225,6 +227,7 @@ function MyApp({ Component, pageProps }) {
       <ThirdPartyProviders>
         <AppContent Component={Component} pageProps={pageProps} />
       </ThirdPartyProviders>
+      <Analytics />
     </ErrorBoundary>
   );
 }
