@@ -1,14 +1,19 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import Link from 'next/link';
 import styles from '../styles/SearchBar.module.css';
 
-const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSearch }) => {
+const SearchBar = memo(({ placeholder = "Search for products, parts, tools...", onSearch }) => {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Refs for debouncing and caching
+  const debounceTimer = useRef(null);
+  const abortController = useRef(null);
+  const cache = useRef(new Map());
 
   // Popular search terms for suggestions
   const popularSearches = [
@@ -32,44 +37,76 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
     { name: 'Repair Tools', slug: 'repair-tools', count: '20+ products' }
   ];
 
-  // Fetch real search results from API
-  const fetchSearchResults = async (query) => {
+  // Optimized fetch with caching and abort controller
+  const fetchSearchResults = useCallback(async (searchQuery) => {
+    // Check cache first
+    if (cache.current.has(searchQuery)) {
+      return cache.current.get(searchQuery);
+    }
+
+    // Cancel previous request
+    if (abortController.current) {
+      abortController.current.abort();
+    }
+
+    // Create new abort controller
+    abortController.current = new AbortController();
+
     try {
-      const response = await fetch(`/api/products?search=${encodeURIComponent(query)}&limit=10`);
+      const response = await fetch(
+        `/api/products?search=${encodeURIComponent(searchQuery)}&limit=10`,
+        { signal: abortController.current.signal }
+      );
       const data = await response.json();
+
       if (data.success) {
-        return data.data.map(product => ({
+        const results = data.data.map(product => ({
           id: product.id,
           name: product.name,
           category: product.category,
           price: product.price,
           discount_percentage: product.discount_percentage || 0
         }));
+
+        // Cache the results
+        cache.current.set(searchQuery, results);
+        return results;
       }
       return [];
     } catch (error) {
-      console.error('Error fetching search results:', error);
+      if (error.name !== 'AbortError') {
+        console.error('Error fetching search results:', error);
+      }
       return [];
     }
-  };
+  }, []);
 
-  // Handle search input
+  // Debounced search function
+  const debouncedSearch = useCallback((searchQuery) => {
+    // Clear previous timer
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    // Set new timer
+    debounceTimer.current = setTimeout(async () => {
+      if (searchQuery.length > 0) {
+        setIsLoading(true);
+        const results = await fetchSearchResults(searchQuery);
+        setSuggestions(results.slice(0, 5));
+        setIsLoading(false);
+      }
+    }, 300); // 300ms debounce
+  }, [fetchSearchResults]);
+
+  // Handle search input with debouncing
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
 
     if (value.length > 0) {
-      setIsLoading(true);
-      // Fetch real search results
-      fetchSearchResults(value).then(results => {
-        setSuggestions(results.slice(0, 5)); // Limit to 5 suggestions
-        setIsLoading(false);
-      }).catch(error => {
-        console.error('Error fetching suggestions:', error);
-        setSuggestions([]);
-        setIsLoading(false);
-      });
       setShowSuggestions(true);
+      debouncedSearch(value);
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
@@ -116,6 +153,20 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
   const handleCategoryClick = (category) => {
     window.location.href = `/products/${category.slug}`;
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      // Clear debounce timer
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+      // Abort any pending requests
+      if (abortController.current) {
+        abortController.current.abort();
+      }
+    };
+  }, []);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -261,6 +312,8 @@ const SearchBar = ({ placeholder = "Search for products, parts, tools...", onSea
       </div>
     </div>
   );
-};
+});
+
+SearchBar.displayName = 'SearchBar';
 
 export default SearchBar;

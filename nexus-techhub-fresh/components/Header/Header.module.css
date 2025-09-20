@@ -182,7 +182,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  transform: translateX(0);
+  transform: translateX(0) translateY(-10px);
   width: 600px;
   max-width: 90vw;
   background: white;
@@ -193,10 +193,13 @@
   margin-top: 0.5rem;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Only animate composited properties */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   max-height: 70vh;
   overflow-y: auto;
+  /* Force GPU acceleration */
+  will-change: transform, opacity;
 }
 
 /* Adjust mega menu position for items that would go off-screen */
@@ -460,7 +463,10 @@
   z-index: 2000;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  /* Only animate composited properties */
+  transition: opacity 0.3s ease;
+  /* Force GPU acceleration */
+  will-change: opacity;
 }
 
 .mobileMenu.open {
@@ -477,8 +483,11 @@
   background: white;
   overflow-y: auto;
   transform: translateX(100%);
+  /* Only animate composited properties */
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  /* Force GPU acceleration */
+  will-change: transform;
 }
 
 .mobileMenu.open .mobileMenuContent {
@@ -685,6 +694,37 @@
   .accountLink span {
     display: none;
   }
+}
+
+/* Search placeholder styles for lazy loading */
+.searchPlaceholder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  min-width: 200px;
+}
+
+.searchInput {
+  flex: 1;
+  height: 20px;
+  background: #e9ecef;
+  border-radius: 2px;
+  border: none;
+}
+
+.searchButton {
+  width: 20px;
+  height: 20px;
+  background: #007bff;
+  border-radius: 2px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Mobile Styles */

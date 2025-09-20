@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import PreOwnedModal from '../PreOwnedModal';
 import Cart from '../Cart/Cart';
-import SearchBar from '../../../components/SearchBar';
 import styles from './Header.module.css';
+
+// Lazy load SearchBar for better performance
+const SearchBar = dynamic(() => import('../../../components/SearchBar'), {
+  loading: () => (
+    <div className={styles.searchContainer}>
+      <div className={styles.searchPlaceholder}>
+        <div className={styles.searchInput}></div>
+        <div className={styles.searchButton}></div>
+      </div>
+    </div>
+  ),
+  ssr: false // Disable SSR for search component
+});
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -1092,9 +1105,9 @@ const Header = () => {
                   </Link>
                 )}
 
-                {/* Mega Menu */}
-                {item.submenu && (
-                  <div className={`${styles.megaMenu} ${activeMegaMenu === item.id ? styles.active : ''}`}>
+                {/* Mega Menu - Only render when active to reduce DOM size */}
+                {item.submenu && activeMegaMenu === item.id && (
+                  <div className={`${styles.megaMenu} ${styles.active}`}>
                     <div className={styles.megaMenuContent}>
                       {item.submenu.map((section, sectionIndex) => (
                         <div key={sectionIndex} className={styles.megaMenuColumn}>
@@ -1148,11 +1161,12 @@ const Header = () => {
             <button
               className={`${styles.mobileMenuToggle} ${isMobileMenuOpen ? styles.active : ''}`}
               onClick={toggleMobileMenu}
-              aria-label="Toggle mobile menu"
+              aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
+              aria-expanded={isMobileMenuOpen}
             >
-              <span></span>
-              <span></span>
-              <span></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
             </button>
           </div>
         </div>

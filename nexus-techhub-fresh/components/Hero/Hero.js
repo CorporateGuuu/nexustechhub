@@ -36,13 +36,38 @@ const Hero = () => {
     }
   ];
 
-  // Auto-play carousel
+  // Auto-play carousel - defer to avoid blocking main thread
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // Change slide every 5 seconds
+    const startCarousel = () => {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+      }, 5000); // Change slide every 5 seconds
 
-    return () => clearInterval(interval);
+      return interval;
+    };
+
+    // Use requestIdleCallback if available to defer carousel start
+    if ('requestIdleCallback' in window) {
+      const cancelId = requestIdleCallback(() => {
+        const interval = startCarousel();
+        // Store interval for cleanup
+        return () => clearInterval(interval);
+      }, { timeout: 2000 });
+
+      return () => {
+        if (cancelId) {
+          cancelIdleCallback(cancelId);
+        }
+      };
+    } else {
+      // Fallback to setTimeout
+      const timeoutId = setTimeout(() => {
+        const interval = startCarousel();
+        return () => clearInterval(interval);
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
   }, [slides.length]);
 
   const goToSlide = (index) => {
@@ -115,11 +140,16 @@ const Hero = () => {
                         src={slide.image}
                         alt={slide.title}
                         onError={(e) => e.target.src = '/images/products/placeholder.svg'}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        priority={index === 0}
+                        width="600"
+                        height="400"
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
                       />
                       <div className={styles.slideOverlay}></div>
                     </div>
                     <div className={styles.slideText}>
-                      <h3>{slide.title}</h3>
+                      <div className={styles.slideTitle} role="heading" aria-level="2">{slide.title}</div>
                       <p>{slide.subtitle}</p>
                       <Link href={slide.link} className={styles.slideCta}>
                         {slide.cta}
@@ -137,6 +167,8 @@ const Hero = () => {
                   key={index}
                   className={`${styles.indicator} ${index === currentSlide ? styles.active : ''}`}
                   onClick={() => goToSlide(index)}
+                  aria-label={`Go to slide ${index + 1} of ${slides.length}`}
+                  aria-current={index === currentSlide ? 'true' : 'false'}
                 />
               ))}
             </div>
