@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styles from '../styles/SearchBar.module.css';
 
 const SearchBar = memo(({ placeholder = "Search for products, parts, tools...", onSearch }) => {
+  const router = useRouter();
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -121,8 +123,8 @@ const SearchBar = memo(({ placeholder = "Search for products, parts, tools...", 
       if (onSearch) {
         onSearch(query);
       } else {
-        // Default behavior - redirect to search page
-        window.location.href = `/search?q=${encodeURIComponent(query)}`;
+        // Default behavior - redirect to search page using Next.js router
+        router.push(`/search?q=${encodeURIComponent(query)}`);
       }
       setShowSuggestions(false);
     }
@@ -134,8 +136,8 @@ const SearchBar = memo(({ placeholder = "Search for products, parts, tools...", 
     event.stopPropagation();
     setQuery(suggestion.name);
     setShowSuggestions(false);
-    // Redirect to product page
-    window.location.href = `/products/${suggestion.id}`;
+    // Redirect to product page using Next.js router
+    router.push(`/products/${suggestion.id}`);
   };
 
   // Handle popular search click
@@ -145,13 +147,13 @@ const SearchBar = memo(({ placeholder = "Search for products, parts, tools...", 
     if (onSearch) {
       onSearch(term);
     } else {
-      window.location.href = `/search?q=${encodeURIComponent(term)}`;
+      router.push(`/search?q=${encodeURIComponent(term)}`);
     }
   };
 
   // Handle category click
   const handleCategoryClick = (category) => {
-    window.location.href = `/products/${category.slug}`;
+    router.push(`/products/${category.slug}`);
   };
 
   // Cleanup on unmount
@@ -298,18 +300,7 @@ const SearchBar = memo(({ placeholder = "Search for products, parts, tools...", 
         )}
       </form>
 
-      {/* Search shortcuts for mobile */}
-      <div className={styles.searchShortcuts}>
-        <Link href="/products/iphone-parts" className={styles.shortcutLink}>
-          iPhone Parts
-        </Link>
-        <Link href="/products/samsung-parts" className={styles.shortcutLink}>
-          Samsung Parts
-        </Link>
-        <Link href="/products/repair-tools" className={styles.shortcutLink}>
-          Tools
-        </Link>
-      </div>
+
     </div>
   );
 });

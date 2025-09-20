@@ -1,20 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-// Email configuration
-const emailTransporter = nodemailer.createTransporter({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: process.env.SMTP_SECURE === 'true',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// Initialize SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -54,9 +46,12 @@ export default async function handler(req, res) {
 
     // Send email notification to admin
     try {
-      await emailTransporter.sendMail({
-        from: `"Nexus Tech Hub Contact" <${process.env.SMTP_USER}>`,
-        to: process.env.ADMIN_EMAIL || process.env.SMTP_USER,
+      const adminMsg = {
+        to: process.env.ADMIN_EMAIL || 'admin@nexustechhub.ae',
+        from: {
+          email: 'noreply@nexustechhub.ae',
+          name: 'Nexus Tech Hub Contact'
+        },
         subject: `New Contact Inquiry: ${subject || 'General Inquiry'}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -93,16 +88,22 @@ export default async function handler(req, res) {
             </p>
           </div>
         `
-      });
+      };
+
+      await sgMail.send(adminMsg);
+      console.log('Admin notification email sent successfully');
     } catch (emailError) {
       console.error('Admin email sending error:', emailError);
     }
 
     // Send confirmation email to customer
     try {
-      await emailTransporter.sendMail({
-        from: `"Nexus Tech Hub" <${process.env.SMTP_USER}>`,
+      const customerMsg = {
         to: email,
+        from: {
+          email: 'noreply@nexustechhub.ae',
+          name: 'Nexus Tech Hub'
+        },
         subject: 'Thank you for contacting Nexus Tech Hub',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -130,7 +131,7 @@ export default async function handler(req, res) {
             <p>In the meantime, feel free to browse our extensive catalog of premium repair parts:</p>
 
             <div style="text-align: center; margin: 30px 0;">
-              <a href="${process.env.NEXT_PUBLIC_SITE_URL}/products"
+              <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://nexustechhub.com'}/products"
                  style="background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
                 Browse Our Products
               </a>
@@ -146,7 +147,10 @@ export default async function handler(req, res) {
             </p>
           </div>
         `
-      });
+      };
+
+      await sgMail.send(customerMsg);
+      console.log('Customer confirmation email sent successfully');
     } catch (emailError) {
       console.error('Customer confirmation email error:', emailError);
     }
