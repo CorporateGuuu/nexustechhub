@@ -226,6 +226,8 @@
   object-position: center;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   filter: brightness(0.8) contrast(1.1) saturate(1.2);
+  /* Prevent layout shifts */
+  aspect-ratio: 16 / 9;
 }
 
 .slideImage img:hover {
@@ -270,7 +272,7 @@
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
 
-.slideText h3 {
+.slideTitle {
   font-size: 2rem;
   font-weight: 800;
   margin: 0 0 0.75rem 0;

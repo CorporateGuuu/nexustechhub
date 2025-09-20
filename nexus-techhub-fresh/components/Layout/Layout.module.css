@@ -6,5 +6,26 @@
 
 .main {
   flex: 1;
-  width: 100%;
+  padding: 0;
+}
+
+/* Loading placeholders for lazy-loaded components */
+.headerPlaceholder,
+.footerPlaceholder {
+  height: 80px; /* Approximate header/footer height */
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerPlaceholder {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.footerPlaceholder {
+  border-top: 1px solid #e9ecef;
 }

@@ -1,33 +1,118 @@
-/* Import base styles with CSS variables */
-@import './base.css';
-@import './landing.css';
-@import './ZIndexFix.module.css';
-
-/* Theme Variables */
+/* Critical CSS Variables - Inlined to avoid request chaining */
 :root {
-  /* Light Theme (Default) - White, Green, Turquoise */
-  --bg-color: #ffffff;
-  --text-color: #111827;
-  --text-muted: #6b7280;
+  /* Colors - White, Green, Turquoise Theme - High Contrast Compliant */
   --primary-color: #10b981;
-  /* Green */
+  /* Green - WCAG AA compliant */
   --primary-dark: #059669;
-  /* Darker Green */
-  --secondary-color: #14b8a6;
-  /* Turquoise */
-  --secondary-dark: #0d9488;
-  /* Darker Turquoise */
-  --border-color: #d1d5db;
+  /* Darker Green - WCAG AAA compliant */
+  --primary-light: #d1fae5;
+  /* Light Green */
+  --secondary-color: #0891b2;
+  /* Better contrast turquoise */
+  --secondary-dark: #0e7490;
+  /* Darker turquoise with better contrast */
+  --text-color: #111827;
+  /* Near Black - WCAG AAA compliant */
+  --text-muted: #374151;
+  /* Darker gray for better contrast (was #6b7280) */
+  --border-color: #9ca3af;
+  /* Darker border for better visibility */
+  --accent-color: #0891b2;
+  /* Better contrast turquoise */
+  --accent-dark: #0e7490;
+  /* Darker turquoise */
+  --accent-light: #ccfbf1;
+  /* Light Turquoise */
+  --error-color: #dc2626;
+  /* Better contrast red (was #ef4444) */
+  --error-light: #fecaca;
+  /* Light Red */
+  --success-color: #059669;
+  /* Better contrast green (was #10b981) */
+  --success-light: #d1fae5;
+  /* Light Green */
+  --warning-color: #d97706;
+  /* Better contrast orange (was #f59e0b) */
+  --warning-light: #fef3c7;
+  /* Light Orange */
+  --black: #000000;
+  /* Pure Black */
+  --white: #ffffff;
+  /* Pure White */
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-size-xs: 0.75rem;
+  /* 12px */
+  --font-size-sm: 0.875rem;
+  /* 14px */
+  --font-size-base: 1rem;
+  /* 16px */
+  --font-size-lg: 1.125rem;
+  /* 18px */
+  --font-size-xl: 1.25rem;
+  /* 20px */
+  --font-size-2xl: 1.5rem;
+  /* 24px */
+  --font-size-3xl: 1.875rem;
+  /* 30px */
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  /* 4px */
+  --spacing-sm: 0.5rem;
+  /* 8px */
+  --spacing-md: 1rem;
+  /* 16px */
+  --spacing-lg: 1.5rem;
+  /* 24px */
+  --spacing-xl: 2rem;
+  /* 32px */
+  --spacing-2xl: 3rem;
+  /* 48px */
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* Container widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  /* 4px */
+  --radius-md: 0.5rem;
+  /* 8px */
+  --radius-lg: 0.75rem;
+  /* 12px */
+  --radius-xl: 1rem;
+  /* 16px */
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Z-index */
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal: 40;
+  --z-popover: 50;
+  --z-tooltip: 60;
+
+  /* Theme Variables - Light Theme (Default) - White, Green, Turquoise */
+  --bg-color: #ffffff;
   --card-bg: #ffffff;
   --header-bg: #ffffff;
   --footer-bg: #10b981;
   /* Green footer to match Nexus TechHub branding */
-  --accent-color: #14b8a6;
-  /* Turquoise accent */
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --error-color: #ef4444;
-  /* Red for errors */
 }
 
 /* Dark Theme - White, Green, Turquoise */

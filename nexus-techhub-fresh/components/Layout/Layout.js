@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Head from 'next/head';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
+import dynamic from 'next/dynamic';
 import styles from './Layout.module.css';
+
+// Lazy load heavy components
+const Header = dynamic(() => import('../Header/Header'), {
+  loading: () => <div className={styles.headerPlaceholder}></div>
+});
+
+const Footer = dynamic(() => import('../Footer/Footer'), {
+  loading: () => <div className={styles.footerPlaceholder}></div>
+});
 
 export default function Layout({ children, title, description }) {
   const pageTitle = title 

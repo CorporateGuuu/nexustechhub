@@ -18,13 +18,32 @@ module.exports = {
   images: {
     domains: ['localhost'],
     formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 31536000, // 1 year cache
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+
+  // Compression and optimization
+  compress: true,
+
+  // Reduce bundle size
+  swcMinify: true,
 
   // Enable experimental features for better performance
   experimental: {
     optimizeCss: true,
     scrollRestoration: true,
-    optimizePackageImports: ['@mui/material', '@mui/icons-material', '@stripe/stripe-js'],
+    optimizePackageImports: [
+      '@mui/material',
+      '@mui/icons-material',
+      '@stripe/stripe-js',
+      '@supabase/supabase-js',
+      '@sentry/nextjs'
+    ],
+    concurrentFeatures: true,
+    serverComponentsExternalPackages: [],
+    // Optimize third-party usage
+    esmExternals: 'loose',
   },
 
   // Optimize build output
@@ -32,33 +51,59 @@ module.exports = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Bundle analysis and optimization
+  // Optimized bundle analysis - balance between caching and request count
   webpack: (config, { isServer }) => {
-    // Optimize chunks
     if (!isServer) {
-      config.optimization.splitChunks.cacheGroups = {
-        ...config.optimization.splitChunks.cacheGroups,
-        // Separate vendor chunks
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-          priority: 10,
-        },
-        // Separate large libraries
-        stripe: {
-          test: /[\\/]node_modules[\\/]@stripe[\\/]/,
-          name: 'stripe',
-          chunks: 'all',
-          priority: 20,
-        },
-        mui: {
-          test: /[\\/]node_modules[\\/]@mui[\\/]/,
-          name: 'mui',
-          chunks: 'all',
-          priority: 20,
+      // More conservative chunk splitting to reduce request count
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          // Framework chunk - React, Next.js, and core libraries
+          framework: {
+            chunks: 'all',
+            name: 'framework',
+            test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|next|@next|scheduler|prop-types)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          // Vendor chunk - commonly used libraries
+          vendor: {
+            test: /[\\/]node_modules[\\/](?!react|react-dom|next|@next|scheduler|prop-types)/,
+            name: 'vendor',
+            chunks: 'all',
+            priority: 30,
+            enforce: true,
+            minSize: 100000, // 100KB minimum
+          },
+          // Large third-party libraries (only if they're actually large)
+          stripe: {
+            test: /[\\/]node_modules[\\/]@stripe[\\/]/,
+            name: 'stripe',
+            chunks: 'async', // Load asynchronously when needed
+            priority: 20,
+          },
+          supabase: {
+            test: /[\\/]node_modules[\\/]@supabase[\\/]/,
+            name: 'supabase',
+            chunks: 'async', // Load asynchronously when needed
+            priority: 20,
+          },
+          // MUI only if it's actually used on the page
+          mui: {
+            test: /[\\/]node_modules[\\/]@mui[\\/]/,
+            name: 'mui',
+            chunks: 'async', // Load asynchronously when needed
+            priority: 10,
+          },
         },
       };
+
+      // Enable compression and optimization
+      config.optimization.minimize = true;
+
+      // Reduce bundle size by removing unused exports
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = true;
     }
 
     return config;

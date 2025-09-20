@@ -184,6 +184,10 @@ export default function Home() {
                       e.target.style.opacity = '0.7';
                     }}
                     loading={index < 2 ? "eager" : "lazy"}
+                    priority={index === 0}
+                    width="400"
+                    height="300"
+                    style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
                   />
                   <div className={styles.categoryOverlay}>
                     <span className={styles.categoryOverlayBtn}>Shop Now</span>
@@ -234,6 +238,14 @@ export default function Home() {
                       e.target.style.opacity = '0.7';
                     }}
                     loading="lazy"
+                    width="300"
+                    height="300"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      aspectRatio: '1',
+                      objectFit: 'cover'
+                    }}
                   />
                   <div className={styles.productBadge}>{product.badge}</div>
                   <div className={styles.productOverlay}>
@@ -256,7 +268,10 @@ export default function Home() {
                     )}
                   </div>
 
-                  <button className={styles.addToCartBtn}>
+                  <button
+                    className={styles.addToCartBtn}
+                    aria-label={`Add ${product.name} to cart`}
+                  >
                     Add to Cart
                   </button>
                 </div>
