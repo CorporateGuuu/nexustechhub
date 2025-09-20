@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     // Send email notification to admin
     try {
       const adminMsg = {
-        to: process.env.ADMIN_EMAIL || 'admin@nexustechhub.ae',
+        to: process.env.ADMIN_EMAIL,
         from: {
           email: 'noreply@nexustechhub.ae',
           name: 'Nexus Tech Hub Contact'
