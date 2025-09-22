@@ -1,4 +1,9 @@
 /* Nexus TechHub Global Styles */
+
+/* Tailwind CSS v4 Directives - Essential for proper styling */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 * {
   margin: 0;
   padding: 0;
