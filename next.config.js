@@ -28,9 +28,6 @@ module.exports = {
   // Compression and optimization
   compress: true,
 
-  // Reduce bundle size
-  swcMinify: true,
-
   // Enable experimental features for better performance
   experimental: {
     optimizeCss: true,
@@ -42,21 +39,22 @@ module.exports = {
       '@supabase/supabase-js',
       '@sentry/nextjs'
     ],
-    concurrentFeatures: true,
-    serverComponentsExternalPackages: [],
-    // Optimize third-party usage
-    esmExternals: 'loose',
     // Reduce bundle size
     optimizeServerReact: true,
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+
+  // Turbopack configuration
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },
+
+  // Server external packages
+  serverExternalPackages: [],
 
   // Optimize build output
   compiler: {

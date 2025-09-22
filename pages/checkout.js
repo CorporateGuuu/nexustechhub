@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
@@ -56,7 +56,7 @@ export default function Checkout() {
   };
 
   // Fetch cart data
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     try {
       setLoading(true);
       const sessionId = getSessionId();
@@ -75,7 +75,7 @@ export default function Checkout() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
 
   // Handle shipping info changes
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function Checkout() {
         instructions: shippingInfo.instructions
       });
     }
-  }, [billingInfo, sameAsBilling]);
+  }, [billingInfo, sameAsBilling, shippingInfo.instructions]);
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -140,7 +140,7 @@ export default function Checkout() {
   // Load cart on mount
   useEffect(() => {
     fetchCart();
-  }, []);
+  }, [fetchCart]);
 
   if (loading) {
     return (
