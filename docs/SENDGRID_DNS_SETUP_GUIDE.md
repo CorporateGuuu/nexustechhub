@@ -138,18 +138,21 @@ After verification, you can use:
 ## 🛠️ **Troubleshooting**
 
 ### **DNS Records Not Found**
+
 - **Wait Time**: DNS propagation takes 5-30 minutes
 - **TTL Settings**: Ensure TTL is 300 or lower
 - **Record Format**: Some registrars require full domain name
 - **Contact Support**: Reach out to your domain registrar
 
 ### **SendGrid Verification Fails**
+
 - **Double-check Values**: Ensure exact match with documentation
 - **No Extra Spaces**: Values should be exact
 - **Quotes for TXT**: TXT record value must be in quotes
 - **Contact SendGrid**: Support available in dashboard
 
 ### **Email Sending Issues**
+
 - **API Key**: Verify `SENDGRID_API_KEY` is correct
 - **Domain Verification**: Must be completed first
 - **Rate Limits**: Check SendGrid account limits
