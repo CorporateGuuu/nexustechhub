@@ -1,22 +1,46 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import PreOwnedModal from '../PreOwnedModal';
 import Cart from '../Cart/Cart';
 import styles from './Header.module.css';
 
-// Lazy load SearchBar for better performance
-const SearchBar = dynamic(() => import('../../../components/SearchBar'), {
-  loading: () => (
+// Simple inline search component to avoid import issues
+const SimpleSearchBar = () => {
+  const [query, setQuery] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+    }
+  };
+
+  return (
     <div className={styles.searchContainer}>
-      <div className={styles.searchPlaceholder}>
-        <div className={styles.searchInput}></div>
-        <div className={styles.searchButton}></div>
-      </div>
+      <form onSubmit={handleSearch} className={styles.searchForm}>
+        <div className={styles.searchInputWrapper}>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search products..."
+            className={styles.searchInput}
+            autoComplete="off"
+          />
+          <button type="submit" className={styles.searchButton}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="M21 21l-4.35-4.35"></path>
+            </svg>
+          </button>
+        </div>
+      </form>
     </div>
-  ),
-  ssr: false // Disable SSR for search component
-});
+  );
+};
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -938,9 +962,7 @@ const Header = () => {
         <div className={styles.rightSide}>
         {/* Search Bar */}
         <div className={styles.searchContainer}>
-          <SearchBar
-            placeholder="Search products..."
-          />
+          <SimpleSearchBar />
         </div>
 
           {/* Header Actions */}
