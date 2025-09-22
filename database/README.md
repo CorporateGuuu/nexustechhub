@@ -54,6 +54,7 @@ Main Categories (11):
 ```
 
 ### Sample Products
+
 - **iPhone Parts**: 20 products (screens, batteries, cameras, frames for iPhone 15/14/13 series)
 - **Samsung Galaxy S Series**: 20 products (S24/S23/S22 Ultra/Plus screens, batteries, cameras)
 - **iPad Parts**: 20 products (iPad Pro, Air, 10th Gen variants)
@@ -63,6 +64,7 @@ Main Categories (11):
 - **Tools & Supplies**: 20 professional repair tools and equipment
 
 ## Product Details Include
+
 - Realistic wholesale pricing with discounts
 - Stock quantity management
 - Featured product flags
@@ -72,6 +74,7 @@ Main Categories (11):
 - Image URLs for product displays
 
 ## Notes
+
 - All prices are in USD and represent wholesale pricing
 - Stock quantities vary realistically (20-200 units per product)
 - Featured products are marked for homepage display
