@@ -164,11 +164,11 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Categories Section */}
+      {/* Categories Section - Simplified */}
       <section className={styles.categoriesSection}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <h2>Shop by Category</h2>
+            <h2>Our Product Range</h2>
             <p>Complete range of repair parts for all major brands</p>
           </div>
 
