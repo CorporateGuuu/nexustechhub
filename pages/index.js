@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
-import Hero from '../nexus-techhub-fresh/components/Hero/Hero';
-import WhatsAppButton from '../nexus-techhub-fresh/components/WhatsApp/WhatsAppButton';
+import Layout from '../components/Layout';
+import Hero from '../components/Hero';
+import WhatsAppButton from '../components/WhatsAppButton';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
@@ -65,36 +65,7 @@ export default function Home() {
     }
   ];
 
-  const productShowcase = [
-    {
-      title: 'iPhone Parts Wholesale',
-      description: 'Complete range of iPhone components from iPhone 5 to latest models',
-      image: '/images/showcase/iphone-repair.jpg',
-      features: ['OLED Screens', 'Batteries', 'Charging Ports', 'Cameras', 'Logic Boards'],
-      link: '/products/iphone-parts'
-    },
-    {
-      title: 'Samsung Galaxy Parts',
-      description: 'High-quality Samsung parts for all Galaxy series devices',
-      image: '/images/showcase/samsung-repair.jpg',
-      features: ['AMOLED Screens', 'Batteries', 'USB-C Ports', 'S Pen', 'Motherboards'],
-      link: '/products/samsung-parts'
-    },
-    {
-      title: 'iPad & Tablet Components',
-      description: 'Professional parts for tablets and iPads of all generations',
-      image: '/images/showcase/ipad-repair.jpg',
-      features: ['LCD Screens', 'Batteries', 'Home Buttons', 'Cameras', 'Digitizers'],
-      link: '/products/ipad-parts'
-    },
-    {
-      title: 'Repair Tools & Equipment',
-      description: 'Professional-grade repair tools and workshop equipment',
-      image: '/images/showcase/tools-workshop.jpg',
-      features: ['Precision Tools', 'Heat Guns', 'Suction Cups', 'Microscopes', 'Soldering Stations'],
-      link: '/products/repair-tools'
-    }
-  ];
+
 
   const categories = [
     {
@@ -131,28 +102,7 @@ export default function Home() {
     }
   ];
 
-  const services = [
-    {
-      icon: 'BO',
-      title: 'Bulk Ordering',
-      description: 'Competitive wholesale pricing with volume discounts available.'
-    },
-    {
-      icon: 'QG',
-      title: 'Quality Guarantee',
-      description: 'All parts tested and guaranteed for compatibility and performance.'
-    },
-    {
-      icon: 'FS',
-      title: 'Fast Shipping',
-      description: 'Express shipping worldwide with tracking and insurance.'
-    },
-    {
-      icon: 'BS',
-      title: 'B2B Support',
-      description: 'Dedicated account management for business customers.'
-    }
-  ];
+
 
 
 
