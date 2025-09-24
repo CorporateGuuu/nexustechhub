@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
+import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import styles from '../styles/Products.module.css';
 

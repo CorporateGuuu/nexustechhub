@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
+import Layout from '../../components/Layout';
 import styles from '../../styles/CheckoutSuccess.module.css';
 
 export default function CheckoutSuccess() {

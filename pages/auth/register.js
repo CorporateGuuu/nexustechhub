@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
+import Layout from '../../components/Layout';
 import styles from '../../styles/Home.module.css';
 
 export default function Register() {

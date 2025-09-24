@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import ProtectedRoute from '../../components/ProtectedRoute';
-import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
+import Layout from '../../components/Layout';
 
 function AuthTestContent() {
   const { user, session, isAuthenticated, signOut } = useAuth();

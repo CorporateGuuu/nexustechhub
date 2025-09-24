@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Layout from '../nexus-techhub-fresh/components/Layout/Layout';
+import Layout from '../components/Layout';
 import styles from '../styles/About.module.css';
 
 export default function About() {

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../contexts/AuthContext';
-import Layout from '../../nexus-techhub-fresh/components/Layout/Layout';
+import Layout from '../../components/Layout';
 
 export default function Logout() {
   const { signOut, loading } = useAuth();
