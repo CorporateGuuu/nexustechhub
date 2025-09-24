@@ -1,9 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Head from 'next/head';
-import Header from '../nexus-techhub-fresh/components/Header/Header';
-import Footer from '../nexus-techhub-fresh/components/Footer/Footer';
-import WhatsAppButton from '../nexus-techhub-fresh/components/WhatsApp/WhatsAppButton';
+import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import ProductGrid from '../components/ProductGrid';
 import styles from '../styles/Search.module.css';
@@ -85,17 +82,11 @@ export default function Search() {
   };
 
   return (
-    <>
-      <Head>
-        <title>{getPageTitle()}</title>
-        <meta name="description" content={getPageDescription()} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href={`https://nexustechhub.ae/search${searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : ''}`} />
-      </Head>
-
-      <Header />
-
-      <main className={styles.searchPage}>
+    <Layout
+      title={getPageTitle()}
+      description={getPageDescription()}
+    >
+      <div className={styles.searchPage}>
         <div className={styles.container}>
           <div className={styles.searchHeader}>
             <h1 className={styles.title}>
@@ -146,10 +137,7 @@ export default function Search() {
             </>
           )}
         </div>
-      </main>
-
-      <Footer />
-      <WhatsAppButton />
-    </>
+      </div>
+    </Layout>
   );
 }
