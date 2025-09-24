@@ -158,7 +158,7 @@ router.get('/checkout', async (req, res) => {
       subtotal: parseFloat(subtotal.toFixed(2)),
       addresses: addressesResult.rows,
       user: userResult.rows[0],
-      stripePublicKey: process.env.STRIPE_PUBLIC_KEY || 'pk_test_your_test_key',
+      stripePublicKey: process.env.STRIPE_PUBLIC_KEY,
       error: req.query.error
     });
   } catch (error) {
