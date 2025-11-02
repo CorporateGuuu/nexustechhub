@@ -1,63 +1,34 @@
-# Dependencies
-node_modules/
+# See https://help.github.com/articles/ignoring-files/ for more
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Next.js
-.next/
-out/
-build/
-dist/
+# local env files
+.env*.local
 
-# Environment files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.production.generated
-vapid-keys.env
-netlify-env-vars.txt
-*.env
-# Critical Business Variables
+# vercel
+.vercel
 
-# Keep .env.example for reference
-!.env.example
-
-# Large files and videos
-Website Content/Videos/
-*.mov
-*.mp4
-*.avi
-*.mkv
-
-# Build cache
-.next/cache/
-
-# IDE files
-.vscode/
-.idea/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Python virtual environments
-venv/
-env/
-ENV/
-.venv/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-*.so
-.pytest_cache/
-.coverage
-htmlcov/
-*.egg-info/
-
-# Local Netlify folder
-.netlify
+# typescript
+*.tsbuildinfo
