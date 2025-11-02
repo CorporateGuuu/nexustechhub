@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDatabase } from '../../../../lib/mongodb-utils';
+import { supabase } from '../../../lib/supabase';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,47 +11,48 @@ export async function GET(request: NextRequest) {
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
 
-    const db = await getDatabase();
-    if (!db) {
-      return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
-    }
+    // Build Supabase query
+    let query = supabase
+      .from('products')
+      .select('*', { count: 'exact' });
 
-    // Build query
-    const query: any = {};
-
+    // Apply filters
     if (category && category !== 'all') {
-      query.category = category;
+      query = query.ilike('category', category);
     }
 
     if (brand && brand !== 'all') {
-      query.brand = brand;
+      query = query.ilike('brand', brand);
     }
 
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = parseFloat(minPrice);
-      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    if (minPrice) {
+      query = query.gte('price', parseFloat(minPrice));
     }
 
-    // Get products with pagination
-    const skip = (page - 1) * limit;
-    const products = await db.collection('products')
-      .find(query)
-      .skip(skip)
-      .limit(limit)
-      .toArray();
+    if (maxPrice) {
+      query = query.lte('price', parseFloat(maxPrice));
+    }
 
-    // Get total count for pagination
-    const totalCount = await db.collection('products').countDocuments(query);
+    // Apply pagination
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    query = query.range(from, to);
+
+    const { data: products, error, count } = await query;
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
-      data: products,
+      data: products || [],
       pagination: {
         page,
         limit,
-        total: totalCount,
-        pages: Math.ceil(totalCount / limit)
+        total: count || 0,
+        pages: Math.ceil((count || 0) / limit)
       }
     });
 

@@ -1,4 +1,4 @@
-const algoliasearch = require('algoliasearch');
+import { algoliasearch } from 'algoliasearch';
 
 const algoliaAppId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID;
 const algoliaAdminApiKey = process.env.ALGOLIA_ADMIN_API_KEY;
@@ -23,14 +23,12 @@ export const getAlgoliaSearchClient = () => {
 
 // Get the products index
 export const getProductsIndex = () => {
-  const client = getAlgoliaAdminClient();
-  return client.initIndex(algoliaIndexName);
+  return algoliasearch(algoliaAppId!, algoliaAdminApiKey!).initIndex(algoliaIndexName);
 };
 
 // Search-only index for frontend
 export const getSearchOnlyIndex = () => {
-  const client = getAlgoliaSearchClient();
-  return client.initIndex(algoliaIndexName);
+  return algoliasearch(algoliaAppId!, algoliaSearchApiKey!).initIndex(algoliaIndexName);
 };
 
 // Product interface for Algolia indexing
@@ -51,11 +49,11 @@ export interface AlgoliaProduct {
   _tags?: string[]; // Algolia internal tags
 }
 
-// Transform MongoDB product to Algolia format
+// Transform Supabase product to Algolia format
 export const transformProductForAlgolia = (product: any): AlgoliaProduct => {
   return {
-    objectID: product._id.toString(),
-    id: product._id.toString(),
+    objectID: product.id.toString(),
+    id: product.id.toString(),
     name: product.name,
     description: product.description,
     category: product.category,
@@ -98,7 +96,7 @@ export const updateProductInAlgolia = async (product: any) => {
 
   try {
     const result = await index.saveObject(algoliaProduct);
-    console.log(`Updated product ${product._id} in Algolia`);
+    console.log(`Updated product ${product.id} in Algolia`);
     return result;
   } catch (error) {
     console.error('Error updating product in Algolia:', error);

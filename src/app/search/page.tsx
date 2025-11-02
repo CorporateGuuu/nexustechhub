@@ -1,59 +1,61 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getMockProducts, filterMockProducts, MockProduct } from '../../lib/mockData';
+import { searchService, SearchResult } from '../../lib/searchService';
 import { Product } from '../../types';
 import ProductGrid from '../../components/Product/ProductGrid';
 import FacetedFilters from '../../components/Product/FacetedFilters';
 
-// Convert MockProduct to Product format
-const convertToProduct = (mockProduct: MockProduct): Product => ({
-  _id: mockProduct.id,
-  id: mockProduct.id,
-  name: mockProduct.name,
-  price: mockProduct.price,
-  originalPrice: mockProduct.originalPrice,
-  image: mockProduct.image,
-  gallery: [mockProduct.image], // Use image as single gallery item
-  category: mockProduct.category,
-  brand: mockProduct.brand,
-  inStock: mockProduct.inStock,
-  description: mockProduct.description,
+// Convert SearchResult to Product format
+const convertToProduct = (searchResult: SearchResult): Product => ({
+  _id: searchResult.id,
+  id: searchResult.id,
+  name: searchResult.name,
+  price: searchResult.price,
+  originalPrice: searchResult.originalPrice,
+  image: searchResult.image,
+  gallery: searchResult.images || [searchResult.image], // Use images array or fallback to single image
+  category: searchResult.category,
+  brand: searchResult.brand,
+  inStock: searchResult.inStock,
+  description: searchResult.description,
 });
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const allMockProducts = getMockProducts();
-  const filters = {
-    brands: [] as string[],
-    priceRange: { min: 0, max: 1000 },
-    conditions: [] as string[]
-  };
+  useEffect(() => {
+    const performSearch = async () => {
+      if (!query.trim()) {
+        setSearchResults([]);
+        return;
+      }
 
-  // Filter products based on search query and filters
-  const filteredMockProducts = useMemo(() => {
-    let products = allMockProducts;
+      setIsLoading(true);
+      setError(null);
 
-    // First apply search query
-    if (query.trim()) {
-      const searchTerm = query.toLowerCase();
-      products = products.filter(product =>
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.brand.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm) ||
-        product.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-      );
-    }
+      try {
+        const response = await searchService.search(query);
+        setSearchResults(response.products);
+      } catch (err) {
+        console.error('Search failed:', err);
+        setError('Failed to load search results. Please try again.');
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    // Then apply filters
-    return filterMockProducts(products, filters);
-  }, [allMockProducts, query]);
+    performSearch();
+  }, [query]);
 
   // Convert to Product format for ProductGrid
-  const filteredProducts: Product[] = filteredMockProducts.map(convertToProduct);
+  const products: Product[] = searchResults.map(convertToProduct);
 
   if (!query.trim()) {
     return (
@@ -66,6 +68,28 @@ export default function SearchPage() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Searching...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Search Error</h1>
+          <p className="text-red-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -73,7 +97,7 @@ export default function SearchPage() {
           Search Results for "{query}"
         </h1>
         <p className="text-gray-600">
-          Found {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} matching your search
+          Found {products.length} product{products.length !== 1 ? 's' : ''} matching your search
         </p>
       </div>
 
@@ -81,15 +105,15 @@ export default function SearchPage() {
         {/* Filters Sidebar */}
         <div className="w-80 flex-shrink-0">
           <FacetedFilters
-            products={filteredProducts}
+            products={products}
             onFiltersChange={() => {}} // Placeholder - filters not implemented yet
           />
         </div>
 
         {/* Products Grid */}
         <div className="flex-1">
-          {filteredProducts.length > 0 ? (
-            <ProductGrid products={filteredProducts} />
+          {products.length > 0 ? (
+            <ProductGrid products={products} />
           ) : (
             <div className="text-center py-12">
               <div className="text-gray-400 mb-4">

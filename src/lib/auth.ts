@@ -1,16 +1,22 @@
-import clientPromise from '../../lib/mongodb';
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { supabase } from './supabase';
 import * as bcrypt from 'bcryptjs';
 
+export async function signUp(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+  return { data, error };
+}
+
 export const authOptions = {
-  adapter: MongoDBAdapter(clientPromise as any),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || 'demo-client-id',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'demo-client-secret',
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -21,22 +27,32 @@ export const authOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        const client = await clientPromise;
-        const db = client.db('nexus');
-        const user = await db.collection('users').findOne({ email: credentials.email });
+        try {
+          // Query user from Supabase
+          const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', credentials.email)
+            .single();
 
-        if (!user || !user.password) return null;
+          if (error || !user) return null;
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) return null;
+          // For demo purposes, we're using bcrypt to compare passwords
+          // In production, Supabase Auth handles this automatically
+          const isValid = await bcrypt.compare(credentials.password, user.password || '');
+          if (!isValid) return null;
 
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
-          role: user.role || 'retail',
-          wholesaleApproved: user.wholesaleApproved || false,
-        };
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            wholesaleApproved: user.wholesale_approved,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
+        }
       },
     }),
   ],
@@ -61,7 +77,7 @@ export const authOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'demo-secret-key-change-in-production',
 };
 
 const handler = NextAuth(authOptions);
