@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../lib/auth';
-import clientPromise from '../../../../lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { supabase } from '../../../../lib/supabase';
 
 export async function GET() {
   try {
@@ -11,16 +10,18 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const client = await clientPromise;
-    const db = client.db('nexus');
+    // Fetch wholesale requests from Supabase
+    const { data: requests, error } = await supabase
+      .from('wholesale_requests')
+      .select('*')
+      .order('applied_at', { ascending: false });
 
-    const requests = await db
-      .collection('wholesale_requests')
-      .find({})
-      .sort({ appliedAt: -1 })
-      .toArray();
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    }
 
-    return NextResponse.json(requests);
+    return NextResponse.json(requests || []);
   } catch (error) {
     console.error('Error fetching wholesale requests:', error);
     return NextResponse.json(
@@ -43,43 +44,21 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
-    const client = await clientPromise;
-    const db = client.db('nexus');
-
-    // Get the request
-    const request = await db.collection('wholesale_requests').findOne({
-      _id: new ObjectId(requestId)
-    });
-
-    if (!request) {
-      return NextResponse.json({ error: 'Request not found' }, { status: 404 });
-    }
-
     const newStatus = action === 'approve' ? 'approved' : 'rejected';
 
-    // Update the request status
-    await db.collection('wholesale_requests').updateOne(
-      { _id: new ObjectId(requestId) },
-      {
-        $set: {
-          status: newStatus,
-          reviewedAt: new Date(),
-          reviewedBy: session.user.email
-        }
-      }
-    );
+    // Update the request status in Supabase
+    const { error } = await supabase
+      .from('wholesale_requests')
+      .update({
+        status: newStatus,
+        reviewed_at: new Date().toISOString(),
+        reviewed_by: session.user.email,
+      })
+      .eq('id', requestId);
 
-    // If approved, update the user's role and wholesaleApproved status
-    if (action === 'approve') {
-      await db.collection('users').updateOne(
-        { _id: new ObjectId(request.userId) },
-        {
-          $set: {
-            role: 'dealer',
-            wholesaleApproved: true
-          }
-        }
-      );
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });

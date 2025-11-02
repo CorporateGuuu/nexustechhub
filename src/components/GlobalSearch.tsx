@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { searchMockProducts, MockProduct } from '../lib/mockData';
+import { searchService, SearchResult } from '../lib/searchService';
 
 // Debounce hook
 const useDebounce = (value: string, delay: number) => {
@@ -32,7 +32,7 @@ export default function GlobalSearch({
 }: GlobalSearchProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<MockProduct[]>([]);
+  const [suggestions, setSuggestions] = useState<SearchResult[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -43,17 +43,24 @@ export default function GlobalSearch({
 
   // Perform search when debounced query changes
   useEffect(() => {
-    if (debouncedQuery.trim()) {
-      setIsLoading(true);
-      // Simulate API delay
-      setTimeout(() => {
-        const results = searchMockProducts(debouncedQuery);
-        setSuggestions(results.slice(0, 5)); // Limit to 5 suggestions
-        setIsLoading(false);
-      }, 100);
-    } else {
-      setSuggestions([]);
-    }
+    const fetchSuggestions = async () => {
+      if (debouncedQuery.trim()) {
+        setIsLoading(true);
+        try {
+          const results = await searchService.getSuggestions(debouncedQuery, 5);
+          setSuggestions(results);
+        } catch (error) {
+          console.error('Failed to fetch suggestions:', error);
+          setSuggestions([]);
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setSuggestions([]);
+      }
+    };
+
+    fetchSuggestions();
   }, [debouncedQuery]);
 
   // Handle input change
@@ -74,7 +81,7 @@ export default function GlobalSearch({
   };
 
   // Handle suggestion click
-  const handleSuggestionClick = (product: MockProduct) => {
+  const handleSuggestionClick = (product: SearchResult) => {
     setShowSuggestions(false);
     setQuery('');
     router.push(`/products/${product.id}`);
@@ -158,7 +165,7 @@ export default function GlobalSearch({
                         ${product.price}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {product.condition}
+                        {product.inStock ? 'In Stock' : 'Out of Stock'}
                       </div>
                     </div>
                   </div>

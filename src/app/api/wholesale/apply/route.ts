@@ -1,25 +1,34 @@
-import clientPromise from 'lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '../../../../lib/supabase';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const client = await clientPromise;
-    const db = client.db('nexus');
 
-    await db.collection('wholesale_requests').insertOne({
-      ...body,
-      status: 'pending',
-      appliedAt: new Date(),
-    });
+    // Insert wholesale request into Supabase
+    const { data, error } = await supabase
+      .from('wholesale_requests')
+      .insert({
+        user_id: body.userId,
+        user_email: body.userEmail,
+        user_name: body.userName,
+        business_name: body.businessName,
+        business_type: body.businessType,
+        phone: body.phone,
+        address: body.address,
+        tax_id: body.taxId,
+        status: 'pending',
+        applied_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
 
-    // Update user role to pending
-    await db.collection('users').updateOne(
-      { _id: body.userId },
-      { $set: { role: 'wholesale', wholesaleApproved: false } }
-    );
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, requestId: data.id });
   } catch (error) {
     console.error('Error processing wholesale application:', error);
     return NextResponse.json(
