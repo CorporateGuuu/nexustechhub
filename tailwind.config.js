@@ -1,16 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    "./src/app/**/*.{js,ts,jsx,tsx}",
+    "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        primary: '#e30613',
-        'primary-dark': '#c2000d',
+        primary: "#0066cc",
+        dark: "#111",
+      },
+      fontFamily: {
+        sans: ['"Open Sans"', "sans-serif"],
+      },
+      boxShadow: {
+        card: "0 4px 12px rgba(0,0,0,0.05)",
       },
     },
   },
   plugins: [],
-}
+};
