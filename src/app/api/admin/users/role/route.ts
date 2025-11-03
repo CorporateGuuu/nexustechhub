@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '../../../../../lib/supabaseClient';
 import { getUserFromCookie, requireAdmin } from '../../../../../lib/auth';
+import { Resend } from 'resend';
+import fs from 'fs';
+import path from 'path';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +20,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
+    // Get user details before approval
+    const { data: userData, error: fetchError } = await (supabaseAdmin as any)
+      .from('profiles')
+      .select('first_name, last_name, email')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError || !userData) {
+      console.error('User fetch error:', fetchError);
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     // Update user role to approved
     const { error } = await (supabaseAdmin as any)
       .from('profiles')
@@ -24,6 +41,28 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('User approval error:', error);
       return NextResponse.json({ error: 'Failed to approve user' }, { status: 500 });
+    }
+
+    // Send approval email
+    try {
+      const templatePath = path.join(process.cwd(), 'emails', 'wholesale-approval.html');
+      let template = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholder with user's name
+      const fullName = `${userData.first_name} ${userData.last_name}`.trim();
+      template = template.replace('{{name}}', fullName);
+
+      await resend.emails.send({
+        from: 'Nexus Tech Hub <sales@nexustechhub.com>',
+        to: userData.email,
+        subject: 'Welcome to Nexus Tech Hub – UAE\'s #1 Wholesale Parts Supplier',
+        html: template,
+      });
+
+      console.log('Approval email sent to:', userData.email);
+    } catch (emailError) {
+      console.error('Email sending error:', emailError);
+      // Don't fail the approval if email fails
     }
 
     return NextResponse.redirect('/admin/users');
