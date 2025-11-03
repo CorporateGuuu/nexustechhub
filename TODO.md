@@ -8,7 +8,7 @@
 - [x] Update TODO.md with progress
 
 ## Pending
-- [ ] Fix .env.production recursion error (manual check required - check for circular references)
+- [x] Fix .env.production recursion error (added missing NEXTAUTH_URL and NEXTAUTH_SECRET)
 - [ ] Deploy and verify fixes
 
 ## Notes
