@@ -22,7 +22,7 @@ export interface Database {
         Insert: {
           id?: string;
           email: string;
-          name: string;
+          name?: string;
           role?: 'admin' | 'wholesale' | 'retail';
           wholesale_approved?: boolean;
           created_at?: string;
@@ -162,46 +162,37 @@ export interface Database {
       profiles: {
         Row: {
           id: string;
+          email: string | null;
           first_name: string | null;
           last_name: string | null;
           phone: string | null;
-          address_line1: string | null;
-          address_line2: string | null;
-          city: string | null;
-          state: string | null;
-          postal_code: string | null;
-          country: string | null;
+          avatar_url: string | null;
           role: string | null;
+          wholesale_approved: boolean | null;
           created_at: string;
           updated_at: string;
         };
         Insert: {
           id: string;
+          email?: string | null;
           first_name?: string | null;
           last_name?: string | null;
           phone?: string | null;
-          address_line1?: string | null;
-          address_line2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postal_code?: string | null;
-          country?: string | null;
+          avatar_url?: string | null;
           role?: string | null;
+          wholesale_approved?: boolean | null;
           created_at?: string;
           updated_at?: string;
         };
         Update: {
           id?: string;
+          email?: string | null;
           first_name?: string | null;
           last_name?: string | null;
           phone?: string | null;
-          address_line1?: string | null;
-          address_line2?: string | null;
-          city?: string | null;
-          state?: string | null;
-          postal_code?: string | null;
-          country?: string | null;
+          avatar_url?: string | null;
           role?: string | null;
+          wholesale_approved?: boolean | null;
           created_at?: string;
           updated_at?: string;
         };
