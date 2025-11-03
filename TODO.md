@@ -9,7 +9,7 @@
 
 ## Pending
 - [x] Fix .env.production recursion error (added missing NEXTAUTH_URL and NEXTAUTH_SECRET)
-- [ ] Deploy and verify fixes
+- [x] Deploy and verify fixes (changes pushed to GitHub, Netlify deployment triggered)
 
 ## Notes
 - .env.production may have circular references causing infinite recursion
