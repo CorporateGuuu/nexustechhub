@@ -11,6 +11,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 // Load environment variables
+config({ path: '.env.production' });
 config({ path: '.env.local' });
 config(); // fallback to .env
 
@@ -254,6 +255,10 @@ async function executeMigration(migration) {
 
 async function runMigrations() {
   console.log('🚀 Starting Nexus Tech Hub migration runner...\n');
+  console.log('🔧 Environment variables loaded:');
+  console.log('   - SUPABASE_URL:', supabaseUrl ? '✅ Set' : '❌ Not set');
+  console.log('   - SERVICE_KEY:', supabaseServiceKey ? '✅ Set' : '❌ Not set');
+  console.log();
 
   try {
     // Ensure migration tracking table exists

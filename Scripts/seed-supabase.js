@@ -6,6 +6,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 // Load environment variables
+config({ path: '.env.production' });
 config({ path: '.env.local' });
 config(); // fallback to .env
 

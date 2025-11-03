@@ -62,6 +62,13 @@
     Access-Control-Allow-Headers = "Content-Type, Authorization"
 
 # Redirects
+# WWW to non-WWW redirect
+[[redirects]]
+  from = "https://www.nexustechhub.netlify.app/*"
+  to = "https://nexustechhub.netlify.app/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/home"
   to = "/"
