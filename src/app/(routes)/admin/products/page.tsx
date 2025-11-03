@@ -1,28 +1,37 @@
-import { Suspense } from 'react';
-import DataTable from '../components/DataTable';
+import { supabaseServer } from '../../../../lib/supabase/server';
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const { data: products } = await supabaseServer
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(50);
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Products Management</h1>
-        <p className="text-gray-600">Manage product inventory and details</p>
+    <div>
+      <h1 className="text-lg mb-4">Products</h1>
+      <div className="border border-gray-300">
+        <table className="w-full">
+          <thead className="border-b border-gray-300">
+            <tr>
+              <th className="px-4 py-2 text-left text-sm">Name</th>
+              <th className="px-4 py-2 text-left text-sm">Price</th>
+              <th className="px-4 py-2 text-left text-sm">Category</th>
+              <th className="px-4 py-2 text-left text-sm">Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products?.map((p: any) => (
+              <tr key={p.id} className="border-b border-gray-200">
+                <td className="px-4 py-2">{p.name}</td>
+                <td className="px-4 py-2">${p.price}</td>
+                <td className="px-4 py-2">{p.category}</td>
+                <td className="px-4 py-2">{p.stock_quantity}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-
-      <Suspense fallback={<div>Loading products...</div>}>
-        <DataTable
-          title="Products"
-          endpoint="/api/products"
-          columns={[
-            { key: 'id', label: 'ID' },
-            { key: 'name', label: 'Name' },
-            { key: 'price', label: 'Price' },
-            { key: 'category', label: 'Category' },
-            { key: 'stock_quantity', label: 'Stock' },
-            { key: 'created_at', label: 'Created' },
-          ]}
-        />
-      </Suspense>
     </div>
   );
 }
