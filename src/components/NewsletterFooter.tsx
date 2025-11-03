@@ -42,10 +42,10 @@ export default function NewsletterFooter() {
   ];
 
   const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: 'https://facebook.com/mobilesentrix', color: '#1877f2' },
-    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/mobilesentrix', color: '#1da1f2' },
-    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/mobilesentrix', color: '#e4405f' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/mobilesentrix', color: '#0077b5' }
+    { name: 'Facebook', icon: Facebook, href: 'https://facebook.com/nexustechhub', color: '#1877f2' },
+    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/nexustechhub', color: '#1da1f2' },
+    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/nexustechhub', color: '#e4405f' },
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/nexustechhub', color: '#0077b5' }
   ];
 
   return (
@@ -151,8 +151,8 @@ export default function NewsletterFooter() {
                 </div>
                 <div className="d-flex align-items-center mb-2">
                   <Mail className="me-2" size={16} />
-                  <a href="mailto:support@mobilesentrix.com" className="text-white text-decoration-none hover-primary">
-                    support@mobilesentrix.com
+                  <a href="mailto:support@nexustechhub.com" className="text-white text-decoration-none hover-primary">
+                    support@nexustechhub.com
                   </a>
                 </div>
                 <div className="d-flex align-items-start mb-3">
@@ -201,7 +201,7 @@ export default function NewsletterFooter() {
           <div className="row align-items-center">
             <div className="col-md-6">
               <p className="mb-0 text-white small">
-                © 2025 MobileSentrix. All rights reserved.
+                © 2025 Nexus Tech Hub. All rights reserved.
               </p>
             </div>
             <div className="col-md-6 text-md-end">
