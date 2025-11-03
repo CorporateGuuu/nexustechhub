@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Database } from './supabase';
+import type { Database } from '../types/supabase';
 
 // =============================================================================
 // Nexus Tech Hub - Supabase Client Configuration
@@ -8,8 +8,8 @@ import type { Database } from './supabase';
 // -----------------------------------------------------------------------------
 // Browser Client (for client-side operations)
 // -----------------------------------------------------------------------------
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check your .env.local file.');
@@ -27,15 +27,11 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 // -----------------------------------------------------------------------------
 // Server Client (for server-side operations)
 // -----------------------------------------------------------------------------
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Note: Use supabaseAdmin from './supabase/admin' for admin operations
+// or supabaseServer from './supabase/server' for server operations
 
-// Server client with service role key for admin operations (API routes, server components, seeding, etc.)
-export const supabaseAdmin = createClient<Database>(supabaseUrl, supabaseServiceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+// Re-export for backward compatibility
+export { supabaseAdmin } from './supabase/admin';
 
 // -----------------------------------------------------------------------------
 // Utility Functions
