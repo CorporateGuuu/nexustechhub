@@ -32,7 +32,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${openSans.className} antialiased`}>
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );
