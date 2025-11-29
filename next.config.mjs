@@ -7,6 +7,10 @@ const nextConfig = {
         hostname: 'your-image-cdn.com',
       },
       {
+        protocol: 'https',
+        hostname: 'i.imgur.com',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
       },

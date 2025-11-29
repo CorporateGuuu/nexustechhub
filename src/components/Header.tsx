@@ -1,62 +1,83 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { LogIn, LogOut, Menu } from 'lucide-react';
+import { useAuth } from 'hooks/useAuth';
 
 export default function Header() {
-  const [time, setTime] = useState('09:58:49');
-
-  useEffect(() => {
-    let timer = 9 * 3600 + 58 * 60 + 49; // Current time: 03:33 PM EST, adjust if needed
-    const interval = setInterval(() => {
-      if (timer > 0) {
-        timer--;
-        const h = String(Math.floor(timer / 3600)).padStart(2, '0');
-        const m = String(Math.floor((timer % 3600) / 60)).padStart(2, '0');
-        const s = String(timer % 60).padStart(2, '0');
-        setTime(`${h}:${m}:${s}`);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const { user, logout } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <>
-      <div className="bg-black text-white text-center py-2.5 text-sm z-50">
-        Introducing the Genuine Apple Parts Program! Official Apple parts.{' '}
-        <a href="#" className="font-semibold hover:underline">Learn More</a>
-      </div>
-      <header className="bg-white shadow-md sticky top-0 z-40 p-4">
-        <div className="container mx-auto flex flex-col lg:flex-row items-center gap-4">
-          <div className="lg:w-1/6 w-1/2">
-            <a href="/" className="text-3xl font-bold text-black">
-              Nexus<span className="text-blue-600">T</span>ech Hub
-            </a>
-          </div>
-          <div className="lg:w-5/12 w-full order-2 lg:order-none mt-3 lg:mt-0">
-            <div className="relative max-w-md w-full">
-              <input
-                type="text"
-                placeholder="What are you looking for?"
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 text-xl" aria-label="Search">
-                <i className="fas fa-search"></i>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="text-2xl font-black text-white tracking-tighter">
+          NEXUS TECHHUB
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-10">
+          {user ? (
+            <>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                  {user.email[0].toUpperCase()}
+                </div>
+                <span className="text-white font-medium">{user.name || user.email}</span>
+              </div>
+              <button
+                onClick={logout}
+                className="flex items-center gap-2 text-red-400 hover:text-red-300 transition text-sm"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
               </button>
-            </div>
-          </div>
-          <div className="lg:w-5/12 text-end">
-            <div className="flex justify-end items-center gap-3">
-              <a href="#" className="text-gray-600 text-sm">NT Services</a>
-              <a href="/my-account" className="text-gray-600 text-sm">My Account</a>
-              <a href="#" className="text-gray-600 text-sm">
-                FedEx Ground <span className="bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full ml-1">{time}</span>
-              </a>
-              <a href="#" className="bg-white border border-green-500 text-green-500 font-semibold px-3 py-1.5 rounded-full text-sm">
-                Cart $0.00
-              </a>
-            </div>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className="group flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105 text-sm"
+            >
+              <LogIn className="w-4 h-4 group-hover:translate-x-1 transition" />
+              LOGIN
+            </Link>
+          )}
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden text-white"
+          aria-label="Toggle mobile menu"
+        >
+          <Menu className="w-8 h-8" />
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-black/95 backdrop-blur-xl border-t border-white/10">
+          <div className="px-6 py-8 flex flex-col gap-6">
+            {user ? (
+              <>
+                <div className="text-white font-bold py-4 border-t border-white/10">
+                  Hello, {user.name || user.email}
+                </div>
+                <button onClick={logout} className="text-red-400 text-xl">Logout</button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xl px-8 py-5 rounded-2xl text-center"
+              >
+                Login / Register
+              </Link>
+            )}
           </div>
         </div>
-      </header>
-    </>
+      )}
+    </header>
   );
 }
