@@ -14,6 +14,11 @@ const nextConfig = {
     // your project has TypeScript errors.
     ignoreBuildErrors: true,
   },
+  experimental: {
+    // Prevents Next from trying to pre-fetch data at build time
+    // (especially useful with generateStaticParams)
+    missingSuspenseWithCSRBailout: false,
+  },
   images: {
     remotePatterns: [
       {
@@ -23,6 +28,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'i.imgur.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'phgbosbtwayzejfxyxao.supabase.co',
       },
       {
         protocol: 'http',
