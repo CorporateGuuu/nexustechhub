@@ -23,8 +23,8 @@
       "@/*": ["./src/*"],
       "src/*": ["./src/*"],
       "lib/*": ["./src/lib/*"],
-      "hooks/*": ["./hooks/*"],
-      "utils/*": ["./utils/*"]
+      "hooks/*": ["./src/hooks/*"],
+      "utils/*": ["./src/utils/*"]
     },
     "plugins": [
       {
