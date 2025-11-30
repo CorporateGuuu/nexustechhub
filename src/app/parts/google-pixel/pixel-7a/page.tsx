@@ -3,6 +3,9 @@ import { getProductsBySubcategory } from '../../../../lib/supabase';
 import ProductGrid from '../../../../components/Product/ProductGrid';
 import Breadcrumb from '@/components/Breadcrumb';
 
+// Force dynamic rendering since this page fetches data from Supabase
+export const dynamic = 'force-dynamic';
+
 const pixel7aParts = [
   {
     name: 'OLED Display Assembly',
