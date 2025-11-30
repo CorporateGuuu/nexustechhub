@@ -64,8 +64,6 @@
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.67.0",
     "react-hot-toast": "^2.6.0",
-    "react-instantsearch": "^7.17.0",
-    "react-instantsearch-dom": "^6.40.4",
     "react-intersection-observer": "^10.0.0",
     "react-owl-carousel": "^2.3.3",
     "recharts": "^3.5.1",
