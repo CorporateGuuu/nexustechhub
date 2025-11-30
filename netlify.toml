@@ -2,15 +2,14 @@
 [build]
   command = "npm run build"
   publish = ".next"
-  environment = { NODE_VERSION = "20" }
+
+[build.environment]
+  NODE_VERSION = "20"
+  NEXT_PRIVATE_TARGET = "server"
 
 # THIS IS THE MAGIC → Next.js + Node modules caching
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Cache these folders between builds
-[build.environment]
-  NEXT_PRIVATE_TARGET = "server"
 
 [build.cache]
   # Cache .next (Next.js build output)
