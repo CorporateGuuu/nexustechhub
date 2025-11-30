@@ -3,9 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-// Force dynamic rendering since this page fetches payment verification data
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 import { useCart } from '../../stores/cartStore';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
