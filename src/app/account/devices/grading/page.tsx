@@ -1,10 +1,3 @@
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Device Grading Scale - Buyback Guide | Nexus Tech Hub',
-  description: 'Understand our device grading (A+/B/C/D) for buyback and trade-in programs. FAQ on orders, accessories, returns.',
-};
-
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
