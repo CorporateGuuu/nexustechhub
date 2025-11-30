@@ -1,92 +1,29 @@
+# netlify.toml
 [build]
   command = "npm run build"
   publish = ".next"
+  environment = { NODE_VERSION = "20" }
 
+# THIS IS THE MAGIC → Next.js + Node modules caching
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Cache these folders between builds
 [build.environment]
-  NODE_VERSION = "20"
-  NODE_ENV = "production"
+  NEXT_PRIVATE_TARGET = "server"
 
-  CYPRESS_BASE_URL = "https://nexustechhub.netlify.app"
-  # Secrets scanning configuration
-  # Exclude documentation, setup files, env files, and build output from secrets scanning
-  SECRETS_SCAN_OMIT_PATHS = "docs/,lib/,Scripts/,routes/,database/,.env*,netlify-env-vars.txt,test-sendgrid.js,.netlify/,nexus-techhub-fresh/,.next/,package.json,package-lock.json,node_modules/"
+[build.cache]
+  # Cache .next (Next.js build output)
+  paths = [
+    ".next/cache",
+    "node_modules/.cache"
+  ]
 
-# Build settings
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
-
-# Headers for security and performance
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-
-# Cache static assets
-[[headers]]
-  for = "/_next/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-# Optimize JavaScript bundle caching
-[[headers]]
-  for = "/_next/static/chunks/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/_next/static/*.js"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-# Security headers for API routes
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    Cache-Control = "no-cache"
-    Access-Control-Allow-Origin = "https://nexustechhub.netlify.app"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type, Authorization"
-
-# Redirects
-# WWW to non-WWW redirect
-[[redirects]]
-  from = "https://www.nexustechhub.netlify.app/*"
-  to = "https://nexustechhub.netlify.app/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "/home"
-  to = "/"
-  status = 301
-
-[[redirects]]
-  from = "/api"
-  to = "/api/"
-  status = 200
-
-# Functions configuration
-[functions]
-  directory = "netlify/functions"
-
-# Cypress plugin for E2E testing - disabled to prevent build failures
-# [[plugins]]
-#   package = "netlify-plugin-cypress"
-#   [plugins.inputs]
-#     enable = true
-#     record = false
-#     spec = "cypress/e2e/**/*.cy.js"
+# Optional but recommended: cache node_modules too (huge speedup)
+[[plugins]]
+  package = "netlify-plugin-cache"
+  [plugins.inputs]
+    paths = [
+      "node_modules/.cache",
+      ".next/cache"
+    ]
