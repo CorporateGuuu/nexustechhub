@@ -1,6 +1,6 @@
 import { getProductsBySubcategory } from '../../../lib/supabase';
 import ProductGrid from '../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../components/Breadcrumb';
+import Breadcrumb from '../../../components/Breadcrumb';
 
 const ipadModels = [
   { name: 'iPad Pro 13" (7th Gen)', slug: 'ipad-pro-13-7th-gen', description: 'M4 Chip • Tandem OLED • Ultra-Thin Design' },

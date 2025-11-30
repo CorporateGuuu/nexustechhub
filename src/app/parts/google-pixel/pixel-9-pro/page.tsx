@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { getProductsBySubcategory } from '../../../../lib/supabase';
 import ProductGrid from '../../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../../components/Breadcrumb';
+import Breadcrumb from '../../../../components/Breadcrumb';
 
 const pixel9ProParts = [
   {

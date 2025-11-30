@@ -1,6 +1,6 @@
 import { getProductsBySubcategory } from '../../../lib/supabase';
 import ProductGrid from '../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../components/Breadcrumb';
+import Breadcrumb from '../../../components/Breadcrumb';
 
 const macbookAirpodsItems = [
   { name: 'MacBook Pro', slug: 'macbook-pro', description: 'M3/M4 Chips • Liquid Retina XDR • Pro Performance' },

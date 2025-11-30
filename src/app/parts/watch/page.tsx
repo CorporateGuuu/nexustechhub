@@ -1,6 +1,6 @@
 import { getProductsBySubcategory } from '../../../lib/supabase';
 import ProductGrid from '../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../components/Breadcrumb';
+import Breadcrumb from '../../../components/Breadcrumb';
 
 const watchModels = [
   { name: 'Apple Watch Ultra 2', slug: 'series-ultra-2', description: 'Titanium Case • Action Button • Rugged Design' },
