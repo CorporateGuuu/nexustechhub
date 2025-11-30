@@ -1,5 +1,5 @@
 import ProductGrid from '../../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../../components/UI/Breadcrumb';
+import { Breadcrumb } from '../../../../components/Breadcrumb';
 import { getProductsByModel } from '../../../../lib/supabase';
 
 export const metadata = {

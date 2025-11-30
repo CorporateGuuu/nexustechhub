@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Breadcrumb } from '../../components/UI/Breadcrumb';
+import { Breadcrumb } from '../../components/Breadcrumb';
 
 const repairCategories = [
   {
