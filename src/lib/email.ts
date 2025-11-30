@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export interface WelcomeEmailData {
   email: string;
   name?: string;
@@ -10,6 +8,13 @@ export interface WelcomeEmailData {
 
 export async function sendWelcomeEmail({ email, name, role }: WelcomeEmailData) {
   try {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error('Missing RESEND_API_KEY environment variable');
+      return { success: false, error: 'Missing API key' };
+    }
+
+    const resend = new Resend(apiKey);
     const { data, error } = await resend.emails.send({
       from: 'Nexus Tech Hub <welcome@nexustechhub.com>',
       to: [email],
