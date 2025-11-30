@@ -12,7 +12,7 @@ interface BreadcrumbProps {
   className?: string;
 }
 
-function Breadcrumb({ items, className }: BreadcrumbProps) {
+export default function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
     <nav className={cn("flex items-center space-x-1 text-sm text-gray-600 mb-6", className)}>
       <Link
@@ -40,5 +40,3 @@ function Breadcrumb({ items, className }: BreadcrumbProps) {
     </nav>
   );
 }
-
-export { Breadcrumb };
