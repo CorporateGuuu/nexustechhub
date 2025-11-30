@@ -129,7 +129,7 @@ export default function NavBar() {
             <div className="hidden lg:flex items-center space-x-8">
               <div className="text-purple-600 font-bold">FedEx</div>
               <div className="text-red-600 font-bold animate-pulse">Free Shipping Over $500</div>
-              <a href="#" className="relative group">
+              <Link href="/cart" className="relative group">
                 <div className="bg-gradient-to-r from-sky-500 to-blue-600 text-white px-6 py-4 rounded-2xl flex items-center space-x-3 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all">
                   <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 7.5M17 13l1.5 7.5"/>
@@ -141,7 +141,7 @@ export default function NavBar() {
                     </span>
                   )}
                 </div>
-              </a>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
