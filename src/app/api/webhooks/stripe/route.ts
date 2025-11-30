@@ -1,14 +1,23 @@
 import { NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import Stripe from 'stripe';
-import { headers } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 });
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+// Export config to disable body parsing for raw access
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 // Subscription event handlers
 async function handleSubscriptionCreated(subscription: Stripe.Subscription, supabase: any) {
@@ -148,35 +157,16 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice, supabase: any
 
 export async function POST(request: Request) {
   const body = await request.text();
-  const headersList = headers();
-  const sig = headersList.get('stripe-signature');
-
-  if (!sig) {
-    return NextResponse.json({ error: 'No signature' }, { status: 400 });
-  }
+  const sig = request.headers.get('stripe-signature')!;
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message);
-    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
+    return NextResponse.json({ error: 'Webhook signature verification failed' }, { status: 400 });
   }
-
-  const cookieStore = cookies();
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
 
   try {
     switch (event.type) {
