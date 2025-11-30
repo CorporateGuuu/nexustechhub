@@ -148,7 +148,11 @@ export default function GlobalSearch({
               {suggestions.map((product) => (
                 <button
                   key={product.id}
-                  onClick={() => handleSuggestionClick(product)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSuggestionClick(product);
+                  }}
                   className="w-full px-4 py-3 text-left hover:bg-gray-50 focus:bg-gray-50 focus:outline-none border-b border-gray-100 last:border-b-0"
                 >
                   <div className="flex items-center justify-between">

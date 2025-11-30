@@ -2,12 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { LogIn, LogOut, Menu } from 'lucide-react';
+import { LogIn, LogOut, Menu, ShoppingCart } from 'lucide-react';
 import { useAuth } from 'hooks/useAuth';
+import { useCart } from '../stores/cartStore';
+import { Badge } from './ui/badge';
+import CartDrawer from './CartDrawer';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const { itemCount, subtotal } = useCart();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
@@ -18,7 +23,22 @@ export default function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-10">
+        <nav className="hidden md:flex items-center gap-6">
+          {/* Mini Cart */}
+          <button
+            onClick={() => setCartOpen(true)}
+            className="flex items-center gap-2 text-white hover:text-cyan-300 transition relative"
+            aria-label="Open cart"
+          >
+            <ShoppingCart className="w-6 h-6" />
+            {itemCount > 0 && (
+              <Badge variant="secondary" className="absolute -top-2 -right-2 text-xs px-1.5 py-0.5 min-w-[20px] h-5">
+                {itemCount}
+              </Badge>
+            )}
+            <span className="text-sm font-medium">${subtotal.toFixed(2)}</span>
+          </button>
+
           {user ? (
             <>
               <div className="flex items-center gap-3">
@@ -78,6 +98,9 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      {/* Cart Drawer */}
+      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
     </header>
   );
 }

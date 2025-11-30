@@ -14,6 +14,23 @@ export interface Product {
   inStock: boolean;
   description: string;
   specs?: Record<string, string>;
+  sku?: string;
+  condition?: string;
+  carrier?: string;
+  stockStatus?: string;
+  slug?: string;
+  shortDescription?: string;
+  weight?: number;
+  dimensions?: string;
+  tags?: string[];
+  isFeatured?: boolean;
+  isNew?: boolean;
+  discountPercentage?: number;
+  lowStockThreshold?: number;
+  metaTitle?: string;
+  metaDescription?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface User {
@@ -31,7 +48,7 @@ export interface Order {
   items: OrderItem[];
   total: number;
   status: string;
-  shippingAddress: object;
+  shippingAddress?: object;
   createdAt: Date;
 }
 
@@ -47,4 +64,48 @@ export interface FacetFilter {
   brands: { [key: string]: number };
   categories: { [key: string]: number };
   priceRanges: { [key: string]: number };
+}
+
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  condition: string;
+  qty: number;
+}
+
+// Stripe-related types
+export interface StripeCheckoutSession {
+  id: string;
+  url: string;
+}
+
+export interface CheckoutRequest {
+  items: CartItem[];
+  successUrl: string;
+  cancelUrl: string;
+}
+
+export interface StripeOrder {
+  id: string;
+  userId: string;
+  stripeSessionId: string;
+  items: CartItem[];
+  total: number;
+  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
+  shippingAddress?: {
+    name: string;
+    email: string;
+    address: {
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      postal_code: string;
+      country: string;
+    };
+  };
+  createdAt: string;
+  updatedAt: string;
 }

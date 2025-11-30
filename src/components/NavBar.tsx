@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartCount] = useState(7);
-  const [cartTotal] = useState('$1,249.00');
+  const [cartTotal] = useState('$182.34');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { user, logout } = useAuth();
@@ -45,7 +45,7 @@ export default function NavBar() {
             </a>
 
             {/* LIVE SEARCH WITH SUGGESTIONS */}
-            <div className="hidden lg:block relative flex-1 max-w-2xl mx-12">
+            <div className="hidden lg:block relative flex-1 max-w-md mx-4">
               <div className="relative">
                 <input
                   type="text"
@@ -67,34 +67,6 @@ export default function NavBar() {
                 <svg className="w-6 h-6 text-sky-600 absolute left-5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-
-                {/* Login Button - Next to Search */}
-                <div className="ml-6">
-                  {user ? (
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                        {user.email[0].toUpperCase()}
-                      </div>
-                      <span className="text-gray-800 font-medium">{user.name || user.email}</span>
-                      <button
-                        onClick={logout}
-                        className="flex items-center gap-2 text-red-400 hover:text-red-300 transition text-sm ml-4"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  ) : (
-                    <Link
-                      href="/login"
-                      className="group flex items-center justify-center w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105"
-                      title="Login / Register"
-                    >
-                      <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                      </svg>
-                    </Link>
-                  )}
-                </div>
               </div>
 
               {/* LIVE SUGGESTIONS DROPDOWN */}
@@ -125,8 +97,37 @@ export default function NavBar() {
               )}
             </div>
 
-            {/* Cart */}
+            {/* Login Button - Moved to right side of search */}
+            <div className="hidden lg:flex items-center ml-4">
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                    {user.email[0].toUpperCase()}
+                  </div>
+                  <span className="text-gray-800 font-medium">{user.name || user.email}</span>
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-2 text-red-400 hover:text-red-300 transition text-sm ml-4"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="group flex items-center justify-center w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105"
+                  title="Login / Register"
+                >
+                  <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                  </svg>
+                </Link>
+              )}
+            </div>
+
+            {/* FedEx and Cart */}
             <div className="hidden lg:flex items-center space-x-8">
+              <div className="text-purple-600 font-bold">FedEx</div>
               <div className="text-red-600 font-bold animate-pulse">Free Shipping Over $500</div>
               <a href="#" className="relative group">
                 <div className="bg-gradient-to-r from-sky-500 to-blue-600 text-white px-6 py-4 rounded-2xl flex items-center space-x-3 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all">
@@ -170,7 +171,7 @@ export default function NavBar() {
                     </svg>
                   </button>
                   {/* Apple Mega Dropdown - Keep existing */}
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[96vw] max-w-7xl">
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-5 gap-12 max-w-7xl mx-auto">
                       <div>
                         <h3 className="font-bold mb-4">iPhone 16 Series</h3>
@@ -228,7 +229,7 @@ export default function NavBar() {
                     </svg>
                   </button>
                   {/* Accessories Mega Dropdown - Keep existing */}
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[96vw] max-w-7xl">
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
                       <div>
                         <h3 className="font-bold text-gray-900 mb-4">Recently Added</h3>
@@ -314,7 +315,7 @@ export default function NavBar() {
                     </svg>
                   </button>
                   {/* Tools & Supplies Mega Dropdown - Keep existing */}
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[96vw] max-w-7xl">
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
                       <div>
                         <h3 className="font-bold text-gray-900 mb-5">Shop by Brand</h3>
@@ -391,7 +392,7 @@ export default function NavBar() {
                     </svg>
                   </button>
                   {/* Refurbishing Mega Dropdown - Keep existing */}
-                  <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[96vw] max-w-7xl">
+                  <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
                       <div><h3 className="font-bold mb-5">OCA Machines</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Forward OCA Pro</a></li><li><a href="#" className="hover:text-sky-600">TBK-578</a></li><li><a href="#" className="hover:text-sky-600">Mini Laminators</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Bubble Removers</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Auto Bubble Remover</a></li><li><a href="#" className="hover:text-sky-600">30L Autoclave</a></li></ul></div>
@@ -408,7 +409,7 @@ export default function NavBar() {
                     Board Components
                   </button>
                   {/* Board Components Mega Dropdown - Keep existing */}
-                  <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[96vw] max-w-7xl">
+                  <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
                       <div><h3 className="font-bold mb-5">IC Chips</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Tristar / Tigris</a></li><li><a href="#" className="hover:text-sky-600">Charging IC</a></li><li><a href="#" className="hover:text-sky-600">Audio IC</a></li><li><a href="#" className="hover:text-sky-600">Power IC</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Connectors</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">FPC Connectors</a></li><li><a href="#" className="hover:text-sky-600">Battery Connectors</a></li><li><a href="#" className="hover:text-sky-600">Charging Port</a></li></ul></div>
