@@ -20,6 +20,24 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription, supa
     const priceId = subscription.items.data[0]?.price.id;
     const price = subscription.items.data[0]?.price;
 
+    // Determine user role based on plan
+    let userRole = 'retail'; // default
+    const planId = price?.id;
+    if (planId?.includes('basic') || planId?.includes('pro') || planId?.includes('enterprise')) {
+      userRole = 'wholesale';
+    }
+
+    // Update user role in profiles table
+    const { error: roleError } = await supabase
+      .from('profiles')
+      .update({ role: userRole })
+      .eq('id', userId);
+
+    if (roleError) {
+      console.error('Error updating user role:', roleError);
+    }
+
+    // Create subscription record
     const { error } = await supabase
       .from('subscriptions')
       .insert({
@@ -40,6 +58,8 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription, supa
     if (error) {
       console.error('Error creating subscription record:', error);
     }
+
+    console.log(`User ${userId} role updated to ${userRole} with active subscription`);
   } catch (error) {
     console.error('Error in handleSubscriptionCreated:', error);
   }
