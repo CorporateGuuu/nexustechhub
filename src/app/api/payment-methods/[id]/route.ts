@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '../../../../lib/supabaseClient';
 import { cookies } from 'next/headers';
 
+export const dynamic = "force-dynamic";
+
 // DELETE /api/payment-methods/[id] - Remove a payment method
 export async function DELETE(
   request: NextRequest,

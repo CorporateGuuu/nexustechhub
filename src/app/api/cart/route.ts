@@ -3,6 +3,8 @@ import { supabaseAdmin } from '../../../lib/supabaseClient';
 import { cookies } from 'next/headers';
 import { validateData, addToCartSchema } from '../../../lib/validate';
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     // Get the auth token from cookies

@@ -176,6 +176,7 @@ export default function NavBar() {
                       <div>
                         <h3 className="font-bold mb-4">iPhone 16 Series</h3>
                         <ul className="space-y-2 text-sm text-gray-600">
+                          <li><Link href="/parts/apple" className="hover:text-sky-600">iPhone Parts</Link></li>
                           <li><a href="#" className="hover:text-sky-600">iPhone 16 Pro Max</a></li>
                           <li><a href="#" className="hover:text-sky-600">iPhone 16 Pro</a></li>
                           <li><a href="#" className="hover:text-sky-600">iPhone 16 Plus</a></li>
@@ -238,6 +239,7 @@ export default function NavBar() {
                             <div className="w-10 h-10 bg-gray-200 border-2 border-dashed rounded"></div>
                             <span className="font-medium text-red-700">Recently Added</span>
                           </li>
+                          <li><Link href="/parts/accessories" className="hover:text-sky-600 flex items-center gap-2"><div className="w-8 h-8 bg-gray-200 rounded"></div>Accessories Overview</Link></li>
                           <li><a href="#" className="hover:text-sky-600 flex items-center gap-2"><div className="w-8 h-8 bg-gray-200 rounded"></div>Casper</a></li>
                           <li><a href="#" className="hover:text-sky-600 flex items-center gap-2"><div className="w-8 h-8 bg-gray-200 rounded"></div>OEM Accessories</a></li>
                           <li><a href="#" className="hover:text-sky-600 flex items-center gap-2 bg-amber-50 rounded-lg px-2"><div className="w-8 h-8 bg-gray-200 rounded"></div>AmpSentrix</a></li>
@@ -320,6 +322,7 @@ export default function NavBar() {
                       <div>
                         <h3 className="font-bold text-gray-900 mb-5">Shop by Brand</h3>
                         <ul className="space-y-3 text-gray-600">
+                          <li><Link href="/parts/tools-&-supplies" className="hover:text-sky-600">Tools & Supplies Overview</Link></li>
                           <li><a href="#" className="hover:text-sky-600">iFixit</a></li>
                           <li><a href="#" className="hover:text-sky-600">Wiha</a></li>
                           <li><a href="#" className="hover:text-sky-600">Wrepair</a></li>
@@ -394,7 +397,7 @@ export default function NavBar() {
                   {/* Refurbishing Mega Dropdown - Keep existing */}
                   <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
-                      <div><h3 className="font-bold mb-5">OCA Machines</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Forward OCA Pro</a></li><li><a href="#" className="hover:text-sky-600">TBK-578</a></li><li><a href="#" className="hover:text-sky-600">Mini Laminators</a></li></ul></div>
+                      <div><h3 className="font-bold mb-5">OCA Machines</h3><ul className="space-y-3 text-gray-600"><li><Link href="/parts/refurbishing" className="hover:text-sky-600">Refurbishing Overview</Link></li><li><a href="#" className="hover:text-sky-600">Forward OCA Pro</a></li><li><a href="#" className="hover:text-sky-600">TBK-578</a></li><li><a href="#" className="hover:text-sky-600">Mini Laminators</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Bubble Removers</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Auto Bubble Remover</a></li><li><a href="#" className="hover:text-sky-600">30L Autoclave</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Laser Machines</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Back Glass Laser</a></li><li><a href="#" className="hover:text-sky-600">Frame Separator</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Separation</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Freezer Separator</a></li><li><a href="#" className="hover:text-sky-600">Hot Plate</a></li><li><a href="#" className="hover:text-sky-600">Wire Separator</a></li></ul></div>
@@ -411,7 +414,7 @@ export default function NavBar() {
                   {/* Board Components Mega Dropdown - Keep existing */}
                   <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
-                      <div><h3 className="font-bold mb-5">IC Chips</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Tristar / Tigris</a></li><li><a href="#" className="hover:text-sky-600">Charging IC</a></li><li><a href="#" className="hover:text-sky-600">Audio IC</a></li><li><a href="#" className="hover:text-sky-600">Power IC</a></li></ul></div>
+                      <div><h3 className="font-bold mb-5">IC Chips</h3><ul className="space-y-3 text-gray-600"><li><Link href="/parts/board-components" className="hover:text-sky-600">Board Components Overview</Link></li><li><a href="#" className="hover:text-sky-600">Tristar / Tigris</a></li><li><a href="#" className="hover:text-sky-600">Charging IC</a></li><li><a href="#" className="hover:text-sky-600">Audio IC</a></li><li><a href="#" className="hover:text-sky-600">Power IC</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Connectors</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">FPC Connectors</a></li><li><a href="#" className="hover:text-sky-600">Battery Connectors</a></li><li><a href="#" className="hover:text-sky-600">Charging Port</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Cameras</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Front Camera</a></li><li><a href="#" className="hover:text-sky-600">Rear Camera Modules</a></li></ul></div>
                       <div><h3 className="font-bold mb-5">Flex Cables</h3><ul className="space-y-3 text-gray-600"><li><a href="#" className="hover:text-sky-600">Power / Volume Flex</a></li><li><a href="#" className="hover:text-sky-600">Mainboard Flex</a></li></ul></div>
@@ -420,6 +423,26 @@ export default function NavBar() {
                     </div>
                   </div>
                 </div>
+
+                <Link href="/parts/samsung" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  Samsung
+                </Link>
+
+                <Link href="/parts/motorola" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  Motorola
+                </Link>
+
+                <Link href="/parts/google" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  Google
+                </Link>
+
+                <Link href="/parts/other-parts" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  Other Parts
+                </Link>
+
+                <Link href="/parts/game-console" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  Game Console
+                </Link>
 
                 <a href="#" className="py-2 text-red-600 font-bold hover:text-red-700 transition">
                   Pre-Owned Devices
