@@ -8,50 +8,10 @@ import { useCart } from '../../stores/cartStore';
 export default function ShoppingCartPage() {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
 
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'iPhone 15 Pro Max 256GB',
-      image: '/api/placeholder/80/80',
-      price: 1199.00,
-      quantity: 1,
-      sku: 'IPH15PM-256',
-      availability: 'In Stock'
-    },
-    {
-      id: 2,
-      name: 'Samsung Galaxy S24 Ultra',
-      image: '/api/placeholder/80/80',
-      price: 1299.00,
-      quantity: 2,
-      sku: 'SGS24U-512',
-      availability: 'In Stock'
-    },
-    {
-      id: 3,
-      name: 'Apple Watch Series 9',
-      image: '/api/placeholder/80/80',
-      price: 399.00,
-      quantity: 1,
-      sku: 'AW9-45MM',
-      availability: 'In Stock'
-    }
-  ]);
+  // Use the actual cart store instead of mock data
+  const { items: cartItems, updateQuantity, removeItem, clearCart, subtotal } = useCart();
 
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) return;
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
-
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // Calculate totals using real cart data
   const tax = subtotal * 0.08; // 8% tax
   const shipping = subtotal > 500 ? 0 : 29.99;
   const total = subtotal + tax + shipping;
@@ -244,20 +204,20 @@ export default function ShoppingCartPage() {
                             />
                             <div className="flex-1">
                               <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                              <p className="text-sm text-gray-600 mb-2">SKU: {item.sku}</p>
-                              <p className="text-sm text-green-600">{item.availability}</p>
+                              <p className="text-sm text-gray-600 mb-2">Condition: {item.condition}</p>
+                              <p className="text-sm text-green-600">In Stock</p>
                               <div className="flex items-center space-x-4 mt-3">
                                 <div className="flex items-center border border-gray-300 rounded-lg">
                                   <button
-                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                    onClick={() => updateQuantity(item.id, item.qty - 1)}
                                     className="p-2 hover:bg-gray-50"
                                     aria-label="Decrease quantity"
                                   >
                                     <Minus className="h-4 w-4" />
                                   </button>
-                                  <span className="px-4 py-2 text-center min-w-[3rem]">{item.quantity}</span>
+                                  <span className="px-4 py-2 text-center min-w-[3rem]">{item.qty}</span>
                                   <button
-                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                    onClick={() => updateQuantity(item.id, item.qty + 1)}
                                     className="p-2 hover:bg-gray-50"
                                     aria-label="Increase quantity"
                                   >
@@ -275,7 +235,7 @@ export default function ShoppingCartPage() {
                             </div>
                             <div className="text-right">
                               <p className="text-lg font-semibold text-gray-900">${item.price.toFixed(2)}</p>
-                              <p className="text-sm text-gray-600">Total: ${(item.price * item.quantity).toFixed(2)}</p>
+                              <p className="text-sm text-gray-600">Total: ${(item.price * item.qty).toFixed(2)}</p>
                             </div>
                           </div>
                         </div>
