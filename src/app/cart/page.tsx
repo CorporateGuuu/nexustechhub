@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Search, ShoppingCart, Truck, ChevronDown, User, Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
+import { useCart } from '../../stores/cartStore';
 
 export default function ShoppingCartPage() {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
@@ -318,10 +320,13 @@ export default function ShoppingCartPage() {
                       </div>
                     </div>
 
-                    <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium mt-6 flex items-center justify-center space-x-2">
-                      <span>Proceed to Checkout</span>
+                    <Link
+                      href="/checkout"
+                      className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors font-medium mt-6 flex items-center justify-center space-x-2"
+                    >
+                      <span>Pay Now</span>
                       <ArrowRight className="h-5 w-5" />
-                    </button>
+                    </Link>
 
                     <div className="mt-4 text-center">
                       <p className="text-sm text-gray-600">

@@ -139,17 +139,17 @@ export default function ProductCard({ product }: { product: Product }) {
           {/* Action Button */}
           {isLoggedIn ? (
             <button
-              onClick={() => addToCart({ ...product, price })}
-              className="mt-3 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+              onClick={() => addToCart({ id: product.id, name: product.name, price: price, images: [product.image, ...product.gallery] })}
+              className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700"
             >
-              Add to Cart
+              Add to Cart – ${price}
             </button>
           ) : (
             <button
-              onClick={() => addToQuote({ ...product, price })}
-              className="mt-3 w-full bg-gray-100 text-gray-900 py-2 rounded-md hover:bg-gray-200 transition-colors font-medium"
+              onClick={() => addToQuote({ id: product.id, name: product.name, price: price, images: [product.image, ...product.gallery] })}
+              className="w-full bg-gray-100 text-gray-900 py-4 rounded-xl font-bold text-lg hover:bg-gray-200"
             >
-              Add to Quote
+              Add to Quote – ${price}
             </button>
           )}
         </div>

@@ -1,11 +1,27 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Search, ShoppingCart, Truck, ChevronDown, User, Mail, CreditCard, Award, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import FedExCountdownDemo from '../../components/FedExCountdownDemo';
+import { useAuth } from '../../../hooks/useAuth';
 
 export default function CustomerAccountPage() {
+  const { user, logout } = useAuth();
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Please log in to access your account</h1>
+          <Link href="/login" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const recentOrders = [
     {
@@ -129,8 +145,13 @@ export default function CustomerAccountPage() {
 
             {/* User, FedEx, and Cart */}
             <div className="flex items-center space-x-6">
-              <button className="flex items-center space-x-2 text-gray-700 hover:text-blue-600" aria-label="User account">
+              <button 
+                onClick={logout}
+                className="flex items-center space-x-2 text-gray-700 hover:text-blue-600" 
+                aria-label="User account"
+              >
                 <User className="h-5 w-5" />
+                <span>Logout</span>
               </button>
               <div className="flex items-center space-x-2 text-gray-700">
                 <Truck className="h-5 w-5 text-orange-500" aria-hidden="true" />
@@ -163,7 +184,7 @@ export default function CustomerAccountPage() {
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-gray-600" aria-hidden="true">{section.icon}</span>
-                        <span className={`font-medium text-gray-900 ${!sidebarExpanded && 'hidden'}`}>
+                        <span className={`${!sidebarExpanded && 'hidden'} font-medium text-gray-900`}>
                           {section.title}
                         </span>
                       </div>
@@ -175,12 +196,12 @@ export default function CustomerAccountPage() {
                       <ul id={`submenu-${index}`} className="ml-8 mt-1 space-y-1" role="menu">
                         {section.items.map((item, itemIndex) => (
                           <li key={itemIndex} role="menuitem">
-                            <a
-                              href="#"
+                            <Link
+                              href={`/account/${item.toLowerCase().replace(/ /g, '-')}`}
                               className="block py-1 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                             >
                               {item}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -210,7 +231,7 @@ export default function CustomerAccountPage() {
             {/* Welcome Message */}
             <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6 mb-6">
               <p className="text-gray-700">
-                <span className="font-semibold text-gray-900">Hello Fitzgerald Amaranpong</span> | In this section you can instantly view and update your recent activities and account information.
+                <span className="font-semibold text-gray-900">Hello {user.name || user.email}</span> | In this section you can instantly view and update your recent activities and account information.
               </p>
             </div>
 
@@ -285,11 +306,11 @@ export default function CustomerAccountPage() {
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Name</label>
-                    <p className="text-gray-900">Fitzgerald Amaranpong</p>
+                    <p className="text-gray-900">{user.name || 'N/A'}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Email</label>
-                    <p className="text-gray-900">fitzgerald@example.com</p>
+                    <p className="text-gray-900">{user.email}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Phone</label>
@@ -310,7 +331,7 @@ export default function CustomerAccountPage() {
                   <div>
                     <h4 className="font-medium text-gray-900 mb-2">Default Billing Address</h4>
                     <div className="text-gray-600 text-sm">
-                      <p>Fitzgerald Amaranpong</p>
+                      <p>{user.name || 'User'}</p>
                       <p>Unit A</p>
                       <p>Alexandria, VA 22310</p>
                       <p>T: +1-202-914-1818</p>
@@ -319,7 +340,7 @@ export default function CustomerAccountPage() {
                   <div>
                     <h4 className="font-medium text-gray-900 mb-2">Default Shipping Address</h4>
                     <div className="text-gray-600 text-sm">
-                      <p>Fitzgerald Amaranpong</p>
+                      <p>{user.name || 'User'}</p>
                       <p>Unit A</p>
                       <p>Alexandria, VA 22310</p>
                       <p>T: +1-202-914-1818</p>

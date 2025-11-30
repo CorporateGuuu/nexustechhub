@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { signInWithEmail, signInWithGoogle } from 'lib/supabase';
-import toast, { Toaster } from 'react-hot-toast';
+import { useAuth } from '../../../hooks/useAuth';
+import toast from 'react-hot-toast';
 import PasskeyAuth from 'components/PasskeyAuth';
 
 export default function LoginPage() {
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
+  const { login } = useAuth();
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -24,7 +26,7 @@ export default function LoginPage() {
     const formData = new FormData(e.currentTarget);
     const rememberMe = formData.get('rememberMe') === 'on';
 
-    const { error } = await signInWithEmail(
+    const { data, error } = await signInWithEmail(
       formData.get('email') as string,
       formData.get('password') as string,
       rememberMe
@@ -34,6 +36,14 @@ export default function LoginPage() {
       toast.error(error.message);
       setLoading(false);
     } else {
+      // Update Zustand store with user data
+      if (data.user) {
+        login({
+          id: data.user.id,
+          email: data.user.email!,
+          name: data.user.user_metadata?.name || data.user.user_metadata?.full_name || undefined,
+        });
+      }
       router.push(redirect);
     }
   };

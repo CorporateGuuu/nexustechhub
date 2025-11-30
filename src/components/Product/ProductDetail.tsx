@@ -1,6 +1,6 @@
 'use client';
 
-import { useCart } from '../../../contexts/CartContext';
+import { useCart } from '../../stores/cartStore';
 import { useAuth } from '../../../contexts/AuthContext';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -12,7 +12,7 @@ interface ProductDetailProps {
 }
 
 export default function ProductDetail({ product }: ProductDetailProps) {
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const { user } = useAuth();
   const [selectedImg, setSelectedImg] = useState(product.image);
   const [quantity, setQuantity] = useState(1);
@@ -81,14 +81,13 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   }, []);
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image
-      });
-    }
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      condition: 'New' // Default condition for products
+    });
   };
 
   const nextImage = () => {
