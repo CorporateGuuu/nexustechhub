@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '../../../../lib/supabaseClient';
 import { cookies } from 'next/headers';
 
-export async function GET(request: NextRequest) {
+// Force dynamic rendering since this route uses cookies
+export const dynamic = 'force-dynamic';
+
+export async function GET() {
   try {
     // Get the auth token from cookies
     const cookieStore = cookies();

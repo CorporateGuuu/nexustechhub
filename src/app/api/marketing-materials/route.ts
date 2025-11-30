@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+
+// Force dynamic rendering since this route uses cookies
+export const dynamic = 'force-dynamic';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -13,7 +16,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 });
 
 // GET /api/marketing-materials - Fetch all marketing materials
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check authentication
     const cookieStore = cookies();
