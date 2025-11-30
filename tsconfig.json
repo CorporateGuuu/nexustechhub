@@ -21,7 +21,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "hooks/*": ["hooks/*"],
+      "utils/*": ["utils/*"]
     },
     "plugins": [
       {
