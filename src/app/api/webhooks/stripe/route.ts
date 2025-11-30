@@ -10,6 +10,122 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+// Subscription event handlers
+async function handleSubscriptionCreated(subscription: Stripe.Subscription, supabase: any) {
+  try {
+    const userId = subscription.metadata?.user_id;
+    if (!userId) return;
+
+    // Get price details
+    const priceId = subscription.items.data[0]?.price.id;
+    const price = subscription.items.data[0]?.price;
+
+    const { error } = await supabase
+      .from('subscriptions')
+      .insert({
+        user_id: userId,
+        stripe_subscription_id: subscription.id,
+        stripe_customer_id: subscription.customer as string,
+        status: subscription.status,
+        current_period_start: new Date(subscription.current_period_start * 1000),
+        current_period_end: new Date(subscription.current_period_end * 1000),
+        plan_name: price?.nickname || 'Wholesale Subscription',
+        plan_id: price?.id,
+        price_id: priceId,
+        amount: price?.unit_amount,
+        currency: price?.currency,
+        cancel_at_period_end: subscription.cancel_at_period_end,
+      });
+
+    if (error) {
+      console.error('Error creating subscription record:', error);
+    }
+  } catch (error) {
+    console.error('Error in handleSubscriptionCreated:', error);
+  }
+}
+
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription, supabase: any) {
+  try {
+    const { error } = await supabase
+      .from('subscriptions')
+      .update({
+        status: subscription.status,
+        current_period_start: new Date(subscription.current_period_start * 1000),
+        current_period_end: new Date(subscription.current_period_end * 1000),
+        cancel_at_period_end: subscription.cancel_at_period_end,
+        updated_at: new Date(),
+      })
+      .eq('stripe_subscription_id', subscription.id);
+
+    if (error) {
+      console.error('Error updating subscription record:', error);
+    }
+  } catch (error) {
+    console.error('Error in handleSubscriptionUpdated:', error);
+  }
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription, supabase: any) {
+  try {
+    const { error } = await supabase
+      .from('subscriptions')
+      .update({
+        status: 'canceled',
+        updated_at: new Date(),
+      })
+      .eq('stripe_subscription_id', subscription.id);
+
+    if (error) {
+      console.error('Error canceling subscription record:', error);
+    }
+  } catch (error) {
+    console.error('Error in handleSubscriptionDeleted:', error);
+  }
+}
+
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice, supabase: any) {
+  try {
+    if (invoice.subscription) {
+      // Update subscription status if payment succeeded
+      const { error } = await supabase
+        .from('subscriptions')
+        .update({
+          status: 'active',
+          updated_at: new Date(),
+        })
+        .eq('stripe_subscription_id', invoice.subscription);
+
+      if (error) {
+        console.error('Error updating subscription after payment:', error);
+      }
+    }
+  } catch (error) {
+    console.error('Error in handleInvoicePaymentSucceeded:', error);
+  }
+}
+
+async function handleInvoicePaymentFailed(invoice: Stripe.Invoice, supabase: any) {
+  try {
+    if (invoice.subscription) {
+      // Mark subscription as past due or handle failed payment
+      const { error } = await supabase
+        .from('subscriptions')
+        .update({
+          status: 'past_due',
+          updated_at: new Date(),
+        })
+        .eq('stripe_subscription_id', invoice.subscription);
+
+      if (error) {
+        console.error('Error updating subscription after failed payment:', error);
+      }
+    }
+  } catch (error) {
+    console.error('Error in handleInvoicePaymentFailed:', error);
+  }
+}
+
 export async function POST(request: Request) {
   const body = await request.text();
   const headersList = headers();
@@ -93,6 +209,36 @@ export async function POST(request: Request) {
             console.error('Error updating order status:', error);
           }
         }
+        break;
+      }
+
+      case 'customer.subscription.created': {
+        const subscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionCreated(subscription, supabase);
+        break;
+      }
+
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionUpdated(subscription, supabase);
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        await handleSubscriptionDeleted(subscription, supabase);
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        const invoice = event.data.object as Stripe.Invoice;
+        await handleInvoicePaymentSucceeded(invoice, supabase);
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice;
+        await handleInvoicePaymentFailed(invoice, supabase);
         break;
       }
 
