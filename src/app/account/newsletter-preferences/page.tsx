@@ -18,7 +18,7 @@ export default function NewsletterPreferencesPage() {
     partnerOffers: false
   });
 
-  const handlePreferenceChange = (key, value) => {
+  const handlePreferenceChange = (key: string, value: boolean) => {
     setPreferences({...preferences, [key]: value});
   };
 
