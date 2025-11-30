@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+
+// Force dynamic rendering since this page handles OAuth callbacks
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { Button } from '../../../../components/ui/button';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { joinDiscordGuild } from '../../../../actions/discord/join-guild';
