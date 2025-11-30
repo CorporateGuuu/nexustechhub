@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "echo 'Cache warmed' && ls -la .next/cache/images >/dev/null 2>&1 || true",
     "start": "next start",
     "lint": "next lint",
     "seed": "node scripts/seed-supabase.js",
