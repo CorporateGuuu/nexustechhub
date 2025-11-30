@@ -1,6 +1,6 @@
 import { getProductsBySubcategory } from '../../../../lib/supabase';
 import ProductGrid from '../../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../../components/UI/Breadcrumb';
+import Breadcrumb from '../../../../components/Breadcrumb';
 
 const chargerTypes = [
   { name: 'USB-C Cables', slug: 'usb-c-cables', description: 'High-speed USB-C charging and data cables' },

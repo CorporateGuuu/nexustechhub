@@ -1,6 +1,6 @@
 import { getProductsBySubcategory } from '../../../../lib/supabase';
 import ProductGrid from '../../../../components/Product/ProductGrid';
-import { Breadcrumb } from '../../../../components/UI/Breadcrumb';
+import Breadcrumb from '../../../../components/Breadcrumb';
 
 const protectionTypes = [
   { name: 'iPhone Cases', slug: 'iphone-cases', description: 'Premium cases for all iPhone models' },
