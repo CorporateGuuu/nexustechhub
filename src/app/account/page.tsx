@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingCart, Truck, ChevronDown, User, Mail, CreditCard, Award, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import FedExCountdownDemo from '../../components/FedExCountdownDemo';
-import { useAuth } from '../../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function CustomerAccountPage() {
   const { user, logout } = useAuth();
