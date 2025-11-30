@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,11 +10,6 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { supabase } from '../../../src/lib/supabase';
 import { ShoppingCart, Eye } from 'lucide-react';
-
-export const metadata: Metadata = {
-  title: 'Pre-Owned Devices - Nexus Tech Hub',
-  description: 'Browse our selection of certified pre-owned devices with warranty and quality guarantee.',
-};
 
 interface Device {
   id: string;
