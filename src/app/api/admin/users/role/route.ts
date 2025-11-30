@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 import fs from 'fs';
 import path from 'path';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,6 +45,13 @@ export async function POST(request: NextRequest) {
 
     // Send approval email
     try {
+      const apiKey = process.env.RESEND_API_KEY;
+      if (!apiKey) {
+        console.error('Missing RESEND_API_KEY environment variable');
+        return NextResponse.redirect('/admin/users');
+      }
+
+      const resend = new Resend(apiKey);
       const templatePath = path.join(process.cwd(), 'emails', 'wholesale-approval.html');
       let template = fs.readFileSync(templatePath, 'utf8');
 

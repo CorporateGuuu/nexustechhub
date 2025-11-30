@@ -8,7 +8,6 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Initialize services
-const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 const supabaseAdmin = SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY
   ? createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
   : null;
@@ -278,7 +277,8 @@ class EmailService {
     const emailTemplate = templates[template](data);
 
     try {
-      if (this.provider === 'resend' && resend) {
+      if (this.provider === 'resend' && RESEND_API_KEY) {
+        const resend = new Resend(RESEND_API_KEY);
         const result = await resend.emails.send({
           from: process.env.FROM_EMAIL || 'noreply@nexustechhub.com',
           to: [to],
