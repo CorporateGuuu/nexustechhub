@@ -21,6 +21,20 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="theme-color" content="#ffffff" />
 
+        {/* Performance optimizations for 1000ms faster LCP */}
+        <link rel="preconnect" href="https://your-project-id.supabase.co" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+
+        {/* Preload critical fonts */}
+        <link
+          rel="preload"
+          href="/fonts/inter-var.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+
         {/* Prevent zoom on input focus (iOS) */}
         <style jsx global>{`
           input[type="text"], input[type="email"], input[type="password"], textarea {
