@@ -17,7 +17,8 @@ import {
 import { Input } from '../../../components/ui/input';
 import { Checkbox } from '../../../components/ui/checkbox';
 
-import { signInWithEmail, signInWithGoogle, supabase } from '../../../lib/supabase';
+import { signInWithGoogle, supabase } from '../../../lib/supabase';
+import { useAuth } from '../../../lib/auth-context';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +31,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
+  const { login } = useAuth();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -64,19 +66,32 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const { error } = await signInWithEmail(
-        formData.email,
-        formData.password,
-        formData.rememberMe
-      );
+      // Call the Netlify function instead of direct Supabase auth
+      const response = await fetch('/.netlify/functions/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'login',
+          email: formData.email,
+          password: formData.password
+        })
+      });
 
-      if (error) {
-        toast.error(error.message);
+      const result = await response.json();
+
+      if (result.success) {
+        // Use the auth context to handle login and state management
+        login(result.user, result.session);
+
+        toast.success(result.message || 'Login successful!');
+        router.push('/my-account');
       } else {
-        toast.success('Welcome back!');
-        // Redirect will happen via useEffect
+        toast.error(result.message || 'Login failed');
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast.error('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

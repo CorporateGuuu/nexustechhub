@@ -229,13 +229,13 @@ export const authOptions = {
     async jwt({ token, user }: any) {
       if (user) {
         token.role = user.role;
-        token.wholesaleApproved = user.wholesaleApproved;
+        token.wholesaleApproved = user.wholesale_approved;
       }
       return token;
     },
     async session({ session, token }: any) {
       session.user.role = token.role;
-      session.user.wholesaleApproved = token.wholesaleApproved;
+      session.user.wholesaleApproved = token.wholesale_approved;
       return session;
     },
   },
