@@ -1,8 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
+import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
 import type { Database } from '../types/supabase';
 
 // =============================================================================
-// Nexus Tech Hub - Supabase Client Configuration
+// Nexus Tech Hub - Supabase Client Configuration (Next.js Auth Helpers)
 // =============================================================================
 
 // -----------------------------------------------------------------------------
@@ -15,14 +15,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables. Please check your .env.local file.');
 }
 
-// Browser client for client-side operations (React components, hooks, etc.)
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-  },
-});
+// Browser client using Next.js auth helpers for proper SSR and auth handling
+export const supabase = createBrowserClient<Database>(
+  supabaseUrl,
+  supabaseAnonKey
+);
 
 // -----------------------------------------------------------------------------
 // Server Client (for server-side operations)

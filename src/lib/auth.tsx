@@ -1,153 +1,52 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createBrowserClient } from '@supabase/auth-helpers-nextjs';
+import type { User } from '@supabase/supabase-js';
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
-interface AuthSession {
-  user: User;
-  access_token: string;
-  refresh_token: string;
-  timestamp: number;
-}
-
-interface AuthContextType {
+type AuthContextType = {
   user: User | null;
   loading: boolean;
-  isAuthenticated: boolean;
-  login: (user: User, session: any) => void;
-  logout: () => void;
-  refreshAuth: () => void;
-}
+};
 
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  loading: true,
-  isAuthenticated: false,
-  login: () => {},
-  logout: () => {},
-  refreshAuth: () => {},
-});
+const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load session from localStorage on mount
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  const supabase = createBrowserClient(supabaseUrl!, supabaseAnonKey!);
+
   useEffect(() => {
-    const loadSession = () => {
-      try {
-        const sessionData = localStorage.getItem('auth_session');
-        if (sessionData) {
-          const session: AuthSession = JSON.parse(sessionData);
-
-          // Check if session is not too old (24 hours)
-          const sessionAge = Date.now() - session.timestamp;
-          const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
-          if (sessionAge < maxAge && session.user) {
-            setUser(session.user);
-          } else {
-            // Session expired, clear it
-            localStorage.removeItem('auth_session');
-          }
-        }
-      } catch (error) {
-        console.error('Error loading session:', error);
-        localStorage.removeItem('auth_session');
-      } finally {
-        setLoading(false);
-      }
+    // 1. Get initial session
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      setLoading(false);
     };
+    getSession();
 
-    loadSession();
+    // 2. Listen for ALL auth changes (this is the key!)
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
 
-    // Listen for storage changes (in case another tab logs in/out)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'auth_session') {
-        if (e.newValue) {
-          try {
-            const session: AuthSession = JSON.parse(e.newValue);
-            setUser(session.user);
-          } catch (error) {
-            setUser(null);
-          }
-        } else {
-          setUser(null);
-        }
-        setLoading(false);
+      // Force refresh on these events to sync cookies
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'SIGNED_OUT') {
+        window.location.reload(); // This fixes "undefined" forever
       }
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
     };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
-  const login = (userData: User, session: any) => {
-    const sessionData: AuthSession = {
-      user: userData,
-      access_token: session.access_token,
-      refresh_token: session.refresh_token,
-      timestamp: Date.now()
-    };
-
-    localStorage.setItem('auth_session', JSON.stringify(sessionData));
-    setUser(userData);
-    setLoading(false);
-
-    // Trigger a custom event for other components to listen to
-    window.dispatchEvent(new CustomEvent('auth-login', { detail: { user: userData } }));
-  };
-
-  const logout = () => {
-    localStorage.removeItem('auth_session');
-    setUser(null);
-    setLoading(false);
-
-    // Trigger a custom event for other components to listen to
-    window.dispatchEvent(new CustomEvent('auth-logout'));
-  };
-
-  const refreshAuth = () => {
-    try {
-      const sessionData = localStorage.getItem('auth_session');
-      if (sessionData) {
-        const session: AuthSession = JSON.parse(sessionData);
-        const sessionAge = Date.now() - session.timestamp;
-        const maxAge = 24 * 60 * 60 * 1000;
-
-        if (sessionAge < maxAge && session.user) {
-          setUser(session.user);
-        } else {
-          localStorage.removeItem('auth_session');
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error('Error refreshing auth:', error);
-      setUser(null);
-    }
-    setLoading(false);
-  };
-
-  const value = {
-    user,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    logout,
-    refreshAuth,
-  };
+  }, [supabase.auth]);
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ user, loading }}>
       {children}
     </AuthContext.Provider>
   );
