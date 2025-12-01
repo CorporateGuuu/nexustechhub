@@ -99,10 +99,14 @@ async function handleLogin(email, password, headers) {
 
     // For backward compatibility, also check if user exists in MySQL-style users table
     // (This is a fallback for existing users)
+    const firstName = data.user.user_metadata?.first_name || 'User';
+    const lastName = data.user.user_metadata?.last_name || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+
     const userData = {
       id: data.user.id,
       email: data.user.email,
-      name: `${data.user.user_metadata?.first_name || 'User'} ${data.user.user_metadata?.last_name || ''}`.trim(),
+      name: fullName || 'User',
       role: profile?.role || 'customer'
     };
 

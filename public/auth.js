@@ -6,7 +6,7 @@ class AuthManager {
     }
 
     init() {
-        this.checkSession();
+        this.restoreSession();
         this.attachEventListeners();
         this.updateUI();
     }
@@ -74,13 +74,24 @@ class AuthManager {
 
             if (result.success) {
                 this.currentUser = result.user;
+                // Store session data in localStorage
+                if (result.session) {
+                    localStorage.setItem('auth_session', JSON.stringify({
+                        user: result.user,
+                        access_token: result.session.access_token,
+                        refresh_token: result.session.refresh_token,
+                        timestamp: Date.now()
+                    }));
+                }
                 this.updateUI();
                 this.showNotification(result.message, 'success');
 
-                // Redirect after successful login
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                // Only redirect to index.html if we're not already on the account page
+                if (!window.location.pathname.includes('my-account')) {
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                }
             } else {
                 this.showNotification(result.message, 'error');
             }
@@ -144,40 +155,69 @@ class AuthManager {
         }
     }
 
+    restoreSession() {
+        try {
+            const sessionData = localStorage.getItem('auth_session');
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                // Check if session is not too old (24 hours)
+                const sessionAge = Date.now() - session.timestamp;
+                const maxAge = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+                if (sessionAge < maxAge && session.user) {
+                    this.currentUser = session.user;
+                    console.log('Session restored for user:', this.currentUser.email);
+                } else {
+                    // Session expired, clear it
+                    localStorage.removeItem('auth_session');
+                    console.log('Session expired, cleared');
+                }
+            }
+        } catch (error) {
+            console.error('Error restoring session:', error);
+            localStorage.removeItem('auth_session');
+        }
+    }
+
     async handleLogout() {
         try {
-            const response = await fetch('login.php', {
+            // Call logout endpoint
+            const response = await fetch('/.netlify/functions/login', {
                 method: 'POST',
-                body: new URLSearchParams({ action: 'logout' })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: 'logout' })
             });
 
             const result = await response.json();
 
             if (result.success) {
-                this.currentUser = null;
-                this.updateUI();
                 this.showNotification(result.message, 'info');
-
-                // Redirect to home page
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
             }
-
         } catch (error) {
             console.error('Logout error:', error);
-            // Force logout on frontend even if backend fails
-            this.currentUser = null;
-            this.updateUI();
-            window.location.href = 'index.html';
         }
+
+        // Always clear local session data
+        this.currentUser = null;
+        localStorage.removeItem('auth_session');
+        this.updateUI();
+
+        // Redirect to home page
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
     }
 
     async checkSession() {
         try {
-            const response = await fetch('login.php', {
+            const response = await fetch('/.netlify/functions/login', {
                 method: 'POST',
-                body: new URLSearchParams({ action: 'check_session' })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: 'check_session' })
             });
 
             const result = await response.json();
@@ -220,7 +260,7 @@ class AuthManager {
         // Update user name in navigation
         const userNameElements = document.querySelectorAll('.user-name');
         userNameElements.forEach(element => {
-            element.textContent = isLoggedIn ? this.currentUser.name : '';
+            element.textContent = isLoggedIn ? (this.currentUser.name || 'User') : '';
         });
 
         // Update account page content
@@ -244,9 +284,9 @@ class AuthManager {
                 const userEmailDisplay = document.getElementById('userEmailDisplay');
                 const userRoleDisplay = document.getElementById('userRoleDisplay');
 
-                if (userNameDisplay) userNameDisplay.textContent = this.currentUser.name;
-                if (userEmailDisplay) userEmailDisplay.textContent = this.currentUser.email;
-                if (userRoleDisplay) userRoleDisplay.textContent = this.currentUser.role.charAt(0).toUpperCase() + this.currentUser.role.slice(1);
+                if (userNameDisplay) userNameDisplay.textContent = this.currentUser.name || 'User';
+                if (userEmailDisplay) userEmailDisplay.textContent = this.currentUser.email || '';
+                if (userRoleDisplay) userRoleDisplay.textContent = (this.currentUser.role || 'customer').charAt(0).toUpperCase() + (this.currentUser.role || 'customer').slice(1);
 
             } else {
                 loginSection.style.display = 'block';
@@ -259,7 +299,9 @@ class AuthManager {
         // Update header to show user name instead of "My Account"
         const accountLink = document.querySelector('.account-link');
         if (accountLink && this.isLoggedIn()) {
-            accountLink.innerHTML = `<i class="fas fa-user"></i> ${this.currentUser.name.split(' ')[0]}`;
+            const userName = this.currentUser.name || 'User';
+            const firstName = userName.split(' ')[0] || 'User';
+            accountLink.innerHTML = `<i class="fas fa-user"></i> ${firstName}`;
         }
     }
 
