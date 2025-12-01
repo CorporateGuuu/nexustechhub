@@ -1,11 +1,11 @@
 import ProductDetail from 'src/components/Product/ProductDetail';
-import { supabase } from 'src/lib/supabase';
+import { supabaseServer } from '../../../../lib/supabase/server';
 import { Product } from 'src/types';
 import { notFound } from 'next/navigation';
 
 // Get product from Supabase
 async function getProduct(id: string): Promise<Product | null> {
-  const { data: product, error } = await supabase
+  const { data: product, error } = await supabaseServer
     .from('products')
     .select('*')
     .eq('id', id)
@@ -13,26 +13,28 @@ async function getProduct(id: string): Promise<Product | null> {
 
   if (error || !product) return null;
 
+  const prod = product as any;
+
   // Convert Supabase product to Product format
   return {
-    _id: product.id,
-    id: product.id,
-    name: product.name,
-    price: product.price,
-    originalPrice: product.original_price || undefined,
-    image: product.image,
-    gallery: product.images || [product.image],
-    category: product.category,
-    brand: product.brand,
-    inStock: product.in_stock,
-    description: product.description,
+    _id: prod.id,
+    id: prod.id,
+    name: prod.name,
+    price: prod.price,
+    originalPrice: prod.original_price || undefined,
+    image: prod.thumbnail_url || prod.images?.[0] || '/placeholder.png',
+    gallery: prod.images || [prod.thumbnail_url],
+    category: prod.category_id || 'parts',
+    brand: prod.brand_id || 'Apple',
+    inStock: prod.stock_quantity > 0,
+    description: prod.description || prod.short_description || '',
   };
 }
 
 export async function generateStaticParams() {
   try {
     // Query Supabase for product IDs
-    const { data: products, error } = await supabase
+    const { data: products, error } = await supabaseServer
       .from('products')
       .select('id')
       .limit(50); // Limit to prevent too many static pages
@@ -42,7 +44,7 @@ export async function generateStaticParams() {
       return [];
     }
 
-    return products?.map(product => ({
+    return products?.map((product: any) => ({
       id: product.id.toString()
     })) || [];
   } catch (error) {

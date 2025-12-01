@@ -21,6 +21,9 @@ export const supabase = createBrowserClient<Database>(
   supabaseAnonKey
 );
 
+// For compatibility with existing code that expects createClient()
+export const createClient = () => supabase;
+
 // -----------------------------------------------------------------------------
 // Server Client (for server-side operations)
 // -----------------------------------------------------------------------------
