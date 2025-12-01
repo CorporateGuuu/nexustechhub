@@ -6,19 +6,19 @@ import Link from 'next/link';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { Button } from '../../../components/ui/button';
+import { Button } from '../../components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../../../components/ui/card';
-import { Input } from '../../../components/ui/input';
-import { Checkbox } from '../../../components/ui/checkbox';
+} from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Checkbox } from '../../components/ui/checkbox';
 
-import { signInWithGoogle, supabase } from '../../../lib/supabase';
-import { useAuth } from '../../../lib/auth-context';
+import { signInWithGoogle, supabase } from '../../lib/supabase';
+import { useAuth } from '../../lib/auth';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
