@@ -58,9 +58,16 @@ class AuthManager {
 
             formData.append('action', 'login');
 
-            const response = await fetch('login.php', {
+            const response = await fetch('/.netlify/functions/login', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'login',
+                    email: formData.get('email'),
+                    password: formData.get('password')
+                })
             });
 
             const result = await response.json();
@@ -97,9 +104,20 @@ class AuthManager {
 
             formData.append('action', 'register');
 
-            const response = await fetch('login.php', {
+            const response = await fetch('/.netlify/functions/login', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: 'register',
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    first_name: formData.get('first_name'),
+                    last_name: formData.get('last_name'),
+                    phone: formData.get('phone'),
+                    company: formData.get('company')
+                })
             });
 
             const result = await response.json();
