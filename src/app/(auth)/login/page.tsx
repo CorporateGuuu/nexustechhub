@@ -248,6 +248,36 @@ export default function LoginPage() {
                 >
                   Forgot your password?
                 </button>
+
+                {/* Resend Confirmation Email */}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!email) {
+                      toast.error('Please enter your email first');
+                      return;
+                    }
+                    setLoading(true);
+                    const { error } = await supabase.auth.resend({
+                      type: 'signup',
+                      email,
+                      options: {
+                        emailRedirectTo: `${window.location.origin}/my-account`,
+                      },
+                    });
+                    if (error) {
+                      toast.error(error.message);
+                    } else {
+                      toast.success('Confirmation email sent! Check your inbox.');
+                    }
+                    setLoading(false);
+                  }}
+                  className="text-sm text-green-600 hover:text-green-700 font-medium hover:underline transition-colors block"
+                  disabled={loading}
+                >
+                  Didn't receive confirmation email? Resend
+                </button>
+
                 <p className="text-sm text-gray-600">
                   Don't have an account?{' '}
                   <Link href="/signup" className="text-blue-600 font-semibold hover:text-blue-700 hover:underline transition-colors">
