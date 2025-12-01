@@ -432,7 +432,7 @@ export default function NavBar() {
                   Motorola
                 </Link>
 
-                <Link href="/parts/google" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                <Link href="/parts/google-pixel" className="py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
                   Google
                 </Link>
 
