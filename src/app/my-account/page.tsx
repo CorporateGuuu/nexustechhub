@@ -62,10 +62,10 @@ export default function MyAccountPage() {
                   View My Orders
                 </button>
                 <button
-                  onClick={() => router.push('/profile')}
+                  onClick={() => router.push('/my-account/edit')}
                   className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
                 >
-                  Update Profile
+                  Edit Profile
                 </button>
               </div>
             </div>
