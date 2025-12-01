@@ -14,7 +14,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white`}>
+      <head>
+        {/* iOS Safari Fixes */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="theme-color" content="#ffffff" />
+
+        {/* Prevent zoom on input focus (iOS) */}
+        <style jsx global>{`
+          input[type="text"], input[type="email"], input[type="password"], textarea {
+            font-size: 16px !important;
+          }
+          * { touch-action: manipulation; }
+          body { -webkit-tap-highlight-color: transparent; }
+        `}</style>
+      </head>
+      <body className={`${inter.className} bg-gray-50 antialiased`}>
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
             {/* Mobile Header with Hamburger */}
