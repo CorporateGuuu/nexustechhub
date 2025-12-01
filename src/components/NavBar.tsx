@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Link from 'next/link';
+import { searchProducts } from '../lib/supabase';
+import { Product } from '../types';
 
 export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -9,28 +11,45 @@ export default function NavBar() {
   const [cartTotal] = useState('$182.34');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const { user, logout } = useAuth();
 
-  // Fake database — replace with your real API later
-  const allSuggestions = [
-    { id:1, title:'iPhone 15 Pro Max OLED Screen', category:'OLED Displays', price:'$279', link:'#' },
-    { id:2, title:'Galaxy S24 Ultra Battery', category:'Batteries', price:'$49', link:'#' },
-    { id:3, title:'TBK-568R OCA Machine', category:'Refurbishing', price:'$1,899', link:'#' },
-    { id:4, title:'iFixit Pro Tech Toolkit', category:'Tools', price:'$74.99', link:'#' },
-    { id:5, title:'iPhone 14 Pro Max (Grade A)', category:'Pre-Owned', price:'$789', link:'#' },
-    { id:6, title:'USB-C to Lightning Cable 2m', category:'Accessories', price:'$12', link:'#' },
-    { id:7, title:'Tristar Charging IC (U2)', category:'Board Components', price:'$8.50', link:'#' },
-    { id:8, title:'MagSafe Wireless Charger', category:'Accessories', price:'$39', link:'#' },
-    { id:9, title:'Qianli iCopy Plus', category:'Tools', price:'$149', link:'#' },
-    { id:10, title:'iPad Pro 12.9" M2 (Wi-Fi)', category:'Pre-Owned', price:'$999', link:'#' },
-  ];
+  // Search products when query changes
+  useEffect(() => {
+    const performSearch = async () => {
+      if (searchQuery.trim().length === 0) {
+        setSearchResults([]);
+        return;
+      }
 
-  const filteredSuggestions = allSuggestions.filter(item =>
-    searchQuery.length === 0 ? false : (
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  ).slice(0, 8);
+      setIsSearching(true);
+      try {
+        const results = await searchProducts(searchQuery.trim());
+        setSearchResults(results);
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    // Debounce search to avoid too many API calls
+    const timeoutId = setTimeout(performSearch, 300);
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  const filteredSuggestions = searchResults.map(product => ({
+    id: product.id,
+    title: product.name,
+    category: product.category || 'Parts',
+    price: `$${product.price.toFixed(2)}`,
+    link: product.slug ? `/products/${product.slug}` : `/products/${product.id}`,
+    image: product.image,
+    inStock: product.inStock,
+    isFeatured: product.isFeatured,
+  }));
 
   return (
     <>
