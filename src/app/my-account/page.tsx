@@ -3,7 +3,9 @@
 import { useAuth } from '../../lib/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { Button } from '../../components/ui/button';
 
 export default function MyAccountPage() {
   const { user, loading } = useAuth();
@@ -61,12 +63,9 @@ export default function MyAccountPage() {
                 >
                   View My Orders
                 </button>
-                <button
-                  onClick={() => router.push('/my-account/edit')}
-                  className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  Edit Profile
-                </button>
+                <Button asChild className="w-full">
+                  <Link href="/my-account/edit">Edit Profile</Link>
+                </Button>
               </div>
             </div>
           </div>
