@@ -20,7 +20,12 @@ const nextConfig = {
     missingSuspenseWithCSRBailout: false,
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
       {
         protocol: 'https',
         hostname: 'your-image-cdn.com',
@@ -38,6 +43,10 @@ const nextConfig = {
         hostname: 'localhost',
       },
     ],
+  },
+  // Critical for mobile speed
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
   },
   webpack: (config) => {
     config.resolve.alias = {
