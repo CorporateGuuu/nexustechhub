@@ -9,6 +9,7 @@ interface PullToRefreshProps {
 }
 
 export default function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
+  const [isPulling, setIsPulling] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -30,6 +31,7 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
 
       if (distance > 0) {
         setPullDistance(Math.min(distance / 3, 120));
+        setIsPulling(true);
         e.preventDefault();
       }
     };
@@ -41,6 +43,7 @@ export default function PullToRefresh({ onRefresh, children }: PullToRefreshProp
         setIsRefreshing(false);
       }
       setPullDistance(0);
+      setIsPulling(false);
     };
 
     window.addEventListener('touchstart', handleTouchStart);
