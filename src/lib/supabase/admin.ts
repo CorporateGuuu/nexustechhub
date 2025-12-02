@@ -9,14 +9,20 @@ import type { Database } from '../../types/supabase';
 
 // Environment variables validation
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+let supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl) {
   throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
 }
 
 if (!supabaseServiceRoleKey) {
-  throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+  // In development, allow missing service role key but warn
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('⚠️ SUPABASE_SERVICE_ROLE_KEY not set - admin operations will be limited');
+    supabaseServiceRoleKey = 'dummy-key-for-development'; // Fallback for development
+  } else {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable');
+  }
 }
 
 // Admin client with service role key for admin operations
