@@ -36,13 +36,15 @@ export default function RootLayout({
         />
 
         {/* Prevent zoom on input focus (iOS) */}
-        <style jsx global>{`
-          input[type="text"], input[type="email"], input[type="password"], textarea {
-            font-size: 16px !important;
-          }
-          * { touch-action: manipulation; }
-          body { -webkit-tap-highlight-color: transparent; }
-        `}</style>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            input[type="text"], input[type="email"], input[type="password"], textarea {
+              font-size: 16px !important;
+            }
+            * { touch-action: manipulation; }
+            body { -webkit-tap-highlight-color: transparent; }
+          `
+        }} />
       </head>
       <body className={`${inter.className} bg-gray-50 antialiased`}>
         <AuthProvider>
