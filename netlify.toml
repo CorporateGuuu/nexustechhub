@@ -6,6 +6,8 @@
   publish = ".next"
   # Build command with maximum debugging and guaranteed output
   command = "echo '=== Starting Next.js Build ===' && npm run build 2>&1 && echo '=== Build Completed Successfully ===' || (echo '=== BUILD FAILED ===' && echo 'Exit code: $?' && echo 'Checking for common issues...' && ls -la .next/ 2>/dev/null || echo 'No .next directory found' && exit 1)"
+  # Build timeout (8 minutes - generous for Next.js builds)
+  timeout = "480"
 
 [build.environment]
   # Force Node.js 20 (required for Next.js 14)
@@ -16,10 +18,6 @@
   NODE_OPTIONS = "--max-old-space-size=4096"
   # Ensure production build
   NODE_ENV = "production"
-
-# Build timeout (8 minutes - generous for Next.js builds)
-[build]
-  timeout = "480"
 
 # Official Next.js plugin - handles all Next.js specifics automatically
 [[plugins]]
