@@ -182,13 +182,13 @@ export default function NavBar() {
               <div className="flex items-center space-x-10 text-sm font-bold">
                 {/* Example with active state & animations */}
                 <div className="relative group">
-                  <button className="flex items-center space-x-2 py-3 text-gray-700 hover:text-sky-600 transition relative after:content-[''] after:absolute after:bottom-[-4px] after:left-1/2 after:w-0 after:h-[3px] after:bg-sky-500 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full hover:after:left-0">
+                  <Link href="/parts/apple" className="flex items-center space-x-2 py-3 text-gray-700 hover:text-sky-600 transition relative after:content-[''] after:absolute after:bottom-[-4px] after:left-1/2 after:w-0 after:h-[3px] after:bg-sky-500 after:transition-all after:duration-300 after:ease-in-out hover:after:w-full hover:after:left-0">
                     Apple
                     <span className="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full animate-pulse">NEW</span>
                     <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                     </svg>
-                  </button>
+                  </Link>
                   {/* Apple Mega Dropdown - Keep existing */}
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-5 gap-12 max-w-7xl mx-auto">
@@ -242,12 +242,12 @@ export default function NavBar() {
 
                 {/* Keep all other mega dropdowns exactly as they are */}
                 <div className="relative group">
-                  <button className="flex items-center space-x-1 py-3 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  <Link href="/parts/accessories" className="flex items-center space-x-1 py-3 text-gray-800 hover:text-sky-600 transition font-semibold">
                     Accessories
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                     </svg>
-                  </button>
+                  </Link>
                   {/* Accessories Mega Dropdown - Keep existing */}
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
@@ -329,12 +329,12 @@ export default function NavBar() {
 
                 {/* Continue with all other mega dropdowns - keep them exactly the same */}
                 <div className="relative group">
-                  <button className="flex items-center space-x-1 py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  <Link href="/parts/tools-&-supplies" className="flex items-center space-x-1 py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
                     Tools & Supplies
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                     </svg>
-                  </button>
+                  </Link>
                   {/* Tools & Supplies Mega Dropdown - Keep existing */}
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
@@ -407,12 +407,12 @@ export default function NavBar() {
 
                 {/* Keep all remaining mega dropdowns exactly as they are */}
                 <div className="relative group">
-                  <button className="flex items-center space-x-1 py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  <Link href="/parts/refurbishing" className="flex items-center space-x-1 py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
                     Refurbishing
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                     </svg>
-                  </button>
+                  </Link>
                   {/* Refurbishing Mega Dropdown - Keep existing */}
                   <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
@@ -427,9 +427,9 @@ export default function NavBar() {
                 </div>
 
                 <div className="relative group">
-                  <button className="flex items-center space-x-1 py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
+                  <Link href="/parts/board-components" className="flex items-center space-x-1 py-2 text-gray-800 hover:text-sky-600 transition font-semibold">
                     Board Components
-                  </button>
+                  </Link>
                   {/* Board Components Mega Dropdown - Keep existing */}
                   <div className="mega-dropdown absolute top-full mt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 bg-white rounded-2xl shadow-2xl border border-gray-100 p-10 z-50 w-[90vw] max-w-6xl">
                     <div className="grid grid-cols-6 gap-10 max-w-7xl mx-auto text-sm">
