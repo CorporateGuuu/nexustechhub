@@ -6,17 +6,17 @@ import Link from 'next/link';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-import { Button } from '../../../components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../../../components/ui/card';
-import { Input } from '../../../components/ui/input';
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
-import { signUpWithEmail, signInWithGoogle, supabase } from '../../../lib/supabase';
+import { signUpWithEmail, signInWithGoogle, supabase } from '@/lib/supabase';
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
