@@ -102,7 +102,7 @@ export default function Footer() {
 
         {/* Bottom Section */}
         <div className="border-t border-slate-700 mt-10 pt-6 text-center">
-          <div className="flex justify-center items-center mb-4 space-x-4">
+          <div className="flex flex-row justify-center items-center mb-4 space-x-4">
             {socialLinks.map((social, index) => (
               <a key={index} href={social.href} className="text-gray-400 hover:text-emerald-300 text-xl transition-colors transform hover:scale-110">
                 <i className={social.icon}></i>
