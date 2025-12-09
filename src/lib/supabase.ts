@@ -67,11 +67,11 @@ export const signInWithEmail = async (email: string, password: string, rememberM
 // Get products by subcategory
 export const getProductsBySubcategory = async (subcategory: string): Promise<Product[]> => {
   try {
+    // Search by product name since brand field is null in database
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('is_active', true)
-      .ilike('tags', `%${subcategory}%`)
+      .ilike('name', `%${subcategory}%`)
       .order('created_at', { ascending: false })
       .limit(20);
 
@@ -86,13 +86,13 @@ export const getProductsBySubcategory = async (subcategory: string): Promise<Pro
       id: product.id,
       name: product.name,
       price: product.price,
-      originalPrice: product.original_price || undefined,
-      image: product.thumbnail_url || product.images?.[0] || '/placeholder.png',
-      gallery: product.images || [],
+      originalPrice: undefined, // Not in current table
+      image: product.image_url || '/placeholder.png',
+      gallery: [], // Not in current table
       category: product.category_id || 'parts',
-      brand: product.brand_id || 'Apple',
+      brand: product.brand || 'Samsung',
       inStock: product.stock_quantity > 0,
-      description: product.description || product.short_description || '',
+      description: product.description || '',
       specs: {}, // Could be expanded if specs are stored elsewhere
     }));
   } catch (error) {
@@ -147,31 +147,11 @@ export const searchProducts = async (query: string, limit: number = 8): Promise<
 
     const searchTerm = query.trim();
 
-    // Search across multiple fields: name, description, tags, category, brand
+    // Search across multiple fields: name, description, brand
     const { data, error } = await supabase
       .from('products')
-      .select(`
-        id,
-        name,
-        slug,
-        description,
-        short_description,
-        price,
-        original_price,
-        discount_percentage,
-        stock_quantity,
-        is_active,
-        is_featured,
-        is_new,
-        thumbnail_url,
-        images,
-        category_id,
-        brand_id,
-        tags,
-        created_at
-      `)
-      .eq('is_active', true)
-      .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,short_description.ilike.%${searchTerm}%,tags.cs.{${searchTerm}}`)
+      .select('*')
+      .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,brand.ilike.%${searchTerm}%`)
       .order('is_featured', { ascending: false })
       .order('created_at', { ascending: false })
       .limit(limit);
@@ -187,20 +167,20 @@ export const searchProducts = async (query: string, limit: number = 8): Promise<
       id: product.id,
       name: product.name,
       price: product.price,
-      originalPrice: product.original_price || undefined,
-      image: product.thumbnail_url || product.images?.[0] || '/placeholder.png',
-      gallery: product.images || [],
+      originalPrice: undefined, // Not in current table
+      image: product.image_url || '/placeholder.png',
+      gallery: [], // Not in current table
       category: product.category_id || 'parts',
-      brand: product.brand_id || 'Apple',
+      brand: product.brand || 'Samsung',
       inStock: product.stock_quantity > 0,
-      description: product.description || product.short_description || '',
+      description: product.description || '',
       specs: {}, // Could be expanded if specs are stored elsewhere
       slug: product.slug || undefined,
-      shortDescription: product.short_description || undefined,
+      shortDescription: undefined, // Not in current table
       isFeatured: product.is_featured || false,
       isNew: product.is_new || false,
       discountPercentage: product.discount_percentage || 0,
-      tags: product.tags || undefined,
+      tags: undefined, // Not in current table
     }));
   } catch (error) {
     console.error('Error in searchProducts:', error);
