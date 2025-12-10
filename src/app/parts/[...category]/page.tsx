@@ -1,45 +1,21 @@
-import { supabaseServer } from '../../../lib/supabase/server';
-import { Product, FilterState } from '../../../types';
+import { Product } from '../../../types';
+import { getCategoryProducts } from '../../../utils/supabaseQueries';
 import Link from 'next/link';
 import Image from 'next/image';
 import FilterSidebar from '../../../components/Product/FilterSidebar';
 import { parseURLToFilters, calculateFilterCounts, getPaginationInfo } from '../../../utils/productFilters';
-import { Grid, List, SlidersHorizontal, ArrowRight, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import { Grid, List, SlidersHorizontal, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
 
 interface CategoryPageProps {
   params: { category: string[] };
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// BULLETPROOF SLUG SANITIZATION - Handles ANY URL safely
-function sanitizeSlug(slugArray: string[]): string {
-  try {
-    // Join array segments and decode URL encoding
-    const rawSlug = slugArray.join('/');
-    const decodedSlug = decodeURIComponent(rawSlug);
-
-    // Replace special characters that break queries
-    const sanitized = decodedSlug
-      .replace(/&/g, '-')      // & → -
-      .replace(/%/g, '-')      // % → -
-      .replace(/\s+/g, '-')    // spaces → -
-      .replace(/[^a-zA-Z0-9\-_]/g, '-')  // only allow safe chars
-      .replace(/-+/g, '-')     // multiple dashes → single
-      .replace(/^-|-$/g, '');  // remove leading/trailing dashes
-
-    return sanitized || 'unknown';
-  } catch (error) {
-    console.error('Slug sanitization error:', error);
-    return 'unknown';
-  }
-}
-
-// BULLETPROOF SLUG MAPPING - Maps broken/old slugs to working ones
+// CONFIGURATION - Define all constants first
 const SLUG_MAPPING: Record<string, string> = {
   'tools-supplies': 'tools',
   'tools---supplies': 'tools',
   'tools-26-supplies': 'tools',
-  'tools-supplies': 'tools',
   'apple': 'apple',
   'samsung': 'samsung',
   'google-pixel': 'google-pixel',
@@ -51,226 +27,33 @@ const SLUG_MAPPING: Record<string, string> = {
   'refurbishing': 'refurbishing',
 };
 
-// BULLETPROOF CATEGORY CONFIG - Never fails
-const CATEGORY_CONFIG: Record<string, {
-  title: string;
-  description: string;
-  gradient: string;
-  features: string[];
-}> = {
-  'apple': {
-    title: 'Apple Parts',
-    description: 'Genuine Apple replacement parts for iPhone, iPad, and Mac',
-    gradient: 'from-blue-600 via-blue-700 to-indigo-800',
-    features: ['Genuine OEM Parts', '180-Day Warranty', 'Fast Shipping']
-  },
-  'samsung': {
-    title: 'Samsung Parts',
-    description: 'Premium Samsung Galaxy replacement parts and accessories',
-    gradient: 'from-purple-600 via-purple-700 to-pink-800',
-    features: ['Galaxy Compatible', 'Premium Quality', 'Same-Day Shipping']
-  },
-  'google-pixel': {
-    title: 'Google Pixel Parts',
-    description: 'Original Google Pixel replacement parts and components',
-    gradient: 'from-green-600 via-green-700 to-teal-800',
-    features: ['Pixel Certified', 'Pure Android', 'Expert Support']
-  },
-  'motorola': {
-    title: 'Motorola Parts',
-    description: 'High-quality Motorola replacement parts for all models',
-    gradient: 'from-red-600 via-red-700 to-orange-800',
-    features: ['Motorola Approved', 'Durable Parts', 'Competitive Pricing']
-  },
-  'tools': {
-    title: 'Tools & Supplies',
-    description: 'Professional repair tools and supplies for technicians',
-    gradient: 'from-gray-600 via-gray-700 to-slate-800',
-    features: ['Professional Grade', 'Durable Tools', 'Complete Kits']
-  },
-  'other-parts': {
-    title: 'Other Parts',
-    description: 'Miscellaneous replacement parts and components',
-    gradient: 'from-yellow-600 via-yellow-700 to-orange-800',
-    features: ['Wide Selection', 'Quality Assured', 'Competitive Prices']
-  },
-  'board-components': {
-    title: 'Board Components',
-    description: 'Circuit board components and electronic parts',
-    gradient: 'from-indigo-600 via-indigo-700 to-purple-800',
-    features: ['High Quality', 'Precise Fit', 'Technical Support']
-  },
-  'game-console': {
-    title: 'Game Console Parts',
-    description: 'Replacement parts for gaming consoles and accessories',
-    gradient: 'from-emerald-600 via-emerald-700 to-teal-800',
-    features: ['Gaming Optimized', 'Console Compatible', 'Fast Repairs']
-  },
-  'accessories': {
-    title: 'Accessories',
-    description: 'Phone and tablet accessories for protection and functionality',
-    gradient: 'from-cyan-600 via-cyan-700 to-blue-800',
-    features: ['Premium Accessories', 'Universal Fit', 'Style & Protection']
-  },
-  'refurbishing': {
-    title: 'Refurbishing Services',
-    description: 'Professional phone and tablet refurbishing services',
-    gradient: 'from-violet-600 via-violet-700 to-purple-800',
-    features: ['Expert Refurbishing', 'Quality Assurance', 'Warranty Included']
-  }
+const CATEGORY_CONFIG: Record<string, { title: string; desc: string; gradient: string; features: string[] }> = {
+  apple: { title: 'Apple Parts', desc: 'Genuine Apple replacement parts', gradient: 'from-blue-600 to-indigo-800', features: ['Genuine OEM', '180-Day Warranty', 'Fast Shipping'] },
+  samsung: { title: 'Samsung Parts', desc: 'Premium Samsung Galaxy parts', gradient: 'from-purple-600 to-pink-800', features: ['Galaxy Compatible', 'Premium Quality', 'Same-Day Shipping'] },
+  'google-pixel': { title: 'Google Pixel Parts', desc: 'Original Google Pixel parts', gradient: 'from-green-600 to-teal-800', features: ['Pixel Certified', 'Pure Android', 'Expert Support'] },
+  motorola: { title: 'Motorola Parts', desc: 'High-quality Motorola parts', gradient: 'from-red-600 to-orange-800', features: ['Motorola Approved', 'Durable Parts', 'Competitive Pricing'] },
+  tools: { title: 'Tools & Supplies', desc: 'Professional repair tools', gradient: 'from-gray-600 to-slate-800', features: ['Professional Grade', 'Durable Tools', 'Complete Kits'] },
+  'other-parts': { title: 'Other Parts', desc: 'Miscellaneous parts', gradient: 'from-yellow-600 to-orange-800', features: ['Wide Selection', 'Quality Assured', 'Competitive Prices'] },
+  'board-components': { title: 'Board Components', desc: 'Circuit board parts', gradient: 'from-indigo-600 to-purple-800', features: ['High Quality', 'Precise Fit', 'Technical Support'] },
+  'game-console': { title: 'Game Console Parts', desc: 'Gaming console parts', gradient: 'from-emerald-600 to-teal-800', features: ['Gaming Optimized', 'Console Compatible', 'Fast Repairs'] },
+  accessories: { title: 'Accessories', desc: 'Phone accessories', gradient: 'from-cyan-600 to-blue-800', features: ['Premium Accessories', 'Universal Fit', 'Style & Protection'] },
+  refurbishing: { title: 'Refurbishing Services', desc: 'Professional refurbishing', gradient: 'from-violet-600 to-purple-800', features: ['Expert Refurbishing', 'Quality Assurance', 'Warranty Included'] }
 };
 
-// Get normalized category slug
-function getNormalizedSlug(sanitizedSlug: string): string {
-  return SLUG_MAPPING[sanitizedSlug] || sanitizedSlug;
-}
+// UTILITIES - Define helper functions
+const sanitizeSlug = (slugArray: string[]) =>
+  decodeURIComponent(slugArray.join('/'))
+    .replace(/[^\w-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'unknown';
 
-// BULLETPROOF PRODUCT FETCHING - Never fails, safe for any slug
-async function getCategoryProducts(categorySlug: string, filters: FilterState, page: number = 1, limit: number = 24) {
-  try {
-    const normalizedSlug = getNormalizedSlug(categorySlug);
+const getNormalizedSlug = (slug: string) => SLUG_MAPPING[slug] || slug;
 
-    // Create a SAFE Supabase query - never crashes
-    let query = supabaseServer
-      .from('products')
-      .select('*', { count: 'exact' });
-
-    // Base filters - always apply these safely
-    query = query.eq('is_active', true);
-
-    // Apply category-specific filtering - safe for any input
-    switch (normalizedSlug) {
-      case 'apple':
-        query = query.ilike('brand_id', '%apple%');
-        break;
-      case 'samsung':
-        query = query.ilike('brand_id', '%samsung%');
-        break;
-      case 'google-pixel':
-        query = query.or('brand_id.ilike.%google%,brand_id.ilike.%pixel%');
-        break;
-      case 'motorola':
-        query = query.ilike('brand_id', '%motorola%');
-        break;
-      case 'tools':
-        query = query.or('category_id.ilike.%tool%,name.ilike.%tool%,name.ilike.%repair%');
-        break;
-      case 'accessories':
-        query = query.ilike('category_id', '%accessor%');
-        break;
-      case 'refurbishing':
-        query = query.or('condition.ilike.%refurbished%,name.ilike.%refurbish%');
-        break;
-      case 'game-console':
-        query = query.or('name.ilike.%console%,name.ilike.%gaming%,category_id.ilike.%game%');
-        break;
-      case 'board-components':
-        query = query.or('name.ilike.%board%,name.ilike.%circuit%,name.ilike.%component%');
-        break;
-      case 'other-parts':
-        // Fallback - show some products, but not too many
-        query = query.limit(100);
-        break;
-      default:
-        // For completely unknown categories, show limited results
-        query = query.limit(50);
-        break;
-    }
-
-    // Apply additional filters safely
-    if (filters.search && typeof filters.search === 'string') {
-      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,sku.ilike.%${filters.search}%`);
-    }
-    if (filters.brands?.length > 0 && Array.isArray(filters.brands)) {
-      query = query.in('brand_id', filters.brands);
-    }
-    if (filters.priceRange?.[0] > 0 && typeof filters.priceRange[0] === 'number') {
-      query = query.gte('price', filters.priceRange[0]);
-    }
-    if (filters.priceRange?.[1] < 5000 && typeof filters.priceRange[1] === 'number') {
-      query = query.lte('price', filters.priceRange[1]);
-    }
-    if (filters.conditions?.length > 0 && Array.isArray(filters.conditions)) {
-      query = query.in('condition', filters.conditions);
-    }
-
-    // Apply sorting safely
-    const sortBy = filters.sort || 'newest';
-    switch (sortBy) {
-      case 'price-low':
-        query = query.order('price', { ascending: true });
-        break;
-      case 'price-high':
-        query = query.order('price', { ascending: false });
-        break;
-      case 'name':
-        query = query.order('name', { ascending: true });
-        break;
-      case 'newest':
-      default:
-        query = query.order('created_at', { ascending: false });
-        break;
-    }
-
-    // Get total count first - safe operation
-    const { count } = await query.select('*', { count: 'exact', head: true });
-
-    // Apply pagination safely
-    const currentPage = Math.max(1, page);
-    const itemsPerPage = Math.min(100, Math.max(1, limit)); // Clamp values
-    const from = (currentPage - 1) * itemsPerPage;
-    const to = from + itemsPerPage - 1;
-    query = query.range(from, to);
-
-    const { data: products, error } = await query;
-
-    if (error) {
-      console.error(`Safe query error for ${categorySlug}:`, error);
-      // Return empty but don't crash
-      return { products: [], totalCount: 0 };
-    }
-
-    const transformedProducts: Product[] = (products || []).map((product: any) => ({
-      _id: product.id,
-      id: product.id,
-      name: product.name || 'Unknown Product',
-      price: product.price || 0,
-      originalPrice: product.original_price || undefined,
-      image: product.thumbnail_url || product.images?.[0] || '/images/products/placeholder.svg',
-      gallery: product.images || [],
-      category: product.category_id || categorySlug,
-      brand: product.brand_id || 'Generic',
-      inStock: (product.stock_quantity || 0) > 0,
-      description: product.description || product.short_description || '',
-      specs: {},
-      sku: product.sku || undefined,
-      condition: product.condition || 'New',
-      carrier: 'Universal',
-      stockStatus: (product.stock_quantity || 0) > 0 ? 'In Stock' : 'Out of Stock',
-      slug: product.slug || undefined,
-      shortDescription: product.short_description || undefined,
-      isFeatured: product.is_featured || false,
-      isNew: product.is_new || false,
-      discountPercentage: product.discount_percentage || 0,
-      metaTitle: product.meta_title || undefined,
-      metaDescription: product.meta_description || undefined,
-      createdAt: product.created_at,
-      updatedAt: product.updated_at,
-    }));
-
-    return { products: transformedProducts, totalCount: count || 0 };
-  } catch (error) {
-    console.error(`Critical safe query error for ${categorySlug}:`, error);
-    // NEVER crash - return empty results
-    return { products: [], totalCount: 0 };
-  }
-}
-
-// Generate all possible static params - safe for any combination
+// STATIC GENERATION
 export async function generateStaticParams() {
   const baseSlugs = Object.keys(SLUG_MAPPING);
   return baseSlugs.map((slug) => ({
-    category: [slug], // Catch-all expects array
+    category: [slug],
   }));
 }
 
@@ -284,11 +67,11 @@ export async function generateMetadata({ params }: CategoryPageProps) {
     if (categoryConfig) {
       return {
         title: `${categoryConfig.title} | Nexus Tech Hub`,
-        description: categoryConfig.description,
+        description: categoryConfig.desc,
         keywords: categoryConfig.features.join(', '),
         openGraph: {
           title: `${categoryConfig.title} | Nexus Tech Hub`,
-          description: categoryConfig.description,
+          description: categoryConfig.desc,
           type: 'website',
         },
       };
