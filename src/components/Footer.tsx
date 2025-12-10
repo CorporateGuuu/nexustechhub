@@ -41,8 +41,19 @@ export default function Footer() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <div className="text-2xl font-bold text-white mb-4">
-              Nexus<span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">T</span>ech Hub
+            <div className="mb-4">
+              <svg width="180" height="40" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style={{stopColor:'#10b981', stopOpacity:1}} />
+                    <stop offset="50%" style={{stopColor:'#14b8a6', stopOpacity:1}} />
+                    <stop offset="100%" style={{stopColor:'#06b6d4', stopOpacity:1}} />
+                  </linearGradient>
+                </defs>
+                <text x="0" y="28" fontFamily="Arial, sans-serif" fontSize="24" fontWeight="bold" fill="url(#logoGradient)">
+                  NexusTech Hub
+                </text>
+              </svg>
             </div>
             <p className="mb-4"><strong className="text-emerald-300">United States</strong></p>
             <p className="mb-4">English | USD</p>

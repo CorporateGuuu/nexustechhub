@@ -5,14 +5,32 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence, Variant } from 'framer-motion';
 
-// Slides data (easily replaceable with API later)
+// Slides data with real high-quality images
 const slides = [
-  { id: 1, url: "/hero/slide1.jpg" },
-  { id: 2, url: "https://i.imgur.com/8vL2mK9.jpg" },
-  { id: 3, url: "https://i.imgur.com/fF9pR3s.jpg" },
-  { id: 4, url: "https://i.imgur.com/X7nQvL2.jpg" },
-  { id: 5, url: "https://i.imgur.com/mP4cZ8x.jpg" },
-  { id: 6, url: "https://i.imgur.com/rT5vH9y.jpg" },
+  {
+    id: 1,
+    url: "https://images.unsplash.com/photo-1592286131072-82af6b3a8f1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    title: "iPhone Screen Repair Parts",
+    description: "Premium OLED displays for iPhone 15 Pro Max"
+  },
+  {
+    id: 2,
+    url: "https://images.unsplash.com/photo-1605236453806-6ff36851218e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+    title: "Samsung Galaxy Parts",
+    description: "Complete repair kits for Galaxy S24 Ultra"
+  },
+  {
+    id: 3,
+    url: "https://images.unsplash.com/photo-1581092921461-eab62e97a780?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    title: "Professional Repair Tools",
+    description: "Precision equipment for expert technicians"
+  },
+  {
+    id: 4,
+    url: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    title: "Wholesale Electronics Parts",
+    description: "Bulk pricing for serious repair businesses"
+  },
 ];
 
 // Advanced Framer Motion Variants with blur effects
