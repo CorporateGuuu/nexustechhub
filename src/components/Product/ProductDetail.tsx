@@ -6,12 +6,16 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import { Product } from '../../types';
+import Breadcrumb from '../../components/Breadcrumb';
+import Link from 'next/link';
+import { ChevronLeft, ChevronRight, ZoomIn, Star, Check, Shield, Truck, RotateCcw } from 'lucide-react';
 
 interface ProductDetailProps {
   product: Product;
+  relatedProducts?: Product[];
 }
 
-export default function ProductDetail({ product }: ProductDetailProps) {
+export default function ProductDetail({ product, relatedProducts = [] }: ProductDetailProps) {
   const { addItem } = useCart();
   const { user } = useAuth();
   const [selectedImg, setSelectedImg] = useState(product.image);
@@ -19,8 +23,8 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Mock related products - in real app, fetch from API
-  const relatedProducts: Product[] = [
+  // Default related products if none provided
+  const defaultRelatedProducts: Product[] = [
     {
       _id: '1',
       id: '1',
@@ -71,6 +75,8 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     }
   ];
 
+  const displayRelatedProducts = relatedProducts.length > 0 ? relatedProducts : defaultRelatedProducts;
+
   const allImages = [product.image, ...(product.gallery || [])];
 
   useEffect(() => {
@@ -100,8 +106,21 @@ export default function ProductDetail({ product }: ProductDetailProps) {
     setSelectedImg(allImages[(currentImageIndex - 1 + allImages.length) % allImages.length]);
   };
 
+  // Create breadcrumbs
+  const breadcrumbs = [
+    { label: 'Home', href: '/' },
+    { label: 'Parts', href: '/parts' },
+    { label: product.category, href: `/${product.category}` },
+    { label: product.name }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumbs */}
+      <div className="container mx-auto px-4 py-4">
+        <Breadcrumb items={breadcrumbs} />
+      </div>
+
       {/* Main Product Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
@@ -163,42 +182,78 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             {/* Header */}
             <div>
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-              <p className="text-sm text-gray-600 mb-2">Brand: {product.brand}</p>
+              <div className="flex items-center gap-4 mb-2">
+                <span className="text-sm text-gray-600">Brand: {product.brand}</span>
+                {product.sku && (
+                  <span className="text-sm text-gray-500">SKU: {product.sku}</span>
+                )}
+              </div>
               <p className="text-gray-600">{product.category}</p>
             </div>
 
-            {/* Badge */}
-            {product.badge && (
-              <span className="inline-block bg-blue-600 text-white text-sm px-3 py-1 rounded-full">
-                {product.badge}
-              </span>
-            )}
+            {/* Trust Badges */}
+            <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm">
+                <Check className="w-4 h-4" />
+                <span>180-Day Warranty</span>
+              </div>
+              <div className="flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">
+                <Shield className="w-4 h-4" />
+                <span>Genuine Parts</span>
+              </div>
+              <div className="flex items-center gap-1 bg-orange-50 text-orange-700 px-3 py-1 rounded-full text-sm">
+                <Truck className="w-4 h-4" />
+                <span>Free Shipping</span>
+              </div>
+              <div className="flex items-center gap-1 bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm">
+                <RotateCcw className="w-4 h-4" />
+                <span>Easy Returns</span>
+              </div>
+            </div>
 
             {/* Pricing */}
             <div className="space-y-2">
               {user ? (
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl font-bold text-gray-900">${product.price}</span>
+                  <span className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
                   {product.originalPrice && product.originalPrice > product.price && (
                     <span className="text-xl text-gray-500 line-through">
-                      ${product.originalPrice}
+                      ${product.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                  {(product.discountPercentage || 0) > 0 && (
+                    <span className="bg-red-500 text-white text-sm px-2 py-1 rounded">
+                      {product.discountPercentage}% OFF
                     </span>
                   )}
                 </div>
               ) : (
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <p className="text-lg font-semibold text-gray-700">Login for Pricing</p>
-                  <p className="text-sm text-gray-600 mt-1">Sign in to view wholesale prices</p>
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+                  <p className="text-lg font-semibold text-blue-700">Wholesale Pricing Available</p>
+                  <p className="text-sm text-blue-600 mt-1">Sign in to view discounted prices for bulk orders</p>
                 </div>
               )}
             </div>
 
-            {/* Stock Status */}
-            <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className={`text-sm font-medium ${product.inStock ? 'text-green-700' : 'text-red-700'}`}>
-                {product.inStock ? 'In Stock' : 'Out of Stock'}
-              </span>
+            {/* Stock Status & Rating */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                <span className={`text-sm font-medium ${product.inStock ? 'text-green-700' : 'text-red-700'}`}>
+                  {product.inStock ? 'In Stock' : 'Out of Stock'}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="flex items-center">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`w-4 h-4 ${star <= 4.5 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm text-gray-600 ml-1">4.8 (124)</span>
+              </div>
             </div>
 
             {/* Description */}
@@ -296,7 +351,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         <div className="mt-16">
           <h2 className="text-2xl font-bold mb-8">Related Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedProducts.map((relatedProduct) => (
+            {displayRelatedProducts.map((relatedProduct) => (
               <ProductCard key={relatedProduct.id} product={relatedProduct} />
             ))}
           </div>

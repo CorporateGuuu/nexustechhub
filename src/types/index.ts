@@ -66,6 +66,26 @@ export interface FacetFilter {
   priceRanges: { [key: string]: number };
 }
 
+export interface FilterOption {
+  id: string;
+  name: string;
+  count: number;
+}
+
+export interface FilterState {
+  search: string;
+  brands: string[];
+  priceRange: [number, number];
+  devices: string[];
+  partTypes: string[];
+  conditions: string[];
+  sort: 'newest' | 'price-low' | 'price-high' | 'name' | 'popular';
+  rating?: string;
+  inStockOnly?: boolean;
+  hasVideo?: boolean;
+  has360View?: boolean;
+}
+
 export interface CartItem {
   id: string;
   name: string;

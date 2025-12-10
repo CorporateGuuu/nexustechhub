@@ -1,60 +1,374 @@
-// app/parts/google-pixel/page.tsx
-'use client';
+import { supabaseServer } from '../../../lib/supabase/server';
+import { Product, FilterState } from '../../../types';
+import Link from 'next/link';
+import Image from 'next/image';
+import Breadcrumb from '../../../components/Breadcrumb';
+import FilterSidebar from '../../../components/Product/FilterSidebar';
+import { parseURLToFilters, calculateFilterCounts, getPaginationInfo, buildSupabaseQuery } from '../../../utils/productFilters';
+import { Grid, List, SlidersHorizontal, ArrowRight, ChevronLeft, ChevronRight, Smartphone } from 'lucide-react';
 
-import { useState, useEffect, useCallback } from 'react';
-import ProductCard from '../../../components/ProductCard';
-import PullToRefresh from '../../../components/PullToRefresh';
-import { supabase } from '../../../lib/supabase';
+interface GooglePixelPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-export default function GooglePixelPartsPage() {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+// Get Google Pixel products from Supabase
+async function getGooglePixelProducts(filters: FilterState, page: number = 1, limit: number = 24) {
+  let query = supabaseServer
+    .from('products')
+    .select('*', { count: 'exact' });
 
-  const loadProducts = useCallback(async () => {
-    setLoading(true);
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .or('brand.ilike.Google,brand.ilike.Pixel,brand.ilike.Google Pixel')
-      .order('created_at', { ascending: false });
+  // Apply filters
+  query = buildSupabaseQuery(query, filters);
 
-    setProducts(data || []);
-    setLoading(false); // ← Only one call, fixed!
-  }, []);
+  // Filter for Google Pixel (brand = 'Google' or name contains 'Pixel')
+  query = query.or('brand_id.ilike.%Google%,name.ilike.%Pixel%');
 
-  useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+  // Get total count first
+  const { count } = await query.select('*', { count: 'exact', head: true });
 
-  if (loading) return <div className="p-8 text-center">Loading Google Pixel parts…</div>;
+  // Apply pagination
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+  query = query.range(from, to);
+
+  const { data: products, error } = await query;
+
+  if (error) {
+    console.error('Error fetching Google Pixel products:', error);
+    return { products: [], totalCount: 0 };
+  }
+
+  const transformedProducts: Product[] = (products || []).map((product: any) => ({
+    _id: product.id,
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    originalPrice: product.original_price || undefined,
+    image: product.thumbnail_url || product.images?.[0] || '/images/products/placeholder.svg',
+    gallery: product.images || [],
+    category: product.category_id || 'google-pixel-parts',
+    brand: product.brand_id || 'Google',
+    inStock: product.stock_quantity > 0,
+    description: product.description || product.short_description || '',
+    specs: {},
+    sku: product.sku || undefined,
+    condition: product.condition || 'New',
+    carrier: 'Universal',
+    stockStatus: product.stock_quantity > 0 ? 'In Stock' : 'Out of Stock',
+    slug: product.slug || undefined,
+    shortDescription: product.short_description || undefined,
+    isFeatured: product.is_featured || false,
+    isNew: product.is_new || false,
+    discountPercentage: product.discount_percentage || 0,
+    metaTitle: product.meta_title || undefined,
+    metaDescription: product.meta_description || undefined,
+    createdAt: product.created_at,
+    updatedAt: product.updated_at,
+  }));
+
+  return { products: transformedProducts, totalCount: count || 0 };
+}
+
+export async function generateMetadata() {
+  return {
+    title: 'Google Pixel Parts | Pixel Phone & Tablet Replacement Parts | Nexus Tech Hub',
+    description: 'Premium Google Pixel replacement parts. Screens, batteries, cameras, and more for Pixel 8, 7, 6, 5, 4 series with fast shipping.',
+    keywords: 'Google Pixel parts, Pixel screen replacement, Pixel battery, Pixel camera, Pixel repair parts',
+    openGraph: {
+      title: 'Google Pixel Parts | Pixel Phone & Tablet Replacement Parts | Nexus Tech Hub',
+      description: 'Premium Google Pixel replacement parts with fast shipping and expert support.',
+      type: 'website',
+    },
+  };
+}
+
+export default async function GooglePixelPage({ searchParams }: GooglePixelPageProps) {
+  // Parse URL params for filters
+  const urlSearchParams = new URLSearchParams();
+  Object.entries(searchParams).forEach(([key, value]) => {
+    if (value) {
+      urlSearchParams.set(key, Array.isArray(value) ? value[0] : value);
+    }
+  });
+
+  const currentFilters = parseURLToFilters(urlSearchParams);
+  const currentPage = parseInt(urlSearchParams.get('page') || '1');
+
+  // Get filtered products with pagination
+  const { products, totalCount } = await getGooglePixelProducts(currentFilters, currentPage);
+
+  // Calculate filter options
+  let allProducts: Product[] = [];
+  try {
+    const result = await getGooglePixelProducts(currentFilters, 1, 1000);
+    allProducts = result.products;
+  } catch (error) {
+    console.error('Error getting all products for filter counts:', error);
+    allProducts = products;
+  }
+  const filterOptions = calculateFilterCounts(allProducts);
+
+  // Pagination info
+  const paginationInfo = getPaginationInfo(totalCount, currentPage, 24);
+
+  // Create base URL for filters
+  const baseUrl = '/parts/google-pixel';
 
   return (
-    <PullToRefresh onRefresh={loadProducts}>
-      <div className="min-h-screen bg-gray-50">
-        <div className="bg-gradient-to-br from-green-500 to-teal-600 text-white py-16 px-6 text-center">
-          <h1 className="text-4xl font-black">Google Pixel Parts</h1>
-          <p className="text-xl mt-2 opacity-90">Original OLED • Camera Modules • Batteries</p>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumbs */}
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <Breadcrumb items={[
+          { label: 'Home', href: '/' },
+          { label: 'Parts', href: '/parts' },
+          { label: 'Google Pixel Parts' }
+        ]} />
+      </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-8 pb-24">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-            {products.map((p) => (
-              <ProductCard
-                key={p.id}
-                id={p.id}
-                name={p.name}
-                price={p.price}
-                originalPrice={p.original_price}
-                image={p.image_url || '/placeholder.jpg'}
-                brand="Google"
-                inStock={p.in_stock ?? true}
-                isNew={p.is_new}
-                isSale={p.is_sale}
-              />
-            ))}
+      {/* Hero Banner */}
+      <div className="bg-gradient-to-r from-green-500 via-green-600 to-emerald-700 text-white">
+        <div className="max-w-7xl mx-auto px-4 py-16">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Google Pixel Parts
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 text-green-100 max-w-3xl mx-auto">
+              Pixel 8 • Pixel 7 • Pixel 6 • Premium Quality • Fast USA Shipping • Expert Support
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-3">
+                <Smartphone className="w-5 h-5" />
+                <span>Pixel 8 Series</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-3">
+                <Smartphone className="w-5 h-5" />
+                <span>Pixel 7 Series</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-3">
+                <Smartphone className="w-5 h-5" />
+                <span>Pure Android</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </PullToRefresh>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Desktop Sidebar Filters */}
+          <div className="hidden lg:block w-80 flex-shrink-0">
+            <FilterSidebar
+              brands={filterOptions.brands}
+              devices={filterOptions.devices}
+              partTypes={filterOptions.partTypes}
+              conditions={filterOptions.conditions}
+              currentFilters={currentFilters}
+              baseUrl={baseUrl}
+              className="sticky top-6"
+            />
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Mobile Filter Toggle */}
+            <div className="flex items-center justify-between mb-6">
+              <button
+                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg"
+                aria-label="Open filters"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filters
+              </button>
+
+              {/* View Mode */}
+              <div className="flex border border-gray-300 rounded-md">
+                <Link
+                  href={`${baseUrl}?${urlSearchParams.toString().replace('&view=list', '').replace('view=list', '')}${urlSearchParams.toString().includes('?') ? '&' : '?'}view=grid`}
+                  className={`p-2 ${!urlSearchParams.get('view') || urlSearchParams.get('view') === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                  aria-label="Grid view"
+                >
+                  <Grid className="w-4 h-4" />
+                </Link>
+                <Link
+                  href={`${baseUrl}?${urlSearchParams.toString()}${urlSearchParams.toString().includes('?') ? '&' : '?'}view=list`}
+                  className={`p-2 ${urlSearchParams.get('view') === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+                  aria-label="List view"
+                >
+                  <List className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Results Header */}
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-gray-600">
+                {totalCount} Google Pixel part{totalCount !== 1 ? 's' : ''} found
+              </p>
+            </div>
+
+            {/* Products Grid */}
+            {products.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Smartphone className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No Google Pixel parts found</h3>
+                <p className="text-gray-600 mb-6">We're currently updating our Google Pixel parts inventory.</p>
+                <Link
+                  href="/parts"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Browse All Parts <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className={`grid gap-6 ${
+                  urlSearchParams.get('view') === 'list'
+                    ? 'grid-cols-1'
+                    : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                }`}>
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className={`bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow ${
+                        urlSearchParams.get('view') === 'list' ? 'flex' : ''
+                      }`}
+                    >
+                      {/* Product Image */}
+                      <div className={`relative ${urlSearchParams.get('view') === 'list' ? 'w-48 flex-shrink-0' : 'aspect-square'}`}>
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/images/products/placeholder.svg';
+                          }}
+                        />
+                        {product.isNew && (
+                          <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded font-bold">
+                            NEW
+                          </div>
+                        )}
+                        {(product.discountPercentage || 0) > 0 && (
+                          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded font-bold">
+                            -{product.discountPercentage}%
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Product Info */}
+                      <div className={`p-4 ${urlSearchParams.get('view') === 'list' ? 'flex-1' : ''}`}>
+                        <div className="flex items-start justify-between mb-2">
+                          <span className="text-xs font-medium text-blue-600 uppercase tracking-wider">
+                            {product.brand}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            product.inStock
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {product.stockStatus}
+                          </span>
+                        </div>
+
+                        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                          <Link
+                            href={product.slug ? `/product/${product.slug}` : `/products/${product.id}`}
+                            className="hover:text-blue-600 transition-colors"
+                          >
+                            {product.name}
+                          </Link>
+                        </h3>
+
+                        {urlSearchParams.get('view') === 'list' && (
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                            {product.description}
+                          </p>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xl font-bold text-gray-900">
+                                ${product.price.toFixed(2)}
+                              </span>
+                              {product.originalPrice && (
+                                <span className="text-sm text-gray-500 line-through">
+                                  ${product.originalPrice.toFixed(2)}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {paginationInfo.totalPages > 1 && (
+                  <div className="flex items-center justify-center mt-8 space-x-2">
+                    {/* Previous */}
+                    {paginationInfo.hasPrevPage && (
+                      <Link
+                        href={`${baseUrl}?${new URLSearchParams({
+                          ...Object.fromEntries(urlSearchParams.entries()),
+                          page: (currentPage - 1).toString()
+                        }).toString()}`}
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                        Previous
+                      </Link>
+                    )}
+
+                    {/* Page Numbers */}
+                    {Array.from({ length: Math.min(5, paginationInfo.totalPages) }, (_, i) => {
+                      const pageNum = Math.max(1, Math.min(paginationInfo.totalPages - 4, currentPage - 2)) + i;
+                      if (pageNum > paginationInfo.totalPages) return null;
+
+                      const isActive = pageNum === currentPage;
+                      return (
+                        <Link
+                          key={pageNum}
+                          href={`${baseUrl}?${new URLSearchParams({
+                            ...Object.fromEntries(urlSearchParams.entries()),
+                            page: pageNum.toString()
+                          }).toString()}`}
+                          className={`px-4 py-2 rounded-lg transition-colors ${
+                            isActive
+                              ? 'bg-blue-600 text-white'
+                              : 'border border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </Link>
+                      );
+                    })}
+
+                    {/* Next */}
+                    {paginationInfo.hasNextPage && (
+                      <Link
+                        href={`${baseUrl}?${new URLSearchParams({
+                          ...Object.fromEntries(urlSearchParams.entries()),
+                          page: (currentPage + 1).toString()
+                        }).toString()}`}
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        Next
+                        <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

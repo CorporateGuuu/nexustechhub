@@ -3,14 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useCart } from '../../../contexts/CartContext';
 import { useQuote } from '../../../contexts/QuoteContext';
 import { useSession } from 'next-auth/react';
 import { Product } from '../../types';
 import { getDiscountedPrice, getRoleBadge } from '../../lib/pricing';
+import AddToCartButton from '../AddToCartButton';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { addToCart } = useCart();
   const { addToQuote } = useQuote();
   const { data: session } = useSession();
   const [isCompared, setIsCompared] = useState(false);
@@ -21,6 +20,9 @@ export default function ProductCard({ product }: { product: Product }) {
   const isLoggedIn = !!session;
   const price = getDiscountedPrice(product.price, role);
   const badge = getRoleBadge(role);
+
+  // Create a product with the discounted price for the cart button
+  const productForCart = { ...product, price };
 
   const handleCompareToggle = () => {
     setIsCompared(!isCompared);
@@ -138,12 +140,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
           {/* Action Button */}
           {isLoggedIn ? (
-            <button
-              onClick={() => addToCart({ id: product.id, name: product.name, price: price, images: [product.image, ...product.gallery] })}
-              className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700"
-            >
-              Add to Cart – ${price}
-            </button>
+            <AddToCartButton product={productForCart} />
           ) : (
             <button
               onClick={() => addToQuote({ id: product.id, name: product.name, price: price, images: [product.image, ...product.gallery] })}
@@ -265,15 +262,10 @@ export default function ProductCard({ product }: { product: Product }) {
                   <p className="text-sm text-gray-700 mb-4">{product.description}</p>
 
                   {isLoggedIn ? (
-                    <button
-                      onClick={() => addToCart({ ...product, price })}
-                      className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-                    >
-                      Add to Cart
-                    </button>
+                    <AddToCartButton product={productForCart} variant="compact" />
                   ) : (
                     <button
-                      onClick={() => addToQuote({ ...product, price })}
+                      onClick={() => addToQuote({ id: product.id, name: product.name, price: price, image: product.image })}
                       className="w-full bg-gray-100 text-gray-900 py-2 rounded-md hover:bg-gray-200 transition-colors font-medium"
                     >
                       Add to Quote

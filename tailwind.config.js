@@ -31,5 +31,18 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    // Hide scrollbars for thumbnail galleries
+    function({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+        },
+      });
+    },
+  ],
 };

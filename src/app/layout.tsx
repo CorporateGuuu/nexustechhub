@@ -1,4 +1,5 @@
 import { AuthProvider } from '../providers/AuthProvider';
+import { CartProvider } from '../contexts/CartContext';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import MobileHeader from '../components/mobile/MobileHeader';
@@ -48,19 +49,21 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-gray-50 antialiased`}>
         <AuthProvider>
-          <div className="min-h-screen flex flex-col">
-            {/* Mobile Header with Hamburger */}
-            <MobileHeader />
+          <CartProvider>
+            <div className="min-h-screen flex flex-col">
+              {/* Mobile Header with Hamburger */}
+              <MobileHeader />
 
-            {/* Main Content */}
-            <main className="flex-1 pb-20 md:pb-0">
-              {children}
-            </main>
+              {/* Main Content */}
+              <main className="flex-1 pb-20 md:pb-0">
+                {children}
+              </main>
 
-            {/* Bottom Navigation (only on mobile) */}
-            <MobileBottomNav />
-          </div>
-          <Toaster position="top-center" />
+              {/* Bottom Navigation (only on mobile) */}
+              <MobileBottomNav />
+            </div>
+            <Toaster position="top-center" />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>
