@@ -2,99 +2,193 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { LogIn, LogOut, Menu, ShoppingCart } from 'lucide-react';
-import { useAuth } from 'hooks/useAuth';
-import { useCart } from '../stores/cartStore';
-import { Badge } from './ui/badge';
+import { Search, ShoppingCart, Menu, X } from 'lucide-react';
 import CartDrawer from './CartDrawer';
 
 export default function Header() {
-  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const { itemCount, subtotal } = useCart();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Mock cart data - replace with real cart context
+  const cartItemCount = 3;
+
+  const navigation = [
+    { name: 'Parts', href: '/parts' },
+    { name: 'Accessories', href: '/parts/accessories' },
+    { name: 'Tools', href: '/parts/tools' },
+    { name: 'Brands', href: '/parts' },
+    { name: 'Support', href: '/support' },
+  ];
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="text-2xl font-black text-white tracking-tighter">
-          NEXUS TECHHUB
-        </Link>
+    <header className="bg-white border-b border-gray-200 shadow-sm">
+      {/* Top Bar */}
+      <div className="bg-gray-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-10">
+            <div className="text-sm text-gray-600">
+              Free shipping on orders over $99 • 30-day returns
+            </div>
+            <div className="flex items-center space-x-4 text-sm">
+              <Link href="/support" className="text-gray-600 hover:text-gray-900">
+                Support
+              </Link>
+              <Link href="/account" className="text-gray-600 hover:text-gray-900">
+                Account
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          {/* Mini Cart */}
-          <button
-            onClick={() => setCartOpen(true)}
-            className="flex items-center gap-2 text-white hover:text-cyan-300 transition relative"
-            aria-label="Open cart"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            {itemCount > 0 && (
-              <Badge variant="secondary" className="absolute -top-2 -right-2 text-xs px-1.5 py-0.5 min-w-[20px] h-5">
-                {itemCount}
-              </Badge>
-            )}
-            <span className="text-sm font-medium">${subtotal.toFixed(2)}</span>
-          </button>
-
-          {user ? (
-            <>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                  {user.email[0].toUpperCase()}
-                </div>
-                <span className="text-white font-medium">{user.name || user.email}</span>
-              </div>
-              <button
-                onClick={logout}
-                className="flex items-center gap-2 text-red-400 hover:text-red-300 transition text-sm"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link
-              href="/login"
-              className="group flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105 text-sm"
-            >
-              <LogIn className="w-4 h-4 group-hover:translate-x-1 transition" />
-              LOGIN
+      {/* Main Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href="/" className="text-2xl font-bold text-gray-900 tracking-tight">
+              NEXUS TECH
             </Link>
-          )}
-        </nav>
+          </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden text-white"
-          aria-label="Toggle mobile menu"
-        >
-          <Menu className="w-8 h-8" />
-        </button>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Search Bar */}
+          <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
+            <form onSubmit={handleSearch} className="w-full">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search parts..."
+                  className="w-full pl-4 pr-10 py-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                />
+                <button
+                  type="submit"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  aria-label="Search"
+                >
+                  <Search className="h-4 w-4 text-gray-400" />
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Cart */}
+          <div className="flex items-center space-x-4">
+            {/* Desktop Search Icon */}
+            <button
+              onClick={() => {
+                const searchInput = document.querySelector('input[placeholder="Search parts..."]') as HTMLInputElement;
+                if (searchInput) searchInput.focus();
+              }}
+              className="lg:hidden p-2 text-gray-700 hover:text-gray-900"
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+
+            {/* Cart */}
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative p-2 text-gray-700 hover:text-gray-900"
+              aria-label="Shopping cart"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-700 hover:text-gray-900"
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-xl border-t border-white/10">
-          <div className="px-6 py-8 flex flex-col gap-6">
-            {user ? (
-              <>
-                <div className="text-white font-bold py-4 border-t border-white/10">
-                  Hello, {user.name || user.email}
-                </div>
-                <button onClick={logout} className="text-red-400 text-xl">Logout</button>
-              </>
-            ) : (
+        <div className="md:hidden bg-white border-t border-gray-200">
+          <div className="px-4 py-6 space-y-4">
+            {/* Mobile Search */}
+            <form onSubmit={handleSearch} className="mb-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search parts..."
+                  className="w-full pl-4 pr-10 py-3 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  type="submit"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  aria-label="Search"
+                >
+                  <Search className="h-5 w-5 text-gray-400" />
+                </button>
+              </div>
+            </form>
+
+            {/* Mobile Navigation */}
+            <nav className="space-y-2">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile Account Links */}
+            <div className="pt-4 border-t border-gray-200 space-y-2">
               <Link
-                href="/login"
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-xl px-8 py-5 rounded-2xl text-center"
+                href="/account"
+                className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                Login / Register
+                Account
               </Link>
-            )}
+              <Link
+                href="/support"
+                className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Support
+              </Link>
+            </div>
           </div>
         </div>
       )}

@@ -31,17 +31,21 @@ export default function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="max-h-[85vh]">
-        <DrawerHeader className="flex items-center justify-between">
-          <DrawerTitle className="flex items-center gap-2">
-            <ShoppingBag className="w-6 h-6" />
-            Cart
-            <Badge variant="secondary">{itemCount}</Badge>
-          </DrawerTitle>
-          <DrawerClose className="p-2 hover:bg-gray-100 rounded-lg">
-            <X className="w-5 h-5" />
-          </DrawerClose>
-        </DrawerHeader>
+        <DrawerContent className="max-h-[85vh]">
+          <DrawerHeader className="flex items-center justify-between border-b border-gray-200 pb-4">
+            <DrawerTitle className="flex items-center gap-3">
+              <ShoppingBag className="w-6 h-6 text-gray-600" />
+              <span className="text-lg font-semibold text-gray-900">Shopping Cart</span>
+              {itemCount > 0 && (
+                <span className="bg-blue-600 text-white text-sm font-medium px-2 py-1">
+                  {itemCount}
+                </span>
+              )}
+            </DrawerTitle>
+            <DrawerClose className="p-2 hover:bg-gray-100 text-gray-400 hover:text-gray-600">
+              <X className="w-5 h-5" />
+            </DrawerClose>
+          </DrawerHeader>
 
         <div className="flex-1 overflow-y-auto px-4 pb-4">
           {items.length === 0 ? (

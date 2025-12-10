@@ -254,6 +254,75 @@ export default function FilterSidebar({
     }));
   };
 
+  // Dual-thumb slider handlers
+  const handleSliderDrag = (e: React.MouseEvent, type: 'min' | 'max') => {
+    e.preventDefault();
+
+    const slider = e.currentTarget.parentElement;
+    if (!slider) return;
+
+    const rect = slider.getBoundingClientRect();
+    const startX = e.clientX;
+    const startMin = priceRange[0];
+    const startMax = priceRange[1];
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      const deltaValue = (deltaX / rect.width) * 5000;
+
+      if (type === 'min') {
+        const newMin = Math.max(0, Math.min(startMin + deltaValue, startMax - 10));
+        setPriceRange([newMin, startMax]);
+      } else {
+        const newMax = Math.min(5000, Math.max(startMax + deltaValue, startMin + 10));
+        setPriceRange([startMin, newMax]);
+      }
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleTouchDrag = (e: React.TouchEvent, type: 'min' | 'max') => {
+    e.preventDefault();
+
+    const slider = e.currentTarget.parentElement;
+    if (!slider) return;
+
+    const rect = slider.getBoundingClientRect();
+    const touch = e.touches[0];
+    const startX = touch.clientX;
+    const startMin = priceRange[0];
+    const startMax = priceRange[1];
+
+    const handleTouchMove = (moveEvent: TouchEvent) => {
+      const touch = moveEvent.touches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaValue = (deltaX / rect.width) * 5000;
+
+      if (type === 'min') {
+        const newMin = Math.max(0, Math.min(startMin + deltaValue, startMax - 10));
+        setPriceRange([newMin, startMax]);
+      } else {
+        const newMax = Math.min(5000, Math.max(startMax + deltaValue, startMin + 10));
+        setPriceRange([startMin, newMax]);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+  };
+
   const FilterSection = ({
     title,
     children,
@@ -535,10 +604,58 @@ export default function FilterSidebar({
           </div>
         </FilterSection>
 
-        {/* Price Range */}
+        {/* Price Range - DUAL-THUMB SLIDER */}
         <FilterSection title="Price Range" sectionKey="price" icon={DollarSign} defaultExpanded={false}>
-          <div className="space-y-4">
-            {/* Price inputs */}
+          <div className="space-y-6">
+            {/* Current Range Display */}
+            <div className="text-center">
+              <div className="text-lg font-semibold text-gray-900">
+                ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-500">Selected price range</div>
+            </div>
+
+            {/* Dual-Thumb Slider */}
+            <div className="relative px-2">
+              <div className="relative h-2 bg-gray-200 rounded-lg">
+                {/* Slider Track */}
+                <div
+                  className="absolute h-2 bg-blue-600 rounded-lg"
+                  style={{
+                    left: `${(priceRange[0] / 5000) * 100}%`,
+                    width: `${((priceRange[1] - priceRange[0]) / 5000) * 100}%`
+                  }}
+                />
+
+                {/* Min Thumb */}
+                <div
+                  className="absolute top-1/2 w-5 h-5 bg-white border-2 border-blue-600 rounded-full shadow-lg transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
+                  style={{ left: `${(priceRange[0] / 5000) * 100}%` }}
+                  onMouseDown={(e) => handleSliderDrag(e, 'min')}
+                  onTouchStart={(e) => handleTouchDrag(e, 'min')}
+                />
+
+                {/* Max Thumb */}
+                <div
+                  className="absolute top-1/2 w-5 h-5 bg-white border-2 border-blue-600 rounded-full shadow-lg transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
+                  style={{ left: `${(priceRange[1] / 5000) * 100}%` }}
+                  onMouseDown={(e) => handleSliderDrag(e, 'max')}
+                  onTouchStart={(e) => handleTouchDrag(e, 'max')}
+                />
+              </div>
+
+              {/* Tick Marks */}
+              <div className="flex justify-between mt-1 px-1">
+                {[0, 1000, 2000, 3000, 4000, 5000].map(price => (
+                  <div key={price} className="flex flex-col items-center">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full mb-1" />
+                    <span className="text-xs text-gray-500">${price / 1000}k</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Manual Input Fields */}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs text-gray-600 mb-1">Min Price</label>
@@ -546,11 +663,12 @@ export default function FilterSidebar({
                   type="number"
                   value={priceRange[0]}
                   onChange={(e) => {
-                    const newMin = parseInt(e.target.value) || 0;
+                    const newMin = Math.max(0, Math.min(priceRange[1] - 10, parseInt(e.target.value) || 0));
                     setPriceRange([newMin, priceRange[1]]);
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  placeholder="0"
+                  min="0"
+                  max="5000"
                 />
               </div>
               <div>
@@ -559,46 +677,51 @@ export default function FilterSidebar({
                   type="number"
                   value={priceRange[1]}
                   onChange={(e) => {
-                    const newMax = parseInt(e.target.value) || 5000;
+                    const newMax = Math.min(5000, Math.max(priceRange[0] + 10, parseInt(e.target.value) || 5000));
                     setPriceRange([priceRange[0], newMax]);
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  placeholder="5000"
+                  min="0"
+                  max="5000"
                 />
               </div>
             </div>
 
-            {/* Apply button */}
+            {/* Apply Price Range */}
             <a
               href={createFilterLink(baseUrl, { priceRange: priceRange as [number, number] })}
-              className="block w-full bg-blue-600 text-white text-center py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+              className="block w-full bg-blue-600 text-white text-center py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium shadow-sm"
             >
               Apply Price Range
             </a>
 
-            {/* Quick price options */}
-            <div className="space-y-1">
-              {[
-                { label: 'Under $50', range: [0, 50] },
-                { label: 'Under $100', range: [0, 100] },
-                { label: '$100 - $500', range: [100, 500] },
-                { label: 'All Prices', range: [0, 5000] },
-              ].map((option, index) => {
-                const isSelected = filters.priceRange?.[0] === option.range[0] && filters.priceRange?.[1] === option.range[1];
-                return (
-                  <a
-                    key={index}
-                    href={createFilterLink(baseUrl, { priceRange: option.range as [number, number] })}
-                    className={`block px-3 py-2 text-sm rounded-md transition-colors ${
-                      isSelected
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    {option.label}
-                  </a>
-                );
-              })}
+            {/* Quick Price Presets */}
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-gray-700 mb-2">Quick Select:</div>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: 'Under $50', range: [0, 50] },
+                  { label: 'Under $100', range: [0, 100] },
+                  { label: '$100-$300', range: [100, 300] },
+                  { label: '$300-$1000', range: [300, 1000] },
+                  { label: 'All Prices', range: [0, 5000] },
+                ].map((option, index) => {
+                  const isSelected = filters.priceRange?.[0] === option.range[0] && filters.priceRange?.[1] === option.range[1];
+                  return (
+                    <a
+                      key={index}
+                      href={createFilterLink(baseUrl, { priceRange: option.range as [number, number] })}
+                      className={`block px-3 py-2 text-xs text-center rounded-md transition-colors ${
+                        isSelected
+                          ? 'bg-blue-600 text-white font-medium'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {option.label}
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </FilterSection>
