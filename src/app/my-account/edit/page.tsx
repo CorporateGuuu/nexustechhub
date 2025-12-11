@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from 'react-hot-toast';
 import { Loader2, Upload, Save, ArrowLeft, Shield, Mail, Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import { useAuth } from '../../../lib/auth';
+import { useAuth } from '../../../lib/auth-provider';
 import { supabase } from '../../../lib/supabase';
 
 // FIXED Zod schema (removed the broken closing parenthesis)
