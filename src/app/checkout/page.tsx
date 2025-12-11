@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -21,6 +21,157 @@ import {
   CheckCircle,
   ShoppingCart
 } from 'lucide-react';
+
+// Checkout Loading Skeleton - Premium UX
+function CheckoutLoadingSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header skeleton */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="h-8 bg-gray-200 rounded w-48 animate-pulse"></div>
+            <div className="flex items-center space-x-4">
+              <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content Skeleton */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Cart Summary Skeleton */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="flex items-center space-x-4 py-4 border-b border-gray-100 last:border-b-0">
+                    <div className="w-16 h-16 bg-gray-200 rounded-lg animate-pulse"></div>
+                    <div className="flex-1 space-y-3">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/4 animate-pulse"></div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="w-8 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                    <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Promo Code Skeleton */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="h-5 bg-gray-200 rounded w-24 mb-4 animate-pulse"></div>
+              <div className="flex space-x-2">
+                <div className="flex-1 h-10 bg-gray-200 rounded animate-pulse"></div>
+                <div className="w-16 h-10 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Shipping Address Skeleton */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="h-5 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                  <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+                  <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-12 animate-pulse"></div>
+                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-12 animate-pulse"></div>
+                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+                    <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+                <div className="pt-6 border-t border-gray-200">
+                  <div className="h-5 bg-gray-200 rounded w-28 mb-4 animate-pulse"></div>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+                <div className="h-12 bg-gray-200 rounded w-full mt-8 animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary Sidebar Skeleton */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+              <div className="space-y-4 mb-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="flex justify-between">
+                    <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                    <div className="h-4 bg-gray-200 rounded w-12 animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+              <div className="space-y-4 pt-6 border-t border-gray-200">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded w-28 animate-pulse"></div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                </div>
+              </div>
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <div className="h-4 bg-gray-200 rounded w-48 mb-2 animate-pulse"></div>
+                <div className="space-y-1">
+                  <div className="h-3 bg-gray-200 rounded w-full animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-4/5 animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/5 animate-pulse"></div>
+                  <div className="h-3 bg-gray-200 rounded w-2/5 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Form validation schema
 const checkoutSchema = z.object({
@@ -43,6 +194,13 @@ export default function CheckoutPage() {
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate loading state for premium UX
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   const {
     register,
@@ -71,7 +229,7 @@ export default function CheckoutPage() {
   };
 
   // Handle checkout submission
-  const onSubmit = async (data: CheckoutFormData) => {
+  const onSubmit = async () => {
     setIsProcessing(true);
 
     try {
@@ -93,6 +251,11 @@ export default function CheckoutPage() {
       setIsProcessing(false);
     }
   };
+
+  // Show loading skeleton for premium UX
+  if (isLoading) {
+    return <CheckoutLoadingSkeleton />;
+  }
 
   // Empty cart state
   if (itemCount === 0) {
@@ -135,7 +298,7 @@ export default function CheckoutPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Cart Summary */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="bg-white border border-gray-300 p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Cart Summary</h2>
 
               <div className="space-y-4">
@@ -161,6 +324,7 @@ export default function CheckoutPage() {
                         onClick={() => updateQuantity(item.id, item.qty - 1)}
                         className="p-1 hover:bg-gray-100 rounded transition-colors"
                         disabled={item.qty <= 1}
+                        aria-label="Decrease quantity"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
@@ -168,6 +332,7 @@ export default function CheckoutPage() {
                       <button
                         onClick={() => updateQuantity(item.id, item.qty + 1)}
                         className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        aria-label="Increase quantity"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
@@ -190,7 +355,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Promo Code */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="bg-white border border-gray-300 p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-4">Promo Code</h3>
               <div className="flex space-x-2">
                 <input
@@ -198,11 +363,11 @@ export default function CheckoutPage() {
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
                   placeholder="Enter promo code"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
                 <button
                   onClick={handleApplyPromo}
-                  className="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
+                  className="px-4 py-2 bg-gray-900 text-white hover:bg-gray-800 transition-colors"
                 >
                   Apply
                 </button>
@@ -216,7 +381,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Shipping Address */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="bg-white border border-gray-300 p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-6">Shipping Address</h3>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -228,7 +393,7 @@ export default function CheckoutPage() {
                     <input
                       {...register('firstName')}
                       type="text"
-                      className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                         errors.firstName ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="John"
@@ -245,7 +410,7 @@ export default function CheckoutPage() {
                     <input
                       {...register('lastName')}
                       type="text"
-                      className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                         errors.lastName ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="Doe"
@@ -263,7 +428,7 @@ export default function CheckoutPage() {
                   <input
                     {...register('email')}
                     type="email"
-                    className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                       errors.email ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="john@example.com"
@@ -280,7 +445,7 @@ export default function CheckoutPage() {
                   <input
                     {...register('address')}
                     type="text"
-                    className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                       errors.address ? 'border-red-300' : 'border-gray-300'
                     }`}
                     placeholder="123 Main St"
@@ -298,7 +463,7 @@ export default function CheckoutPage() {
                     <input
                       {...register('city')}
                       type="text"
-                      className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                         errors.city ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="New York"
@@ -315,7 +480,7 @@ export default function CheckoutPage() {
                     <input
                       {...register('state')}
                       type="text"
-                      className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                         errors.state ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="NY"
@@ -332,7 +497,7 @@ export default function CheckoutPage() {
                     <input
                       {...register('zipCode')}
                       type="text"
-                      className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                      className={`w-full px-3 py-2 border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                         errors.zipCode ? 'border-red-300' : 'border-gray-300'
                       }`}
                       placeholder="10001"
@@ -399,7 +564,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg border border-gray-200 p-6 sticky top-6">
+            <div className="bg-white border border-gray-300 p-6 sticky top-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-6">Order Summary</h3>
 
               <div className="space-y-3 mb-6">

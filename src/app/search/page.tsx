@@ -1,4 +1,4 @@
-import { supabaseServer } from '../../../lib/supabase/server';
+import { supabaseServer } from '../../lib/supabase/server';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Package, AlertCircle, RefreshCw } from 'lucide-react';
@@ -34,7 +34,7 @@ async function searchProducts(query: string, page: number = 1) {
       };
     }
 
-    const products = data?.map(p => ({
+    const products = data?.map((p: any) => ({
       _id: p.id,
       id: p.id,
       name: p.name || 'Unknown Product',
@@ -111,16 +111,50 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   const { products, total, hasMore, error: searchError } = searchResult;
 
+  // Generate BreadcrumbList schema for search results
+  const generateBreadcrumbSchema = (query: string) => {
+    const baseUrl = 'https://nexus-tech-hub.netlify.app';
+    const breadcrumbs = [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": baseUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Search Results",
+        "item": query ? `${baseUrl}/search?q=${encodeURIComponent(query)}` : `${baseUrl}/search`
+      }
+    ];
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbs
+    };
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-4 mb-4">
-            <Link href="/" className="text-blue-600 hover:text-blue-800">Home</Link>
-            <span>/</span>
-            <span className="text-gray-900 font-medium">Search</span>
-          </div>
+    <>
+      {/* BreadcrumbList JSON-LD Schema for Google Rich Results */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBreadcrumbSchema(query))
+        }}
+      />
+
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="flex items-center gap-4 mb-4">
+              <Link href="/" className="text-blue-600 hover:text-blue-800">Home</Link>
+              <span>/</span>
+              <span className="text-gray-900 font-medium">Search</span>
+            </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Search Results for &ldquo;{query}&rdquo;
           </h1>
@@ -136,7 +170,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Search Temporarily Unavailable</h2>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              We're experiencing technical difficulties. Our search service will be back online shortly.
+              We&#39;re experiencing technical difficulties. Our search service will be back online shortly.
             </p>
             <div className="flex gap-4 justify-center">
               <button
@@ -229,6 +263,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         )}
       </div>
     </div>
+    </>
   );
 }
 

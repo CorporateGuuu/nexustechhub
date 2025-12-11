@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Menu, X, ShoppingCart, User } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../stores/cartStore';
-import { Badge } from '../ui/badge';
 import CartDrawer from '../CartDrawer';
 
 export default function MobileHeader() {
@@ -17,12 +16,12 @@ export default function MobileHeader() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="bg-white border-b border-gray-200 px-4 py-3 md:hidden">
+      <header className="bg-white border-b border-gray-300 px-4 py-3 md:hidden">
         <div className="flex items-center justify-between">
           {/* Hamburger Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 transition-colors"
+            className="p-2 -ml-2 hover:bg-gray-50 transition-colors"
             aria-label="Open menu"
           >
             <Menu className="w-6 h-6 text-gray-700" />
@@ -30,21 +29,21 @@ export default function MobileHeader() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <span className="text-xl font-black text-sky-500 tracking-tight">NEXUS</span>
-            <span className="text-xl font-black text-gray-900 tracking-tight ml-1">TECHHUB</span>
+            <span className="text-xl font-bold text-gray-900 tracking-wide">NEXUS</span>
+            <span className="text-xl font-bold text-blue-600 tracking-wide ml-1">TECHHUB</span>
           </Link>
 
           {/* Cart Button */}
           <button
             onClick={() => setCartOpen(true)}
-            className="p-2 -mr-2 rounded-lg hover:bg-gray-100 transition-colors relative"
+            className="p-2 -mr-2 hover:bg-gray-50 transition-colors relative"
             aria-label="Open cart"
           >
             <ShoppingCart className="w-6 h-6 text-gray-700" />
             {itemCount > 0 && (
-              <Badge variant="secondary" className="absolute -top-1 -right-1 text-xs px-1.5 py-0.5 min-w-[18px] h-5">
+              <div className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 min-w-[18px] h-5 text-center font-medium">
                 {itemCount}
-              </Badge>
+              </div>
             )}
           </button>
         </div>
@@ -63,11 +62,11 @@ export default function MobileHeader() {
           <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out">
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <span className="text-lg font-bold text-gray-900">Menu</span>
+              <div className="flex items-center justify-between p-4 border-b border-gray-300">
+                <span className="text-lg font-semibold text-gray-900">Menu</span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="p-2 hover:bg-gray-50 transition-colors"
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5 text-gray-500" />
@@ -75,22 +74,22 @@ export default function MobileHeader() {
               </div>
 
               {/* User Section */}
-              <div className="p-4 border-b border-gray-200">
+              <div className="p-4 border-b border-gray-300">
                 {user ? (
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 bg-gray-200 flex items-center justify-center text-gray-700 font-semibold">
                       {user.email[0].toUpperCase()}
                     </div>
                     <div className="flex-1">
                       <p className="font-medium text-gray-900">{user.name || user.email}</p>
-                      <p className="text-sm text-gray-500">Welcome back!</p>
+                      <p className="text-sm text-gray-600">Welcome back</p>
                     </div>
                   </div>
                 ) : (
                   <div className="text-center">
                     <Link
                       href="/login"
-                      className="inline-flex items-center justify-center w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-sky-500/25 transition-all duration-300"
+                      className="inline-flex items-center justify-center w-full bg-blue-600 text-white font-semibold py-3 px-6 hover:bg-blue-700 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <User className="w-4 h-4 mr-2" />
@@ -103,24 +102,24 @@ export default function MobileHeader() {
               {/* Navigation Links */}
               <div className="flex-1 overflow-y-auto">
                 <nav className="p-4">
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Link
                       href="/"
-                      className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="block px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Home
                     </Link>
                     <Link
                       href="/products"
-                      className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="block px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Products
                     </Link>
                     <Link
                       href="/cart"
-                      className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="block px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Cart ({itemCount})
@@ -128,7 +127,7 @@ export default function MobileHeader() {
                     {user && (
                       <Link
                         href="/profile"
-                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Profile
@@ -142,25 +141,25 @@ export default function MobileHeader() {
                       Categories
                     </h3>
                     <div className="space-y-1">
-                      <Link href="/parts/apple" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Apple Parts</Link>
-                      <Link href="/parts/samsung" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Samsung Parts</Link>
-                      <Link href="/parts/accessories" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Accessories</Link>
-                      <Link href="/parts/tools-&-supplies" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Tools & Supplies</Link>
-                      <Link href="/parts/refurbishing" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Refurbishing</Link>
+                      <Link href="/parts/apple" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Apple Parts</Link>
+                      <Link href="/parts/samsung" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Samsung Parts</Link>
+                      <Link href="/parts/accessories" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Accessories</Link>
+                      <Link href="/parts/tools-&-supplies" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Tools & Supplies</Link>
+                      <Link href="/parts/refurbishing" className="block px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors text-sm" onClick={() => setMobileMenuOpen(false)}>Refurbishing</Link>
                     </div>
                   </div>
                 </nav>
               </div>
 
               {/* Footer Actions */}
-              <div className="p-4 border-t border-gray-200">
+              <div className="p-4 border-t border-gray-300">
                 {user && (
                   <button
                     onClick={() => {
                       logout();
                       setMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center justify-center px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium"
+                    className="w-full flex items-center justify-center px-4 py-3 text-red-600 hover:bg-red-50 transition-colors font-medium"
                   >
                     Logout
                   </button>

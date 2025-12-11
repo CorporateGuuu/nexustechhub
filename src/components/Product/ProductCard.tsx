@@ -47,7 +47,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <>
-      <div className="group relative bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200">
+      <div className="group relative bg-white border border-gray-300 hover:border-blue-600 transition-colors">
         {/* Compare Checkbox */}
         <div className="absolute top-3 left-3 z-10">
           <label className="flex items-center cursor-pointer">
@@ -55,35 +55,24 @@ export default function ProductCard({ product }: { product: Product }) {
               type="checkbox"
               checked={isCompared}
               onChange={handleCompareToggle}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
               aria-label="Compare product"
             />
             <span className="sr-only">Compare {product.name}</span>
           </label>
         </div>
 
-        {/* Quick View Trigger */}
-        <div
-          className="relative overflow-hidden rounded-t-lg cursor-pointer"
-          onMouseEnter={handleQuickView}
-        >
+        {/* Image */}
+        <div className="relative overflow-hidden cursor-pointer">
           <Image
             src={product.image}
             alt={product.name}
             width={300}
             height={192}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-48 object-cover"
             placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-            <button
-              onClick={() => setShowQuickView(true)}
-              className="bg-white text-gray-900 px-4 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium"
-            >
-              Quick View
-            </button>
-          </div>
         </div>
 
         <div className="p-4">
@@ -143,8 +132,8 @@ export default function ProductCard({ product }: { product: Product }) {
             <AddToCartButton product={productForCart} />
           ) : (
             <button
-              onClick={() => addToQuote({ id: product.id, name: product.name, price: price, images: [product.image, ...product.gallery] })}
-              className="w-full bg-gray-100 text-gray-900 py-4 rounded-xl font-bold text-lg hover:bg-gray-200"
+              onClick={() => addToQuote({ id: product.id, name: product.name, price: price, image: product.image })}
+              className="w-full bg-gray-100 text-gray-900 py-4 font-semibold text-lg hover:bg-gray-200 transition-colors"
             >
               Add to Quote – ${price}
             </button>

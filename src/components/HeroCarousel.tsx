@@ -9,7 +9,7 @@ import { motion, AnimatePresence, Variant } from 'framer-motion';
 const slides = [
   {
     id: 1,
-    url: "https://images.unsplash.com/photo-1592286131072-82af6b3a8f1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+    url: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
     title: "iPhone Screen Repair Parts",
     description: "Premium OLED displays for iPhone 15 Pro Max"
   },
