@@ -3,39 +3,210 @@ import ProductDetail from 'src/components/Product/ProductDetail';
 import { supabaseServer } from '../../../lib/supabase/server';
 import { Product } from 'src/types';
 
-// Loading skeleton component
+// Beautiful, professional loading skeleton component
 function ProductLoadingSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumb skeleton */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center space-x-2 text-sm">
+          <div className="h-4 bg-gray-200 rounded w-12 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-1 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-1 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-1 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+        </div>
+      </div>
+
+      {/* Main product section */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Image skeleton */}
+          {/* Image gallery skeleton */}
           <div className="space-y-4">
-            <div className="aspect-square bg-gray-200 rounded-lg animate-pulse"></div>
-            <div className="flex gap-2">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="w-20 h-20 bg-gray-200 rounded-lg animate-pulse"></div>
+            {/* Main image */}
+            <div className="relative aspect-square overflow-hidden rounded-lg bg-white shadow-lg">
+              <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse"></div>
+              {/* Zoom indicator */}
+              <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs opacity-50">
+                <div className="w-8 h-3 bg-gray-300 rounded animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Thumbnail gallery */}
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`flex-shrink-0 w-20 h-20 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse ${
+                    i === 0 ? 'ring-2 ring-blue-300 shadow-md' : ''
+                  }`}
+                ></div>
               ))}
             </div>
           </div>
 
-          {/* Content skeleton */}
+          {/* Product details skeleton */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+            {/* Header section */}
+            <div className="space-y-3">
+              <div className="h-9 bg-gradient-to-r from-gray-200 to-gray-100 rounded animate-pulse"></div>
+              <div className="flex items-center gap-4">
+                <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+              </div>
+              <div className="h-5 bg-gray-200 rounded w-24 animate-pulse"></div>
             </div>
 
-            <div className="h-6 bg-gray-200 rounded w-1/3 animate-pulse"></div>
-
-            <div className="space-y-2">
-              <div className="h-4 bg-gray-200 rounded w-2/3 animate-pulse"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+            {/* Trust badges */}
+            <div className="flex flex-wrap gap-3">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg">
+                  <div className="w-4 h-4 bg-gray-300 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-300 rounded w-20 animate-pulse"></div>
+                </div>
+              ))}
             </div>
 
-            <div className="h-32 bg-gray-200 rounded animate-pulse"></div>
+            {/* Pricing section */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-100 rounded w-24 animate-pulse"></div>
+                <div className="h-7 bg-gray-200 rounded w-20 animate-pulse"></div>
+                <div className="h-6 bg-red-200 rounded w-16 animate-pulse"></div>
+              </div>
+            </div>
 
-            <div className="h-12 bg-gray-200 rounded animate-pulse"></div>
+            {/* Stock status & rating */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-gray-300 rounded-full animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded w-16 animate-pulse"></div>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-4 h-4 bg-yellow-200 rounded animate-pulse"></div>
+                  ))}
+                </div>
+                <div className="h-4 bg-gray-300 rounded w-12 animate-pulse ml-1"></div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="space-y-2">
+              <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-100 rounded w-24 animate-pulse"></div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6 animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-4/5 animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Add to cart section */}
+            <div className="space-y-4">
+              {/* Quantity selector */}
+              <div className="flex items-center gap-4">
+                <div className="h-5 bg-gray-200 rounded w-16 animate-pulse"></div>
+                <div className="flex items-center border border-gray-200 rounded-lg">
+                  <div className="px-3 py-2 bg-gray-100 animate-pulse">
+                    <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                  </div>
+                  <div className="w-16 text-center border-x border-gray-200 py-2">
+                    <div className="h-4 bg-gray-300 rounded w-6 mx-auto animate-pulse"></div>
+                  </div>
+                  <div className="px-3 py-2 bg-gray-100 animate-pulse">
+                    <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Add to cart button */}
+              <div className="w-full bg-gradient-to-r from-blue-400 to-blue-300 rounded-lg py-4 px-6 animate-pulse">
+                <div className="h-6 bg-white/50 rounded w-32 mx-auto animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Reviews section */}
+            <div className="border-t pt-6 space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-5 h-5 bg-yellow-200 rounded animate-pulse"></div>
+                  ))}
+                </div>
+                <div className="h-6 bg-gray-200 rounded w-8 animate-pulse"></div>
+                <div className="h-4 bg-gray-300 rounded w-16 animate-pulse"></div>
+              </div>
+              <div className="h-4 bg-gray-200 rounded w-64 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Specifications skeleton */}
+        <div className="mt-16">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+              <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-100 rounded w-32 animate-pulse"></div>
+            </div>
+            <div className="divide-y divide-gray-100">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className={`p-4 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                  <div className="flex justify-between items-center">
+                    <div className="h-5 bg-gray-200 rounded w-24 animate-pulse"></div>
+                    <div className="h-5 bg-gray-200 rounded w-32 animate-pulse"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Related products skeleton */}
+        <div className="mt-16">
+          <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-100 rounded w-48 animate-pulse mb-8"></div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-lg border border-gray-200 overflow-hidden animate-pulse">
+                <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                <div className="p-4 space-y-3">
+                  <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-5 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                  <div className="flex justify-between items-center">
+                    <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-100 rounded w-16 animate-pulse"></div>
+                    <div className="h-4 bg-gray-300 rounded w-12 animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile sticky cart skeleton */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-50">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex-1 space-y-1">
+            <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-100 rounded w-16 animate-pulse"></div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center border border-gray-200 rounded">
+              <div className="px-3 py-2 bg-gray-100 animate-pulse">
+                <div className="w-4 h-4 bg-gray-300 rounded"></div>
+              </div>
+              <div className="px-3 py-2 border-x border-gray-200">
+                <div className="h-4 bg-gray-300 rounded w-3 animate-pulse"></div>
+              </div>
+              <div className="px-3 py-2 bg-gray-100 animate-pulse">
+                <div className="w-4 h-4 bg-gray-300 rounded"></div>
+              </div>
+            </div>
+            <div className="bg-gradient-to-r from-blue-400 to-blue-300 rounded-lg px-6 py-3 animate-pulse">
+              <div className="h-5 bg-white/50 rounded w-20 animate-pulse"></div>
+            </div>
           </div>
         </div>
       </div>
