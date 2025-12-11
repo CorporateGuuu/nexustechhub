@@ -1,18 +1,25 @@
-# OpenNext Netlify Configuration - SECURE & PATCHED for React2Shell vulnerabilities
-# Updated for Next.js 15.5.7+ with CVE-2025-55182 / CVE-2025-66478 protection
+# PIXEL-PERFECT Netlify Configuration for Next.js 15.5.7+
+# Forces identical localhost ↔ Netlify appearance with proper static asset serving
 
 [build]
+  # Build command
   command = "npm run build"
-  publish = "dist"
+  # CRITICAL: Always publish .next directory for Next.js
+  publish = ".next"
 
 [build.environment]
+  # Force Node.js 20 for Next.js 15 compatibility
   NODE_VERSION = "20"
-  # OpenNext specific environment
-  OPENNEXT_VERSION = "latest"
+  # Next.js specific environment variables
+  NEXT_PRIVATE_TARGET = "server"
+  # Increase Node.js memory limit to prevent OOM
+  NODE_OPTIONS = "--max-old-space-size=4096"
+  # Ensure production build
+  NODE_ENV = "production"
 
-# OpenNext adapter - replaces vulnerable @netlify/plugin-nextjs
+# Official Next.js plugin - handles ALL Next.js specifics automatically
 [[plugins]]
-  package = "@opennextjs/cloudflare"
+  package = "@netlify/plugin-nextjs"
 
 # Security scan settings
 [build.secrets_scan]
@@ -22,3 +29,29 @@
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY"
   ]
+
+# CRITICAL REDIRECTS for pixel-perfect asset serving
+[[redirects]]
+  from = "/_next/static/*"
+  to = "/static/:splat"
+  status = 200
+
+# API routes - Next.js App Router API routes need to be handled by functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+# SPA fallback for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Force HTTPS
+[[redirects]]
+  from = "http://nexus-tech-hub.netlify.app/*"
+  to = "https://nexus-tech-hub.netlify.app/:splat"
+  status = 301
+  force = true
