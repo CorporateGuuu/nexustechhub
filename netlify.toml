@@ -1,42 +1,18 @@
-# BULLETPROOF Netlify Configuration for Next.js 14 App Router
-# This configuration addresses all known causes of silent Netlify deployment failures
+# OpenNext Netlify Configuration - SECURE & PATCHED for React2Shell vulnerabilities
+# Updated for Next.js 15.5.7+ with CVE-2025-55182 / CVE-2025-66478 protection
 
 [build]
-  # Always publish the .next directory for Next.js 14
-  publish = ".next"
-  # Build command with maximum debugging and guaranteed output
-  command = "echo '=== Starting Next.js Build ===' && npm run build 2>&1 && echo '=== Build Completed Successfully ===' || (echo '=== BUILD FAILED ===' && echo 'Exit code: $?' && echo 'Checking for common issues...' && ls -la .next/ 2>/dev/null || echo 'No .next directory found' && exit 1)"
-  # Build timeout (8 minutes - generous for Next.js builds)
-  timeout = "480"
+  command = "npm run build"
+  publish = "dist"
 
 [build.environment]
-  # Force Node.js 20 (required for Next.js 14)
   NODE_VERSION = "20"
-  # Next.js specific environment variables
-  NEXT_PRIVATE_TARGET = "server"
-  # Increase Node.js memory limit to prevent OOM
-  NODE_OPTIONS = "--max-old-space-size=4096"
-  # Ensure production build
-  NODE_ENV = "production"
+  # OpenNext specific environment
+  OPENNEXT_VERSION = "latest"
 
-# Official Next.js plugin - handles all Next.js specifics automatically
+# OpenNext adapter - replaces vulnerable @netlify/plugin-nextjs
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-# Processing settings (conservative to avoid issues)
-[build.processing]
-  skip_processing = false
-
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true
-
-[build.processing.html]
-  pretty_urls = true
+  package = "@opennextjs/cloudflare"
 
 # Security scan settings
 [build.secrets_scan]
@@ -46,22 +22,3 @@
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
     "SUPABASE_SERVICE_ROLE_KEY"
   ]
-
-# API Routes - Next.js App Router API routes need to be handled by functions
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-  force = true
-
-# Static assets - ensure proper routing for Next.js static files
-[[redirects]]
-  from = "/_next/static/*"
-  to = "/static/:splat"
-  status = 200
-
-# SPA fallback for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
