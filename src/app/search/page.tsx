@@ -1,4 +1,4 @@
-import { supabaseServer } from '../../../lib/supabase/server';
+import { supabaseServer } from '../../lib/supabase/server';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Package, AlertCircle, RefreshCw } from 'lucide-react';
