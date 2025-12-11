@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Breadcrumb from '../../../../components/Breadcrumb';
-import ProductGrid from '../../../../components/Product/ProductGrid';
+import Breadcrumb from '../../../../../components/Breadcrumb';
+import ProductGrid from '../../../../../components/Product/ProductGrid';
 import { Product } from 'src/types';
 
 export const metadata = {
