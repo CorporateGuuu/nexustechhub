@@ -4,6 +4,7 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone", // important for Netlify
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
@@ -19,31 +20,7 @@ const nextConfig = {
     // (especially useful with generateStaticParams)
     missingSuspenseWithCSRBailout: false,
   },
-  images: {
-    formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'your-image-cdn.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.imgur.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'phgbosbtwayzejfxyxao.supabase.co',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
-    ],
-  },
+  images: { unoptimized: true }, // if you use <Image />
   // Critical for mobile speed
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
