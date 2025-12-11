@@ -44,8 +44,8 @@ export default function NewsletterFooter() {
   const socialLinks = [
     { name: 'Facebook', icon: Facebook, href: 'https://facebook.com/nexustechhub', color: '#1877f2' },
     { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/nexustechhub', color: '#1da1f2' },
-    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/nexustechhub', color: '#e4405f' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/nexustechhub', color: '#0077b5' }
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/nexustechhubuae/', color: '#e4405f' },
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/company/nexus-tech-hub/?viewAsMember=true', color: '#0077b5' }
   ];
 
   return (
