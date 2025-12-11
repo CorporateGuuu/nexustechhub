@@ -8,7 +8,7 @@ import ProductCard from './ProductCard';
 import { Product } from '../../types';
 import Breadcrumb from '../../components/Breadcrumb';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ZoomIn, Star, Check, Shield, Truck, RotateCcw } from 'lucide-react';
+import { Star, Check, Shield, Truck, RotateCcw } from 'lucide-react';
 
 interface ProductDetailProps {
   product: Product;
@@ -18,10 +18,39 @@ interface ProductDetailProps {
 export default function ProductDetail({ product, relatedProducts = [] }: ProductDetailProps) {
   const { addItem } = useCart();
   const { user } = useAuth();
-  const [selectedImg, setSelectedImg] = useState(product.image);
+  const [selectedImg, setSelectedImg] = useState('/images/products/placeholder.svg');
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Set the selected image to the product image when component mounts
+  useEffect(() => {
+    if (product?.image) {
+      setSelectedImg(product.image);
+    }
+  }, [product?.image]);
+
+  // Add safety checks for product data
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
+          <p className="text-gray-600 mb-6">The product you're looking for doesn't exist.</p>
+          <Link href="/parts" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+            Browse Parts
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // Default related products if none provided
   const defaultRelatedProducts: Product[] = [
@@ -78,13 +107,6 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
   const displayRelatedProducts = relatedProducts.length > 0 ? relatedProducts : defaultRelatedProducts;
 
   const allImages = [product.image, ...(product.gallery || [])];
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   const handleAddToCart = () => {
     addItem({
