@@ -3,14 +3,16 @@
 import { Home, Search, ShoppingCart, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useCart } from '../../stores/cartStore';
 
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/search', label: 'Search', icon: Search },
-    { href: '/cart', label: 'Cart', icon: ShoppingCart, badge: 3 },
+    { href: '/cart', label: 'Cart', icon: ShoppingCart, badge: itemCount > 0 ? itemCount : undefined },
     { href: '/my-account', label: 'Account', icon: User },
   ];
 

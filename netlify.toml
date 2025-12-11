@@ -1,25 +1,30 @@
 # PIXEL-PERFECT Netlify Configuration for Next.js 15.5.7+
-# Forces identical localhost ↔ Netlify appearance with proper static asset serving
+# Production-ready deployment with App Router support
 
 [build]
-  # Build command
+  # Build command - ensures clean build
   command = "npm run build"
-  # CRITICAL: Always publish .next directory for Next.js
+  # CRITICAL: Publish .next directory for Next.js App Router
   publish = ".next"
 
 [build.environment]
-  # Force Node.js 20 for Next.js 15 compatibility
+  # Force Node.js 20 for Next.js 15.5.7+ compatibility
   NODE_VERSION = "20"
-  # Next.js specific environment variables
+  # Next.js App Router environment variables
   NEXT_PRIVATE_TARGET = "server"
-  # Increase Node.js memory limit to prevent OOM
+  # Increase memory limit to prevent OOM during build
   NODE_OPTIONS = "--max-old-space-size=4096"
   # Ensure production build
   NODE_ENV = "production"
+  # Disable telemetry for clean builds
+  NEXT_TELEMETRY_DISABLED = "1"
 
-# Official Next.js plugin - handles ALL Next.js specifics automatically
+# Official Next.js plugin - REQUIRED for App Router deployment
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    # Enable experimental features for better App Router support
+    enable_experimental_features = true
 
 # Security scan settings
 [build.secrets_scan]
@@ -27,31 +32,150 @@
   omit_keys = [
     "NEXT_PUBLIC_SUPABASE_URL",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    "SUPABASE_SERVICE_ROLE_KEY"
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "STRIPE_PUBLISHABLE_KEY",
+    "STRIPE_SECRET_KEY"
   ]
 
-# CRITICAL REDIRECTS for pixel-perfect asset serving
+# CRITICAL REDIRECTS - App Router Compatibility
+# Static assets from .next/static
 [[redirects]]
   from = "/_next/static/*"
   to = "/static/:splat"
   status = 200
+  force = true
 
-# API routes - Next.js App Router API routes need to be handled by functions
+# API routes - Next.js App Router API routes
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
   force = true
 
-# SPA fallback for client-side routing
+# Sitemap and robots.txt
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/.netlify/functions/robots"
+  status = 200
+  force = true
+
+# SPA fallback - MUST be last for App Router
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Force HTTPS
+# FORCE HTTPS - Security requirement
 [[redirects]]
   from = "http://nexus-tech-hub.netlify.app/*"
   to = "https://nexus-tech-hub.netlify.app/:splat"
   status = 301
   force = true
+
+# PRODUCTION SECURITY HEADERS - Enterprise Grade
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Strict Content Security Policy
+    Content-Security-Policy = """
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.stripe.com https://www.paypal.com https://*.paypal.com https://www.google-analytics.com https://*.googletagmanager.com https://*.netlify.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.netlify.com;
+    font-src 'self' https://fonts.gstatic.com https://*.netlify.com;
+    img-src 'self' data: https: blob: https://*.netlify.com https://*.supabase.co https://images.unsplash.com;
+    connect-src 'self' https://*.supabase.co https://api.stripe.com https://*.stripe.com https://www.paypal.com https://*.paypal.com https://www.google-analytics.com https://*.googletagmanager.com wss://*.supabase.co https://*.netlify.com;
+    frame-src 'self' https://js.stripe.com https://*.stripe.com https://www.paypal.com https://*.paypal.com https://*.netlify.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self' https://*.stripe.com https://*.paypal.com;
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+    """
+
+    # Security Headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-DNS-Prefetch-Control = "on"
+
+# API Routes Security
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Content-Security-Policy = "default-src 'none'; frame-ancestors 'none';"
+
+# Next.js Static Assets - Maximum Cache
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
+
+# Images - Optimized Cache
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, s-maxage=86400"
+    X-Content-Type-Options = "nosniff"
+
+# Fonts - Long Cache
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    X-Content-Type-Options = "nosniff"
+
+# HTML Pages - Short Cache for Updates
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300, s-maxage=300"
+
+# Service Worker - No Cache
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+# Environment Variables for Production
+[build.environment]
+  # Supabase Configuration
+  NEXT_PUBLIC_SUPABASE_URL = "https://phgbosbtwayzejfxyxao.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key-here"
+
+  # Stripe Configuration (if used)
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_live_your-stripe-key"
+  STRIPE_SECRET_KEY = "sk_live_your-stripe-secret"
+
+  # Auth Configuration
+  NEXTAUTH_URL = "https://nexus-tech-hub.netlify.app"
+  NEXTAUTH_SECRET = "your-nextauth-secret"
+
+  # Application Configuration
+  NODE_ENV = "production"
+  NEXT_PUBLIC_APP_URL = "https://nexus-tech-hub.netlify.app"
+
+# Build Hooks (Optional)
+[build.hooks]
+  prebuild = "echo 'Starting Nexus Tech Hub build...'"
+
+# Dev Server Settings (for local development)
+[dev]
+  # Port for local development
+  port = 3000
+  # Publish directory for dev
+  publish = ".next"
+  # Command for local dev
+  command = "npm run dev"

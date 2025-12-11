@@ -1,22 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 import NavBar from '../components/NavBar';
 import HeroCarousel from '../components/HeroCarousel';
 import WhatsAppButton from '../components/WhatsAppButton';
 import Script from 'next/script';
-
-// Extend Window interface for gtag
-declare global {
-  interface Window {
-    gtag?: (command: string, targetId: string, config?: any) => void;
-  }
-}
-
-
-
-
-
-
 
 function QualityStandardsSection() {
   return (
@@ -50,12 +38,15 @@ function QualityStandardsSection() {
 
               {/* Floating iPhone Stack – REAL PHOTOS */}
               <div className="relative h-96 lg:h-[520px] mx-auto lg:mx-0">
-                <img src="https://i.imgur.com/8YkR2fK.png" alt="iPhone 15 Pro Max floating"
-                     className="absolute top-10 left-1/2 -translate-x-1/2 w-64 lg:w-80 drop-shadow-2xl animate-float" />
-                <img src="https://i.imgur.com/3fM9n1P.png" alt="iPhone 15 Pro"
-                     className="absolute top-0 left-1/4 w-60 lg:w-72 drop-shadow-2xl animate-float delay-300" />
-                <img src="https://i.imgur.com/vL8xY9j.png" alt="iPhone 15"
-                     className="absolute top-20 right-1/4 w-56 lg:w-68 drop-shadow-2xl animate-float delay-600" />
+                <div className="absolute top-10 left-1/2 -translate-x-1/2 w-64 lg:w-80 drop-shadow-2xl animate-float">
+                  <Image src="https://i.imgur.com/8YkR2fK.png" alt="iPhone 15 Pro Max floating" fill className="object-contain" />
+                </div>
+                <div className="absolute top-0 left-1/4 w-60 lg:w-72 drop-shadow-2xl animate-float delay-300">
+                  <Image src="https://i.imgur.com/3fM9n1P.png" alt="iPhone 15 Pro" fill className="object-contain" />
+                </div>
+                <div className="absolute top-20 right-1/4 w-56 lg:w-68 drop-shadow-2xl animate-float delay-600">
+                  <Image src="https://i.imgur.com/vL8xY9j.png" alt="iPhone 15" fill className="object-contain" />
+                </div>
               </div>
 
               <a href="#" className="inline-block px-12 py-6 bg-gradient-to-r from-sky-600 to-blue-700 text-white font-black text-xl rounded-full shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 hover:scale-105">
@@ -68,8 +59,9 @@ function QualityStandardsSection() {
               <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6">
                 {/* AQ7 Logo with glow */}
                 <div className="relative">
-                  <img src="https://i.imgur.com/5mK8vL2.png" alt="AQ7 Technology Logo"
-                       className="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl shadow-2xl animate-spin-slow" />
+                  <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl shadow-2xl animate-spin-slow">
+                    <Image src="https://i.imgur.com/5mK8vL2.png" alt="AQ7 Technology Logo" fill className="rounded-3xl object-contain" />
+                  </div>
                   <div className="absolute inset-0 bg-cyan-400 rounded-3xl blur-3xl opacity-60 animate-pulse"></div>
                 </div>
 
@@ -85,10 +77,12 @@ function QualityStandardsSection() {
 
               {/* Hero Phone with AQ7 badge */}
               <div className="relative mx-auto lg:mx-0 w-80 lg:w-96">
-                <img src="https://i.imgur.com/Q8vR9Zm.png" alt="iPhone with AQ7 badge"
-                     className="relative z-10 drop-shadow-3xl rounded-3xl" />
-                <img src="https://i.imgur.com/X7kP3Lm.png" alt="AQ7 Badge"
-                     className="absolute bottom-8 right-8 w-24 lg:w-32 animate-bounce" />
+                <div className="relative z-10 drop-shadow-3xl rounded-3xl">
+                  <Image src="https://i.imgur.com/Q8vR9Zm.png" alt="iPhone with AQ7 badge" fill className="rounded-3xl object-contain" />
+                </div>
+                <div className="absolute bottom-8 right-8 w-24 lg:w-32 animate-bounce">
+                  <Image src="https://i.imgur.com/X7kP3Lm.png" alt="AQ7 Badge" fill className="object-contain" />
+                </div>
                 <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400 to-blue-600 rounded-3xl blur-3xl opacity-50 animate-pulse"></div>
               </div>
             </div>
@@ -161,7 +155,9 @@ function QualityStandardsSection() {
 function BackToTopButton() {
   return (
     <button
+      type="button"
       id="back-to-top"
+      aria-label="Back to top"
       className="fixed bottom-8 right-8 z-50 bg-gradient-to-r from-sky-600 to-blue-700 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:shadow-sky-500/50 transform hover:scale-110 transition-all duration-300 opacity-0 invisible"
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
     >
@@ -273,20 +269,26 @@ function PremiumFooter() {
 
             <div className="lg:col-span-3 space-y-6">
               <div className="flex gap-3">
-                <select className="bg-gray-900 rounded-xl px-4 py-2 text-sm">
+                <select className="bg-gray-900 rounded-xl px-4 py-2 text-sm" aria-label="Select country">
                   <option>United States</option>
                 </select>
-                <select className="bg-gray-900 rounded-xl px-4 py-2 text-sm">
+                <select className="bg-gray-900 rounded-xl px-4 py-2 text-sm" aria-label="Select language">
                   <option>English</option>
                 </select>
-                <select className="bg-gray-900 rounded-xl px-4 py-2 text-sm">
+                <select className="bg-gray-900 rounded-xl px-4 py-2 text-sm" aria-label="Select currency">
                   <option>USD $</option>
                 </select>
               </div>
               <div className="flex gap-4">
-                <img src="https://i.imgur.com/5rVI1jP.png" alt="R2" className="h-10" />
-                <img src="https://i.imgur.com/Kt3Ew1m.png" alt="ISO" className="h-10" />
-                <img src="https://i.imgur.com/8nL2pXm.png" alt="ISO" className="h-10" />
+                <div className="h-10 w-16">
+                  <Image src="https://i.imgur.com/5rVI1jP.png" alt="R2" fill className="object-contain" />
+                </div>
+                <div className="h-10 w-16">
+                  <Image src="https://i.imgur.com/Kt3Ew1m.png" alt="ISO" fill className="object-contain" />
+                </div>
+                <div className="h-10 w-16">
+                  <Image src="https://i.imgur.com/8nL2pXm.png" alt="ISO" fill className="object-contain" />
+                </div>
               </div>
             </div>
 
@@ -343,19 +345,19 @@ function PremiumFooter() {
               <h4 className="font-bold text-white mb-4">Authorized Distributor</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3 hover:bg-white/20 transition">
-                  <img src="https://i.imgur.com/7v6f7gN.png" className="h-7" />
+                  <Image src="https://i.imgur.com/7v6f7gN.png" alt="Apple logo" width={28} height={28} className="h-7" />
                   Apple
                 </div>
                 <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3 hover:bg-white/20 transition">
-                  <img src="https://i.imgur.com/2jX5p8K.png" className="h-7" />
+                  <Image src="https://i.imgur.com/2jX5p8K.png" alt="Google logo" width={28} height={28} className="h-7" />
                   Google
                 </div>
                 <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3 hover:bg-white/20 transition">
-                  <img src="https://i.imgur.com/1pL9q3m.png" className="h-7" />
+                  <Image src="https://i.imgur.com/1pL9q3m.png" alt="OnePlus logo" width={28} height={28} className="h-7" />
                   OnePlus
                 </div>
                 <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3 hover:bg-white/20 transition">
-                  <img src="https://i.imgur.com/m9k2xLp.png" className="h-7" />
+                  <Image src="https://i.imgur.com/m9k2xLp.png" alt="Motorola logo" width={28} height={28} className="h-7" />
                   Motorola
                 </div>
               </div>
@@ -365,9 +367,15 @@ function PremiumFooter() {
           {/* Bottom Bar */}
           <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
             <div className="flex flex-wrap justify-center gap-6">
-              <img src="https://i.imgur.com/3fG7p9k.png" className="h-7" alt="Visa" />
-              <img src="https://i.imgur.com/9kLm2xP.png" className="h-7" alt="PayPal" />
-              <img src="https://i.imgur.com/1pL9q3m.png" className="h-7" alt="Apple Pay" />
+              <div className="h-7 w-12">
+                <Image src="https://i.imgur.com/3fG7p9k.png" alt="Visa" fill className="object-contain" />
+              </div>
+              <div className="h-7 w-12">
+                <Image src="https://i.imgur.com/9kLm2xP.png" alt="PayPal" fill className="object-contain" />
+              </div>
+              <div className="h-7 w-12">
+                <Image src="https://i.imgur.com/1pL9q3m.png" alt="Apple Pay" fill className="object-contain" />
+              </div>
               <span className="text-gray-500">+ 12 more</span>
             </div>
             <div className="flex gap-6">

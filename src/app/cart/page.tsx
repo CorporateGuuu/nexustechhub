@@ -1,15 +1,120 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, ShoppingCart, Truck, ChevronDown, User, Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import { useCart } from '../../stores/cartStore';
 
+// Professional cart loading skeleton
+function CartLoadingSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header skeleton */}
+      <div className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            <div className="h-8 bg-gray-200 rounded w-48 animate-pulse"></div>
+            <div className="h-10 bg-gray-200 rounded w-96 animate-pulse"></div>
+            <div className="flex items-center space-x-6">
+              <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main content skeleton */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar skeleton */}
+          <div className="w-full lg:w-64">
+            <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-4 space-y-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="flex items-center space-x-3 py-2">
+                  <div className="w-5 h-5 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Cart content skeleton */}
+          <div className="flex-1">
+            <div className="h-9 bg-gray-200 rounded w-48 mb-6 animate-pulse"></div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Cart items skeleton */}
+              <div className="lg:col-span-2">
+                <div className="bg-white rounded-lg shadow-lg border border-gray-200">
+                  <div className="p-6 border-b border-gray-200">
+                    <div className="h-6 bg-gray-200 rounded w-40 animate-pulse"></div>
+                  </div>
+
+                  <div className="divide-y divide-gray-200">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="p-6">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-20 h-20 bg-gray-200 rounded-lg animate-pulse"></div>
+                          <div className="flex-1 space-y-3">
+                            <div className="h-5 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                            <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+                            <div className="flex items-center space-x-4">
+                              <div className="w-24 h-8 bg-gray-200 rounded animate-pulse"></div>
+                              <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                          </div>
+                          <div className="text-right space-y-2">
+                            <div className="h-5 bg-gray-200 rounded w-16 animate-pulse"></div>
+                            <div className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Order summary skeleton */}
+              <div className="lg:col-span-1">
+                <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+                  <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
+
+                  <div className="space-y-4">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="flex justify-between">
+                        <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                        <div className="h-4 bg-gray-200 rounded w-12 animate-pulse"></div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="h-12 bg-gray-200 rounded w-full mt-6 animate-pulse"></div>
+
+                  <div className="h-4 bg-gray-200 rounded w-48 mx-auto mt-4 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ShoppingCartPage() {
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Use the actual cart store instead of mock data
-  const { items: cartItems, updateQuantity, removeItem, clearCart, subtotal } = useCart();
+  const { items: cartItems, updateQuantity, removeItem, subtotal } = useCart();
+
+  // Simulate loading state for premium UX
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Calculate totals using real cart data
   const tax = subtotal * 0.08; // 8% tax
@@ -70,6 +175,11 @@ export default function ShoppingCartPage() {
     }
   ];
 
+  // Show loading skeleton for premium UX
+  if (isLoading) {
+    return <CartLoadingSkeleton />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Header */}
@@ -101,7 +211,7 @@ export default function ShoppingCartPage() {
               </div>
             </div>
             <div className="flex items-center space-x-6">
-              <button className="flex items-center space-x-2 text-gray-700 hover:text-blue-600" aria-label="User account">
+              <button type="button" className="flex items-center space-x-2 text-gray-700 hover:text-blue-600" aria-label="User account">
                 <User className="h-5 w-5" />
               </button>
               <div className="flex items-center space-x-2 text-gray-700">
@@ -120,18 +230,17 @@ export default function ShoppingCartPage() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className={`${sidebarExpanded ? 'w-full lg:w-64' : 'w-16'} transition-all duration-300 order-2 lg:order-1`}>
-            <div className="bg-white rounded-lg shadow-lg border border-gray-200">
-              <nav className="p-4" role="navigation" aria-label="Account navigation">
-                {sidebarItems.map((section, index) => (
-                  <div key={index} className="mb-2">
-                    <button
-                      onClick={() => setSidebarExpanded(!sidebarExpanded)}
-                      className="flex items-center justify-between w-full text-left py-2 px-3 rounded-md hover:bg-gray-50 transition-colors"
-                      aria-expanded={section.expanded ? "true" : "false"}
-                      aria-controls={`submenu-${index}`}
-                    >
+        {/* Sidebar */}
+        <div id="sidebar" className={`${sidebarExpanded ? 'w-full lg:w-64' : 'w-16'} transition-all duration-300 order-2 lg:order-1`}>
+          <div className="bg-white rounded-lg shadow-lg border border-gray-200">
+            <nav className="p-4" role="navigation" aria-label="Account navigation">
+              {sidebarItems.map((section, index) => (
+                <div key={index} className="mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setSidebarExpanded(!sidebarExpanded)}
+                    className="flex items-center justify-between w-full text-left py-2 px-3 rounded-md hover:bg-gray-50 transition-colors"
+                  >
                       <div className="flex items-center space-x-3">
                         <span className="text-gray-600" aria-hidden="true">{section.icon}</span>
                         <span className={`font-medium text-gray-900 ${!sidebarExpanded && 'hidden'}`}>
@@ -197,9 +306,11 @@ export default function ShoppingCartPage() {
                       {cartItems.map((item) => (
                         <div key={item.id} className="p-6">
                           <div className="flex items-center space-x-4">
-                            <img
+                            <Image
                               src={item.image}
                               alt={item.name}
+                              width={80}
+                              height={80}
                               className="w-20 h-20 object-cover rounded-lg border border-gray-200"
                             />
                             <div className="flex-1">

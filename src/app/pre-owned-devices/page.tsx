@@ -134,7 +134,7 @@ export default function PreOwnedDevicesPage() {
             <>
               {devices.length === 0 ? (
                 <div className="text-center py-12">
-                  <div className="text-6xl mb-4">📱</div>
+                  <div className="text-6xl mb-4 font-bold text-gray-400">No Devices</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">No devices available</h3>
                   <p className="text-gray-600">Check back later for new pre-owned device listings.</p>
                 </div>
