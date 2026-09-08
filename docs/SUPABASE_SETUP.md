@@ -14,8 +14,8 @@ Add the following environment variables to your `.env.local` file:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-SUPABASE_JWT_SECRET=your-legacy-jwt-secret
+SUPABASE_SERVICE_ROLE_KEY=REPLACE_ME
+SUPABASE_JWT_SECRET=REPLACE_ME
 ```
 
 ### JWT Secret Configuration

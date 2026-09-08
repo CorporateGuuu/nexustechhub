@@ -171,7 +171,7 @@ Update your `.env.local` file with the correct Supabase URLs:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=REPLACE_ME
 ```
 
 ---

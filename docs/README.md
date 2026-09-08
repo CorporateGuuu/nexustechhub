@@ -58,7 +58,7 @@ Create a `.env.local` file in the root directory:
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_SERVICE_ROLE_KEY=REPLACE_ME
 
 # Stripe Configuration
 STRIPE_PUBLIC_KEY=your-stripe-public-key
