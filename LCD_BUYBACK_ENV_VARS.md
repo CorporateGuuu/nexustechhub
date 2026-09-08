@@ -9,7 +9,7 @@ This document outlines the environment variables required for the LCD BuyBack Pr
 # Supabase URL and Keys (inherited from main project)
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_SERVICE_ROLE_KEY=REPLACE_ME
 ```
 
 ## Database Setup
